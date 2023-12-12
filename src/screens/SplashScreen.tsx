@@ -1,20 +1,21 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { View, ActivityIndicator } from 'react-native'
-import { useUserSession } from '../hooks/userAuthSession'
+import { ActivityIndicator, View } from 'react-native'
 
 const SplashScreen = () => {
-    // Here, you can use your hook.
-    const isLoading = useUserSession()
+    const navigation = useNavigation<NavigationProp>()
 
-    if (isLoading) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" />
-            </View>
-        )
-    }
+    React.useEffect(() => {
+        setTimeout(() => {
+            navigation.navigate('Tabs')
+        }, 500)
+    }, [])
 
-    return null
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size='large' color='#ccc' />
+        </View>
+    )
 }
 
 export default SplashScreen
