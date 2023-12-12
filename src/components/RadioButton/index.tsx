@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import { colors } from '../../theme'
+import { palette } from '../../theme'
 
 interface Props {
     isSelected: boolean
@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
         height: 20,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: colors.palette.primary,
-        backgroundColor: colors.palette.emphasis,
+        borderColor: palette.angry500,
+        backgroundColor: palette.neutral100,
         marginRight: 10
     },
     radioButtonChecked: {
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
         height: 20,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: colors.palette.primary,
-        backgroundColor: colors.palette.emphasis,
+        borderColor: palette.angry500,
+        backgroundColor: palette.neutral100,
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 10
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         width: 10,
         height: 10,
         borderRadius: 5,
-        backgroundColor: colors.palette.primary
+        backgroundColor: palette.angry500
     }
 })
 
