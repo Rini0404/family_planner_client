@@ -1,0 +1,77 @@
+{
+  "name": "devusol_template",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build:local:ios": "cross-env EAS_LOCAL_BUILD_ARTIFACTS_DIR=build eas build --profile development -p ios --local",
+    "build:local:android": "cross-env EAS_LOCAL_BUILD_ARTIFACTS_DIR=build eas build --profile development -p android --local",
+    "build:dev": "eas build --profile development",
+    "build:dev:ios": "eas build --profile development -p ios",
+    "build:dev:android": "eas build --profile development -p android",
+    "build:dev:device": "eas build --profile development:device",
+    "build:dev:device:local": "cross-env EAS_LOCAL_BUILD_ARTIFACTS_DIR=build eas build --profile development:device --local",
+    "build:preview": "eas build --profile preview:device",
+    "build:preview:ios": "eas build --profile preview:device -p ios",
+    "build:preview:android": "eas build --profile preview:device -p android",
+    "build:production": "eas build --profile production",
+    "build:production:ios": "eas build --profile production -p ios",
+    "build:production:android": "eas build --profile production -p android",
+    "release": "eas submit",
+    "release:ios": "eas submit -p ios",
+    "release:android": "eas submit -p android",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "1.18.2",
+    "@react-navigation/bottom-tabs": "^6.3.2",
+    "@react-navigation/native": "^6.1.7",
+    "@react-navigation/native-stack": "^6.9.13",
+    "@react-navigation/stack": "^6.3.17",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@tanstack/react-query": "^4.32.6",
+    "expo": "~49.0.5",
+    "expo-status-bar": "~1.6.0",
+    "expo-updates": "^0.18.11",
+    "expo-web-browser": "^12.3.2",
+    "jest-expo": "^49.0.0",
+    "react": "18.2.0",
+    "react-native": "0.72.3",
+    "react-native-safe-area-context": "4.6.3",
+    "react-native-screens": "~3.22.0",
+    "react-native-webview": "^13.3.1",
+    "react-redux": "^8.1.2",
+    "react-test-renderer": "18.2.0",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@testing-library/react-native": "^12.2.2",
+    "@types/jest": "^29.5.3",
+    "@types/react": "~18.2.14",
+    "@types/react-native": "^0.72.2",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "eslint": "^8.46.0",
+    "eslint-plugin-react": "^7.33.1",
+    "jest": "^29.2.1",
+    "jest-fetch-mock": "^3.0.3",
+    "mock-async-storage": "^2.2.0",
+    "redux-mock-store": "^1.5.4",
+    "typescript": "^5.1.3"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ],
+    "setupFiles": [
+      "./setup-tests.js"
+    ]
+  },
+  "private": true
+}
