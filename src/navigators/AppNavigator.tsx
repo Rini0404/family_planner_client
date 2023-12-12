@@ -1,4 +1,3 @@
-
 import {
     DarkTheme,
     DefaultTheme,
@@ -13,6 +12,7 @@ import { colors } from '../theme'
 import { TabNavigator, TabParamList } from './TabNavigator'
 import { HomeScreen } from '../screens/HomeScreen'
 import SplashScreen from '../screens/SplashScreen'
+import SignupScreen from '../screens/SignupScreen'
 
 
 export type AppStackParamList = {
@@ -20,6 +20,7 @@ export type AppStackParamList = {
   Settings: undefined,
   HomeScreen: undefined,
   SplashScreen: undefined,
+  Signup: undefined,
 }
 
 /**
@@ -44,8 +45,9 @@ const AppStack = () => {
                 gestureEnabled: false,  // Disable the gesture (swiping) to go back
                 headerLeft: () => null // Remove the back button from the header
             }}
-            initialRouteName={'SplashScreen'}
+            initialRouteName={'Signup'}
         >
+            <Stack.Screen name="Signup" component={SignupScreen} />
             <Stack.Screen name="Tabs" component={TabNavigator} />
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="SplashScreen" component={SplashScreen} />
