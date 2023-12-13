@@ -205,8 +205,7 @@ export const SignupScreen: React.FC<SignupProps> = () => {
 
 const styles = StyleSheet.create({
     scrollviewContainer: {
-        paddingTop: StatusBar.currentHeight,
-        flex: 1
+        paddingTop: StatusBar.currentHeight
     },
     contentContainer: {
         alignItems: 'center',
