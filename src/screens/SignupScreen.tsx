@@ -195,7 +195,7 @@ export const SignupScreen: React.FC<SignupProps> = () => {
                     <PrimaryButton
                         onPress={handleSubmit}
                         title='Sign Up'
-                        style={{ marginTop: 10 }}
+                        style={{ marginTop: 80 }}
                     />
                 </View>
             </ScrollView>
