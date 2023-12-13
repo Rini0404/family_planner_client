@@ -18,6 +18,8 @@ import RadioButton from '../components/RadioButton'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { AppStackScreenProps } from '../navigators'
 import PrimaryButton from '../components/PrimaryButton'
+import { Use } from 'react-native-svg'
+import { MemberType, UserOption } from '../types/signup'
 
 interface SignupProps extends AppStackScreenProps<'Signup'> {}
 
@@ -29,9 +31,9 @@ export const SignupScreen: React.FC<SignupProps> = () => {
     const [error, setError] = React.useState<string | null>(null)
     const [isLoading, setIsLoading] = React.useState(false)
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
-    const [userRole, setUserRole] = React.useState<string | null>(null)
+    const [userRole, setUserRole] = React.useState<UserOption | null>(UserOption.MEMBER)
     const [familyName, setFamilyName] = React.useState('')
-    const [memberType, setMemberType] = useState(null);
+    const [memberType, setMemberType] = useState(null)
 
     const handleSubmit = () => {
         const userInfo = {
@@ -40,17 +42,17 @@ export const SignupScreen: React.FC<SignupProps> = () => {
             firstName,
             lastName,
             userRole,
-            ...(userRole === 'Creator' && { familyName }),
-            ...(userRole === 'Member' && { memberType }),
-        };
+            ...(userRole === UserOption.CREATOR && { familyName }),
+            ...(userRole === UserOption.MEMBER && { memberType })
+        }
 
         console.log(userInfo)
     }
     const MyDropdown = () => {
         const [open, setOpen] = useState(false)
         const [items, setItems] = useState([
-            { label: 'Guest', value: 'guest' },
-            { label: 'Family Member', value: 'familyMember' }
+            { label: 'Guest', value: MemberType.GUEST },
+            { label: 'Family Member', value: MemberType.FAMILY_MEMBER }
         ])
 
         return (
@@ -107,15 +109,15 @@ export const SignupScreen: React.FC<SignupProps> = () => {
                     <View style={styles.roleContainer}>
                         <View style={styles.roleWrapper}>
                             <RadioButton
-                                isSelected={userRole === 'Creator'}
-                                onPress={() => setUserRole('Creator')}
+                                isSelected={userRole === UserOption.CREATOR}
+                                onPress={() => setUserRole(UserOption.CREATOR)}
                             />
                             <Text style={styles.roleText}>Creator</Text>
                         </View>
                         <View style={styles.roleWrapper}>
                             <RadioButton
-                                isSelected={userRole === 'Member'}
-                                onPress={() => setUserRole('Member')}
+                                isSelected={userRole === UserOption.MEMBER}
+                                onPress={() => setUserRole(UserOption.MEMBER)}
                             />
                             <Text style={styles.roleText}>Member</Text>
                         </View>
@@ -203,13 +205,14 @@ export const SignupScreen: React.FC<SignupProps> = () => {
 
 const styles = StyleSheet.create({
     scrollviewContainer: {
-        paddingTop: StatusBar.currentHeight
+        paddingTop: StatusBar.currentHeight,
+        flex: 1
     },
     contentContainer: {
         alignItems: 'center',
         paddingHorizontal: 20,
-        height: '100%',
-        paddingTop: '8%',
+        flex: 1,
+        paddingTop: '20%',
         paddingBottom: '30%'
     },
     roleContainer: {
