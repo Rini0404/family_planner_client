@@ -46,50 +46,52 @@ export const palette = {
 
     angry100: '#F2D6CD',
     angry500: '#C03403',
+
+    boxesPastelGreen: '#69BA7B'
 } as const
 
 export const colors = {
     /**
-   * The palette is available to use, but prefer using the name.
-   * This is only included for rare, one-off cases. Try to use
-   * semantic names as much as possible.
-   */
+     * The palette is available to use, but prefer using the name.
+     * This is only included for rare, one-off cases. Try to use
+     * semantic names as much as possible.
+     */
     palette,
     /**
-   * A helper for making something see-thru.
-   */
+     * A helper for making something see-thru.
+     */
     transparent: 'rgba(0, 0, 0, 0)',
     /**
-   * The default text color in many components.
-   */
+     * The default text color in many components.
+     */
     text: palette.neutral100,
     /**
-   * Secondary text information.
-   */
+     * Secondary text information.
+     */
     textDim: palette.primary100,
     /**
-   * The default color of the screen background.
-   */
+     * The default color of the screen background.
+     */
     background: palette.neutral700,
     /**
-   * The default border color.
-   */
+     * The default border color.
+     */
     border: palette.primary500,
     /**
-   * The main tinting color.
-   */
+     * The main tinting color.
+     */
     tint: palette.primary500,
     /**
-   * A subtle color used for lines.
-   */
+     * A subtle color used for lines.
+     */
     separator: palette.neutral400,
     /**
-   * Error messages.
-   */
+     * Error messages.
+     */
     error: palette.angry500,
     /**
-   * Error Background.
-   *
-   */
-    errorBackground: palette.angry100,
+     * Error Background.
+     *
+     */
+    errorBackground: palette.angry100
 }
