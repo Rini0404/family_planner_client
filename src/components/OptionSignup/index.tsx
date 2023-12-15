@@ -3,8 +3,14 @@ import { StyleSheet, Text, View } from 'react-native'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import { OutlinedButton } from '../OutlinedButton'
+import { OptionChosen } from '../../screens/SignupScreen'
 
-export const OptionSignup: React.FC = () => {
+type OptionSignupProps = {
+    optionChosen: OptionChosen | null
+    setOptionChosen: (option: OptionChosen) => void
+}
+
+export const OptionSignup: React.FC<OptionSignupProps> = ({ optionChosen, setOptionChosen }) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -13,7 +19,9 @@ export const OptionSignup: React.FC = () => {
             <View style={styles.buttons}>
                 <OutlinedButton
                     title='Create a group'
-                    onPress={() => {}}
+                    onPress={() => {
+                        setOptionChosen(OptionChosen.Creator)
+                    }}
                     style={styles.outlinedButton}
                     textStyles={{
                         color: 'white',
@@ -25,7 +33,9 @@ export const OptionSignup: React.FC = () => {
 
                 <OutlinedButton
                     title='Join a group'
-                    onPress={() => {}}
+                    onPress={() => {
+                        setOptionChosen(OptionChosen.Member)
+                    }}
                     style={styles.outlinedButton}
                     textStyles={{ color: 'white', fontFamily: typography.tertiary, fontSize: 18 }}
                 />
