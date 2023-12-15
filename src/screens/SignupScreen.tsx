@@ -7,17 +7,30 @@ import { AppStackScreenProps } from '../navigators'
 import { typography } from '../theme/fonts'
 import { BackDrop } from '../components/BackDropGreen'
 import { OptionSignup } from '../components/OptionSignup'
+import { SignupForm } from '../components/SignupForm'
 
 interface SignupProps extends AppStackScreenProps<'Signup'> {}
 
+export enum OptionChosen {
+    Creator = 'Creator',
+    Member = 'Member'
+}
+
 export const SignupScreen: React.FC<SignupProps> = () => {
+    const [optionChosen, setOptionChosen] = useState<OptionChosen | null>(null)
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Register</Text>
             </View>
             <BackDrop />
-            <OptionSignup />
+
+            {!optionChosen && (
+                <OptionSignup optionChosen={optionChosen} setOptionChosen={setOptionChosen} />
+            )}
+
+            {optionChosen && <SignupForm />}
         </View>
     )
 }

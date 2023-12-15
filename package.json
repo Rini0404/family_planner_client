@@ -23,7 +23,8 @@
         "release": "eas submit",
         "release:ios": "eas submit -p ios",
         "release:android": "eas submit -p android",
-        "test": "jest"
+        "test": "jest",
+        "font-fix": "rm -rf ./node_modules/expo/node_modules/expo-font/"
     },
     "dependencies": {
         "@expo-google-fonts/comfortaa": "^0.2.3",
