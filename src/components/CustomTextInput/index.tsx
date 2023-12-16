@@ -2,6 +2,7 @@ import React from 'react'
 import { TextInput, Text, View, StyleSheet, TextInputProps, TouchableOpacity } from 'react-native'
 import ErrorMessage from '../ErrorMessage'
 import { palette, colors } from '../../theme/colors'
+import { typography } from '../../theme/fonts'
 
 interface CustomTextInputProps extends TextInputProps {
     label: string
@@ -24,23 +25,20 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     isPassword,
     isPasswordVisible,
     placeholderTextColor,
-    testID,
+    testID
 }) => {
     return (
         <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>{label}</Text>
-            <View style={styles.textInputWrapper}>
-                <TextInput
-                    style={styles.input}
-                    testID={testID}
-                    placeholder={placeholder}
-                    placeholderTextColor={placeholderTextColor}
-                    value={value}
-                    onChangeText={onChangeText}
-                    secureTextEntry={isPassword && !isPasswordVisible}
-                    autoCapitalize='none'
-                />
-            </View>
+            <TextInput
+                style={styles.input}
+                testID={testID}
+                placeholder={placeholder}
+                placeholderTextColor={placeholderTextColor}
+                value={value}
+                onChangeText={onChangeText}
+                secureTextEntry={isPassword && !isPasswordVisible}
+                autoCapitalize='none'
+            />
             {error ? <ErrorMessage message={error} /> : null}
         </View>
     )
@@ -48,7 +46,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
 
 const styles = StyleSheet.create({
     inputContainer: {
-        width: '100%'
+        width: '80%'
     },
     inputLabel: {
         left: 2,
@@ -58,33 +56,22 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     input: {
-        height: 44,
-        borderColor: palette.neutral800,
-        color: palette.neutral800,
-        paddingLeft: 14,
+        height: '30%',
+        fontFamily: typography.secondary,
+        paddingLeft: '5%',
         borderWidth: 1,
-        width: '100%',
-        backgroundColor: colors.text,
         borderRadius: 8,
+        borderColor: 'white'
     },
     inputError: {
         borderColor: 'red'
-    },
-    textInputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: palette.primary500,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: palette.neutral500,
-        height: 44
     },
     visibilityIcon: {
         position: 'absolute',
         right: 10,
         height: '100%',
         justifyContent: 'center',
-        padding: 10,
+        padding: 10
     }
 })
 
