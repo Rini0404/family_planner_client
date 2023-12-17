@@ -46,7 +46,9 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
 
 const styles = StyleSheet.create({
     inputContainer: {
-        width: '80%'
+        width: '80%',
+        height: '10%',
+        marginBottom: '5%'
     },
     inputLabel: {
         left: 2,
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     input: {
-        height: '30%',
+        height: '100%',
         fontFamily: typography.secondary,
         paddingLeft: '5%',
         borderWidth: 1,
