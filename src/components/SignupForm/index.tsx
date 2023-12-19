@@ -3,8 +3,13 @@ import { StyleSheet, Text, View } from 'react-native'
 import { typography } from '../../theme/fonts'
 import { OutlinedButton } from '../OutlinedButton'
 import CustomTextInput from '../CustomTextInput'
+import { OptionChosen } from '../../screens/SignupScreen'
 
-export const SignupForm: React.FC = () => {
+type SignupFormProps = {
+    optionChosen: OptionChosen | null
+}
+
+export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
     const [email, setEmail] = React.useState<string>('')
     const [password, setPassword] = React.useState<string>('')
     const [firstName, setFirstName] = React.useState<string>('')
@@ -80,19 +85,23 @@ export const SignupForm: React.FC = () => {
                     isPasswordVisible={isPasswordVisible}
                     error={error}
                 />
-                <CustomTextInput
-                    label='Group Code'
-                    placeholder='Group Code'
-                    placeholderTextColor='white'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={groupCode}
-                    onChangeText={(text) => {
-                        setGroupCode(text)
-                        setError(null)
-                    }}
-                    error={error}
-                />
+                {optionChosen === OptionChosen.Member ? (
+                    <CustomTextInput
+                        label='Group Code'
+                        placeholder='Group Code'
+                        placeholderTextColor='white'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        value={groupCode}
+                        onChangeText={(text) => {
+                            setGroupCode(text)
+                            setError(null)
+                        }}
+                        error={error}
+                    />
+                ) : (
+                    <Text>Family Name</Text>
+                )}
             </View>
         </View>
     )

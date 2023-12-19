@@ -19,6 +19,8 @@ export enum OptionChosen {
 export const SignupScreen: React.FC<SignupProps> = () => {
     const [optionChosen, setOptionChosen] = useState<OptionChosen | null>(null)
 
+    console.log('Option Chosen: ', optionChosen)
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -30,7 +32,7 @@ export const SignupScreen: React.FC<SignupProps> = () => {
                 <OptionSignup optionChosen={optionChosen} setOptionChosen={setOptionChosen} />
             )}
 
-            {optionChosen && <SignupForm />}
+            {optionChosen && <SignupForm optionChosen={optionChosen} />}
         </View>
     )
 }
