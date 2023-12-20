@@ -5,6 +5,7 @@ import { OutlinedButton } from '../OutlinedButton'
 import CustomTextInput from '../CustomTextInput'
 import { OptionChosen } from '../../screens/SignupScreen'
 import PrimaryButton from '../PrimaryButton'
+import { post } from '../../api/post'
 
 type SignupFormProps = {
     optionChosen: OptionChosen | null
@@ -36,23 +37,25 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                 // Include conditional fields based on the option chosen
                 ...(optionChosen === OptionChosen.Member ? { groupCode } : { familyName })
             }
-            console.log('userData', userData)
-            const response = await fetch('http://localhost:3001/api/users/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
-            })
+            
+            await post('api/users/signup', userData)
+            // console.log('userData', userData)
+            // const response = await fetch('http://localhost:3001/api/users/signup', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(userData)
+            // })
 
-            console.log('response', response)
-            const data = await response.json()
+            // console.log('response', response)
+            // const data = await response.json()
 
-            console.log('data', data)
-            if (!response.ok) {
-                Alert.alert(data.message || 'Failed to create account')
-                throw new Error(data.message || 'Failed to create account')
-            }
+            // console.log('data', data)
+            // if (!response.ok) {
+            //     Alert.alert(data.message || 'Failed to create account')
+            //     throw new Error(data.message || 'Failed to create account')
+            // }
         } catch (error) {
             console.log(error.message)
         } finally {

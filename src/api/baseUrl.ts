@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3000'
+export const BASE_URL = 'http://192.168.5.14:3002'
 
 export const GOOGLE_REDIRECT_URI = 'https://5fjrs4-3000.csb.app/google'
 
