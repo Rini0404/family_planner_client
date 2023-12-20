@@ -1,5 +1,14 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import {
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native'
 import { typography } from '../../theme/fonts'
 import { OutlinedButton } from '../OutlinedButton'
 import CustomTextInput from '../CustomTextInput'
@@ -37,7 +46,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                 // Include conditional fields based on the option chosen
                 ...(optionChosen === OptionChosen.Member ? { groupCode } : { familyName })
             }
-            
+
             await post('api/users/signup', userData)
             // console.log('userData', userData)
             // const response = await fetch('http://localhost:3001/api/users/signup', {
@@ -59,6 +68,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
         } catch (error) {
             console.log(error.message)
         } finally {
+            Alert.alert('Account created successfully!')
             setIsLoading(false)
         }
     }
@@ -164,10 +174,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '75%',
-        position: 'absolute',
-        bottom: '2%',
-        zIndex: 1,
+        paddingTop: '20%',
         alignItems: 'center'
     },
     header: {

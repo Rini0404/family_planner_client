@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Text, View, StyleSheet, StatusBar } from 'react-native'
+import {
+    Text,
+    View,
+    StyleSheet,
+    StatusBar,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native'
 import { palette, colors } from '../theme/colors'
 import CustomTextInput from '../components/CustomTextInput'
 import DropDownPicker from 'react-native-dropdown-picker'
@@ -27,23 +35,39 @@ export const SignupScreen: React.FC<SignupProps> = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <BackArrow onPress={handleBackPress} />
-                <Text style={styles.headerText}>Register</Text>
-            </View>
-            <BackDrop />
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+        >
+            <ScrollView
+                keyboardShouldPersistTaps='handled'
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+            >
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <BackArrow onPress={handleBackPress} />
+                        <Text style={styles.headerText}>Register</Text>
+                    </View>
+                    <BackDrop />
 
-            {!optionChosen && (
-                <OptionSignup optionChosen={optionChosen} setOptionChosen={setOptionChosen} />
-            )}
+                    {!optionChosen && (
+                        <OptionSignup
+                            optionChosen={optionChosen}
+                            setOptionChosen={setOptionChosen}
+                        />
+                    )}
 
-            {optionChosen && <SignupForm optionChosen={optionChosen} />}
-        </View>
+                    {optionChosen && <SignupForm optionChosen={optionChosen} />}
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create({
+    scrollviewContainer: {
+        paddingTop: StatusBar.currentHeight
+    },
     container: {
         flex: 1
     },
