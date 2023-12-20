@@ -8,6 +8,7 @@ import { typography } from '../theme/fonts'
 import { BackDrop } from '../components/BackDropGreen'
 import { OptionSignup } from '../components/OptionSignup'
 import { SignupForm } from '../components/SignupForm'
+import BackArrow from '../components/BackArrow'
 
 interface SignupProps extends AppStackScreenProps<'Signup'> {}
 
@@ -16,14 +17,19 @@ export enum OptionChosen {
     Member = 'Member'
 }
 
-export const SignupScreen: React.FC<SignupProps> = () => {
+export const SignupScreen: React.FC<SignupProps> = ({ navigation }) => {
     const [optionChosen, setOptionChosen] = useState<OptionChosen | null>(null)
 
     console.log('Option Chosen: ', optionChosen)
 
+    const handleBackPress = () => {
+        navigation.goBack()
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
+                <BackArrow onPress={handleBackPress} />
                 <Text style={styles.headerText}>Register</Text>
             </View>
             <BackDrop />
@@ -49,7 +55,9 @@ const styles = StyleSheet.create({
     },
     header: {
         height: '10%',
-        top: '10%'
+        top: '10%',
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 })
 

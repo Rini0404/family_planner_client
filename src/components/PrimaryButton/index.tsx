@@ -1,6 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native'
 import { colors, palette } from '../../theme'
+import { typography } from '../../theme/fonts'
 
 interface PrimaryButtonProps {
     onPress: () => void
@@ -42,14 +43,15 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 const styles = StyleSheet.create({
     buttonContainer: {
         alignItems: 'center',
-        backgroundColor: palette.highlight500,
-        width: '90%',
+        backgroundColor: palette.neutral100,
+        width: '80%',
         padding: 10,
-        borderRadius: 12
+        borderRadius: 3
     },
     buttonText: {
         fontSize: 12,
-        color: colors.text,
+        fontFamily: typography.tertiary,
+        color: palette.neutral800
     },
     disabledButton: {
         backgroundColor: palette.secondary400

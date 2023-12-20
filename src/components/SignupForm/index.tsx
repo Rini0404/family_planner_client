@@ -1,9 +1,10 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 import { typography } from '../../theme/fonts'
 import { OutlinedButton } from '../OutlinedButton'
 import CustomTextInput from '../CustomTextInput'
 import { OptionChosen } from '../../screens/SignupScreen'
+import PrimaryButton from '../PrimaryButton'
 
 type SignupFormProps = {
     optionChosen: OptionChosen | null
@@ -21,6 +22,43 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
     const [familyName, setFamilyName] = React.useState('')
     const [memberType, setMemberType] = React.useState(null)
     const [groupCode, setGroupCode] = React.useState('')
+
+    const handleSubmit = async () => {
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const userData = {
+                email,
+                password,
+                firstName,
+                lastName,
+                // Include conditional fields based on the option chosen
+                ...(optionChosen === OptionChosen.Member ? { groupCode } : { familyName })
+            }
+            console.log('userData', userData)
+            const response = await fetch('http://localhost:3001/api/users/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+
+            console.log('response', response)
+            const data = await response.json()
+
+            console.log('data', data)
+            if (!response.ok) {
+                Alert.alert(data.message || 'Failed to create account')
+                throw new Error(data.message || 'Failed to create account')
+            }
+        } catch (error) {
+            console.log(error.message)
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -100,8 +138,21 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                         error={error}
                     />
                 ) : (
-                    <Text>Family Name</Text>
+                    <CustomTextInput
+                        label='Family Name'
+                        placeholder='Family Name'
+                        placeholderTextColor='white'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        value={familyName}
+                        onChangeText={(text) => {
+                            setFamilyName(text)
+                            setError(null)
+                        }}
+                        error={error}
+                    />
                 )}
+                <PrimaryButton title='CREATE' onPress={() => handleSubmit()} disabled={isLoading} />
             </View>
         </View>
     )
