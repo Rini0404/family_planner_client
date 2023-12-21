@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Text, View, StyleSheet, StatusBar } from 'react-native'
+import {
+    Text,
+    View,
+    StyleSheet,
+    StatusBar,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native'
 import { palette, colors } from '../theme/colors'
 import CustomTextInput from '../components/CustomTextInput'
 import DropDownPicker from 'react-native-dropdown-picker'
@@ -8,6 +16,7 @@ import { typography } from '../theme/fonts'
 import { BackDrop } from '../components/BackDropGreen'
 import { OptionSignup } from '../components/OptionSignup'
 import { SignupForm } from '../components/SignupForm'
+import BackArrow from '../components/BackArrow'
 
 interface SignupProps extends AppStackScreenProps<'Signup'> {}
 
@@ -16,28 +25,49 @@ export enum OptionChosen {
     Member = 'Member'
 }
 
-export const SignupScreen: React.FC<SignupProps> = () => {
+export const SignupScreen: React.FC<SignupProps> = ({ navigation }) => {
     const [optionChosen, setOptionChosen] = useState<OptionChosen | null>(null)
 
     console.log('Option Chosen: ', optionChosen)
 
+    const handleBackPress = () => {
+        navigation.goBack()
+    }
+
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Register</Text>
-            </View>
-            <BackDrop />
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+        >
+            <ScrollView
+                keyboardShouldPersistTaps='handled'
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+            >
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <BackArrow onPress={handleBackPress} />
+                        <Text style={styles.headerText}>Register</Text>
+                    </View>
+                    <BackDrop />
 
-            {!optionChosen && (
-                <OptionSignup optionChosen={optionChosen} setOptionChosen={setOptionChosen} />
-            )}
+                    {!optionChosen && (
+                        <OptionSignup
+                            optionChosen={optionChosen}
+                            setOptionChosen={setOptionChosen}
+                        />
+                    )}
 
-            {optionChosen && <SignupForm optionChosen={optionChosen} />}
-        </View>
+                    {optionChosen && <SignupForm optionChosen={optionChosen} />}
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create({
+    scrollviewContainer: {
+        paddingTop: StatusBar.currentHeight
+    },
     container: {
         flex: 1
     },
@@ -49,7 +79,9 @@ const styles = StyleSheet.create({
     },
     header: {
         height: '10%',
-        top: '10%'
+        top: '10%',
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 })
 
