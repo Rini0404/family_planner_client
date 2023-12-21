@@ -14,6 +14,7 @@ import { HomeScreen } from '../screens/HomeScreen'
 import SplashScreen from '../screens/SplashScreen'
 import SignupScreen from '../screens/SignupScreen'
 import { Initial } from '../screens/Iniitial'
+import { SignInScreen } from '../screens/Signin'
 
 export type AppStackParamList = {
     Tabs: NavigatorScreenParams<TabParamList>
@@ -21,6 +22,7 @@ export type AppStackParamList = {
     HomeScreen: undefined
     SplashScreen: undefined
     Signup: undefined
+    Signin: undefined
     Initial: undefined
 }
 
@@ -50,6 +52,7 @@ const AppStack = () => {
         >
             <Stack.Screen name='Initial' component={Initial} />
             <Stack.Screen name='Signup' component={SignupScreen} />
+            <Stack.Screen name='Signin' component={SignInScreen} />
             <Stack.Screen name='Tabs' component={TabNavigator} />
             <Stack.Screen name='HomeScreen' component={HomeScreen} />
             <Stack.Screen name='SplashScreen' component={SplashScreen} />
