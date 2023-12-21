@@ -3,9 +3,12 @@ import { TextInput, Text, View, StyleSheet, TextInputProps, TouchableOpacity } f
 import ErrorMessage from '../ErrorMessage'
 import { palette, colors } from '../../theme/colors'
 import { typography } from '../../theme/fonts'
+import HidePassword from '../../../assets/password-icons/hide-password'
+import ShowPassword from '../../../assets/password-icons/show-password'
 
 interface CustomTextInputProps extends TextInputProps {
     label: string
+    onIconPress?: () => void
     placeholder: string
     value: string
     onChangeText: (text: string) => void
@@ -17,7 +20,7 @@ interface CustomTextInputProps extends TextInputProps {
 }
 
 const CustomTextInput: React.FC<CustomTextInputProps> = ({
-    label,
+    onIconPress,
     placeholder,
     value,
     onChangeText,
@@ -28,53 +31,56 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     testID
 }) => {
     return (
-        <View style={styles.inputContainer}>
-            <TextInput
-                style={styles.input}
-                testID={testID}
-                placeholder={placeholder}
-                placeholderTextColor={placeholderTextColor}
-                value={value}
-                onChangeText={onChangeText}
-                secureTextEntry={isPassword && !isPasswordVisible}
-                autoCapitalize='none'
-            />
-            {error ? <ErrorMessage message={error} /> : null}
+        <View style={styles.outerContainer}>
+            <View style={[styles.inputContainer, error ? styles.inputError : {}]}>
+                <TextInput
+                    style={styles.input}
+                    testID={testID}
+                    placeholder={placeholder}
+                    placeholderTextColor={placeholderTextColor}
+                    value={value}
+                    onChangeText={onChangeText}
+                    secureTextEntry={isPassword && !isPasswordVisible}
+                    autoCapitalize='none'
+                />
+                {isPassword && (
+                    <TouchableOpacity onPress={onIconPress} style={styles.eyeIcon}>
+                        {isPasswordVisible ? <HidePassword /> : <ShowPassword />}
+                    </TouchableOpacity>
+                )}
+            </View>
+            {error && <ErrorMessage message={error} />}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    inputContainer: {
+    outerContainer: {
         width: '80%',
-        height: '10%',
         marginBottom: '5%'
     },
-    inputLabel: {
-        left: 2,
-        paddingHorizontal: 2,
-        color: colors.text,
-        fontSize: 16,
-        marginLeft: 5
-    },
-    input: {
-        height: '100%',
-        fontFamily: typography.secondary,
-        paddingLeft: '5%',
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         borderWidth: 1,
         borderRadius: 8,
-        borderColor: 'white'
+        borderColor: 'white',
+        padding: 10
+    },
+    input: {
+        flex: 1, // Allows the input to fill the space
+        fontFamily: typography.secondary
     },
     inputError: {
         borderColor: 'red'
     },
-    visibilityIcon: {
+    eyeIcon: {
         position: 'absolute',
-        right: 10,
+        right: '5%',
         height: '100%',
-        justifyContent: 'center',
-        padding: 10
+        justifyContent: 'center'
     }
+    // ... other styles
 })
 
 export default CustomTextInput

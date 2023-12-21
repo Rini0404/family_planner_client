@@ -8,9 +8,6 @@ import {
     KeyboardAvoidingView,
     Platform
 } from 'react-native'
-import { palette, colors } from '../theme/colors'
-import CustomTextInput from '../components/CustomTextInput'
-import DropDownPicker from 'react-native-dropdown-picker'
 import { AppStackScreenProps } from '../navigators'
 import { typography } from '../theme/fonts'
 import { BackDrop } from '../components/BackDropGreen'

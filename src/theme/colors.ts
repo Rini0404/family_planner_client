@@ -47,8 +47,9 @@ export const palette = {
     angry100: '#F2D6CD',
     angry500: '#C03403',
 
-    boxesPastelGreen: '#69BA7B'
-    // pastelBlue: '#A3C4E5',
+    boxesPastelGreen: '#69BA7B',
+    pastelBlue: '#A3C4E5',
+    pastelOrange: '#DCB117'
 } as const
 
 export const colors = {
