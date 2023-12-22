@@ -11,7 +11,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ isVisible }) => {
 
     return (
         <View style={styles.overlay}>
-            <ActivityIndicator size='large' color={colors.text} />
+            <ActivityIndicator size='large' color={colors.palette.pastelBlue} />
         </View>
     )
 }

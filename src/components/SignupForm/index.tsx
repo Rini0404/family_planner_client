@@ -7,6 +7,7 @@ import PrimaryButton from '../PrimaryButton'
 import { post } from '../../api/post'
 import { validateEmail } from '../../utils/validators/EmailValidator'
 import { validatePassword } from '../../utils/validators/PasswordValidator'
+import LoadingOverlay from '../LoadingOverlay'
 
 type SignupFormProps = {
     optionChosen: OptionChosen | null
@@ -129,102 +130,109 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>
-                    Have an account?
-                    <Text style={styles.link}> Log in</Text>
-                </Text>
-            </View>
+        <>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>
+                        Have an account?
+                        <Text style={styles.link}> Log in</Text>
+                    </Text>
+                </View>
 
-            <View style={styles.inputsContainer}>
-                <CustomTextInput
-                    label='First Name'
-                    placeholder='First Name'
-                    placeholderTextColor='white'
-                    autoCorrect={false}
-                    value={firstName}
-                    onChangeText={(text) => {
-                        setFirstName(text)
-                        setErrors({ ...errors, firstName: null })
-                    }}
-                    error={errors.firstName}
-                />
-                <CustomTextInput
-                    label='Last Name'
-                    placeholder='Last Name'
-                    placeholderTextColor='white'
-                    autoCorrect={false}
-                    value={lastName}
-                    onChangeText={(text) => {
-                        setLastName(text)
-                        setErrors({ ...errors, lastName: null })
-                    }}
-                    error={errors.lastName}
-                />
-                <CustomTextInput
-                    label='Email'
-                    placeholder='Email'
-                    keyboardType='email-address'
-                    placeholderTextColor='white'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={email}
-                    onChangeText={(text) => {
-                        setEmail(text)
-                        setErrors({ ...errors, email: null })
-                    }}
-                    error={errors.email}
-                />
-                <CustomTextInput
-                    label='Password'
-                    placeholder='Password'
-                    placeholderTextColor='white'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={password}
-                    onChangeText={(text) => {
-                        setPassword(text)
-                        setErrors({ ...errors, password: null })
-                    }}
-                    isPassword={true}
-                    isPasswordVisible={isPasswordVisible}
-                    onIconPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                    error={errors.password}
-                />
-
-                {optionChosen === OptionChosen.Member ? (
+                <View style={styles.inputsContainer}>
                     <CustomTextInput
-                        label='Group Code'
-                        placeholder='Group Code'
+                        label='First Name'
+                        placeholder='First Name'
+                        placeholderTextColor='white'
+                        autoCorrect={false}
+                        value={firstName}
+                        onChangeText={(text) => {
+                            setFirstName(text)
+                            setErrors({ ...errors, firstName: null })
+                        }}
+                        error={errors.firstName}
+                    />
+                    <CustomTextInput
+                        label='Last Name'
+                        placeholder='Last Name'
+                        placeholderTextColor='white'
+                        autoCorrect={false}
+                        value={lastName}
+                        onChangeText={(text) => {
+                            setLastName(text)
+                            setErrors({ ...errors, lastName: null })
+                        }}
+                        error={errors.lastName}
+                    />
+                    <CustomTextInput
+                        label='Email'
+                        placeholder='Email'
+                        keyboardType='email-address'
                         placeholderTextColor='white'
                         autoCapitalize='none'
                         autoCorrect={false}
-                        value={groupCode}
+                        value={email}
                         onChangeText={(text) => {
-                            setGroupCode(text)
-                            setErrors({ ...errors, groupCode: null })
+                            setEmail(text)
+                            setErrors({ ...errors, email: null })
                         }}
-                        error={errors.groupCode}
+                        error={errors.email}
                     />
-                ) : (
                     <CustomTextInput
-                        label='Family Name'
-                        placeholder='Family Name'
+                        label='Password'
+                        placeholder='Password'
                         placeholderTextColor='white'
                         autoCapitalize='none'
                         autoCorrect={false}
-                        value={familyName}
+                        value={password}
                         onChangeText={(text) => {
-                            setFamilyName(text)
-                            setErrors({ ...errors, familyName: null })
+                            setPassword(text)
+                            setErrors({ ...errors, password: null })
                         }}
-                        error={errors.familyName}
+                        isPassword={true}
+                        isPasswordVisible={isPasswordVisible}
+                        onIconPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                        error={errors.password}
                     />
-                )}
-                <PrimaryButton title='CREATE' onPress={() => handleSubmit()} disabled={isLoading} />
+
+                    {optionChosen === OptionChosen.Member ? (
+                        <CustomTextInput
+                            label='Group Code'
+                            placeholder='Group Code'
+                            placeholderTextColor='white'
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            value={groupCode}
+                            onChangeText={(text) => {
+                                setGroupCode(text)
+                                setErrors({ ...errors, groupCode: null })
+                            }}
+                            error={errors.groupCode}
+                        />
+                    ) : (
+                        <CustomTextInput
+                            label='Family Name'
+                            placeholder='Family Name'
+                            placeholderTextColor='white'
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            value={familyName}
+                            onChangeText={(text) => {
+                                setFamilyName(text)
+                                setErrors({ ...errors, familyName: null })
+                            }}
+                            error={errors.familyName}
+                        />
+                    )}
+                    <PrimaryButton
+                        title='CREATE'
+                        onPress={() => handleSubmit()}
+                        disabled={isLoading}
+                    />
+                </View>
             </View>
-        </View>
+            {isLoading && <LoadingOverlay isVisible={isLoading} />}
+        </>
     )
 }
 

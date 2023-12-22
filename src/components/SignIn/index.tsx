@@ -6,6 +6,7 @@ import { OptionChosen } from '../../screens/SignupScreen'
 import PrimaryButton from '../PrimaryButton'
 import { post } from '../../api/post'
 import { validateEmail } from '../../utils/validators/EmailValidator'
+import LoadingOverlay from '../LoadingOverlay'
 
 type FormErrors = {
     email: string | null
@@ -64,6 +65,7 @@ export const SignInForm: React.FC = ({}) => {
             }
 
             const response = await post('api/users/login', userData)
+
             console.log('response: ', response)
         } catch (error) {
             console.log('error in signup: ', error)
@@ -76,49 +78,56 @@ export const SignInForm: React.FC = ({}) => {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>
-                    Don't have an account?
-                    <Text style={styles.link}> Register</Text>
-                </Text>
-            </View>
+        <>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>
+                        Don't have an account?
+                        <Text style={styles.link}> Register</Text>
+                    </Text>
+                </View>
 
-            <View style={styles.inputsContainer}>
-                <CustomTextInput
-                    label='Email'
-                    placeholder='Email'
-                    keyboardType='email-address'
-                    placeholderTextColor='white'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={email}
-                    onChangeText={(text) => {
-                        setEmail(text)
-                        setErrors({ ...errors, email: null })
-                    }}
-                    error={errors.email}
-                />
-                <CustomTextInput
-                    label='Password'
-                    placeholder='Password'
-                    placeholderTextColor='white'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={password}
-                    onChangeText={(text) => {
-                        setPassword(text)
-                        setErrors({ ...errors, password: null })
-                    }}
-                    isPassword={true}
-                    isPasswordVisible={isPasswordVisible}
-                    onIconPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                    error={errors.password}
-                />
+                <View style={styles.inputsContainer}>
+                    <CustomTextInput
+                        label='Email'
+                        placeholder='Email'
+                        keyboardType='email-address'
+                        placeholderTextColor='white'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        value={email}
+                        onChangeText={(text) => {
+                            setEmail(text)
+                            setErrors({ ...errors, email: null })
+                        }}
+                        error={errors.email}
+                    />
+                    <CustomTextInput
+                        label='Password'
+                        placeholder='Password'
+                        placeholderTextColor='white'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        value={password}
+                        onChangeText={(text) => {
+                            setPassword(text)
+                            setErrors({ ...errors, password: null })
+                        }}
+                        isPassword={true}
+                        isPasswordVisible={isPasswordVisible}
+                        onIconPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                        error={errors.password}
+                    />
 
-                <PrimaryButton title='CREATE' onPress={() => handleSubmit()} disabled={isLoading} />
+                    <PrimaryButton
+                        title='LOG IN'
+                        onPress={() => handleSubmit()}
+                        disabled={isLoading}
+                    />
+                </View>
             </View>
-        </View>
+            {isLoading && <LoadingOverlay isVisible={isLoading} />}
+        </>
     )
 }
 
