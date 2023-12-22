@@ -6,6 +6,10 @@ import { OptionChosen } from '../../screens/SignupScreen'
 import PrimaryButton from '../PrimaryButton'
 import { post } from '../../api/post'
 import { validateEmail } from '../../utils/validators/EmailValidator'
+import LoadingOverlay from '../LoadingOverlay'
+import { useDispatch } from 'react-redux'
+import { handleLogin } from '../../utils/saveUserInApp'
+import { useNavigation } from '@react-navigation/native'
 
 type FormErrors = {
     email: string | null
@@ -13,6 +17,7 @@ type FormErrors = {
 }
 
 export const SignInForm: React.FC = ({}) => {
+    const navigation = useNavigation()
     const [email, setEmail] = React.useState<string>('')
     const [password, setPassword] = React.useState<string>('')
     const [isLoading, setIsLoading] = React.useState(false)
@@ -22,6 +27,8 @@ export const SignInForm: React.FC = ({}) => {
         email: null,
         password: null
     })
+
+    const dispatch = useDispatch()
 
     const handleSubmit = async () => {
         setIsLoading(true)
@@ -58,67 +65,70 @@ export const SignInForm: React.FC = ({}) => {
         }
 
         try {
-            const userData = {
-                email,
-                password
+            const user = await handleLogin(dispatch, { email, password })
+            if (user) {
+                alert('Logged in successfully')
+                navigation.navigate('HomeScreen')
             }
-
-            const response = await post('api/users/login', userData)
-            console.log('response: ', response)
         } catch (error) {
-            console.log('error in signup: ', error)
             const errorResponse = (error as Error).message
-            const errorMessage = 'Something went wrong!: ' + errorResponse
-            alert(errorMessage)
+            alert(`Something went wrong: ${errorResponse}`)
         } finally {
             setIsLoading(false)
         }
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>
-                    Don't have an account?
-                    <Text style={styles.link}> Register</Text>
-                </Text>
-            </View>
+        <>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>
+                        Don't have an account?
+                        <Text style={styles.link}> Register</Text>
+                    </Text>
+                </View>
 
-            <View style={styles.inputsContainer}>
-                <CustomTextInput
-                    label='Email'
-                    placeholder='Email'
-                    keyboardType='email-address'
-                    placeholderTextColor='white'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={email}
-                    onChangeText={(text) => {
-                        setEmail(text)
-                        setErrors({ ...errors, email: null })
-                    }}
-                    error={errors.email}
-                />
-                <CustomTextInput
-                    label='Password'
-                    placeholder='Password'
-                    placeholderTextColor='white'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={password}
-                    onChangeText={(text) => {
-                        setPassword(text)
-                        setErrors({ ...errors, password: null })
-                    }}
-                    isPassword={true}
-                    isPasswordVisible={isPasswordVisible}
-                    onIconPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                    error={errors.password}
-                />
+                <View style={styles.inputsContainer}>
+                    <CustomTextInput
+                        label='Email'
+                        placeholder='Email'
+                        keyboardType='email-address'
+                        placeholderTextColor='white'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        value={email}
+                        onChangeText={(text) => {
+                            setEmail(text)
+                            setErrors({ ...errors, email: null })
+                        }}
+                        error={errors.email}
+                    />
+                    <CustomTextInput
+                        label='Password'
+                        placeholder='Password'
+                        placeholderTextColor='white'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        value={password}
+                        onChangeText={(text) => {
+                            setPassword(text)
+                            setErrors({ ...errors, password: null })
+                        }}
+                        isPassword={true}
+                        isPasswordVisible={isPasswordVisible}
+                        onIconPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                        error={errors.password}
+                    />
 
-                <PrimaryButton title='CREATE' onPress={() => handleSubmit()} disabled={isLoading} />
+                    <PrimaryButton
+                        title='LOG IN'
+                        onPress={() => handleSubmit()}
+                        disabled={isLoading}
+                    />
+                </View>
             </View>
-        </View>
+            {isLoading && <LoadingOverlay isVisible={isLoading} />}
+        </>
     )
 }
 

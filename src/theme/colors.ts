@@ -62,7 +62,7 @@ export const colors = {
     /**
      * A helper for making something see-thru.
      */
-    transparent: 'rgba(0, 0, 0, 0)',
+    transparent: 'rgba(0, 0, 0, 0.95)',
     /**
      * The default text color in many components.
      */

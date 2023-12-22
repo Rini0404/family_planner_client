@@ -1,23 +1,29 @@
+import { UserType } from '../../types/user'
+import { UPDATE_USER } from './userTypes'
 
-import { 
-    UPDATE_USER,
-} from './userTypes'
-
+interface UserAction {
+    type: typeof UPDATE_USER
+    data: UserType
+}
 
 const initialState = {
     user: {
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
-    },
+        role: ''
+    }
 }
 
-const userReducer = (state = initialState, action: undefined) => {
+const userReducer = (state = initialState, action: UserAction) => {
     switch (action.type) {
-    case UPDATE_USER: return {
-        ...state,
-        user: action.data,
-    }
-    default: return state
+        case UPDATE_USER:
+            return {
+                ...state,
+                user: action.data
+            }
+        default:
+            return state
     }
 }
 
