@@ -18,7 +18,7 @@ export const Initial: React.FC = () => {
             <View style={styles.greenBox}>
                 <View style={styles.buttonGroup}>
                     <OutlinedButton
-                        title='Sign up'
+                        title='Register'
                         onPress={() => {
                             navigation.navigate('Signup')
                         }}
@@ -29,8 +29,7 @@ export const Initial: React.FC = () => {
                         title='Log in'
                         style={styles.button}
                         onPress={() => {
-                            alert('Log in screen not done')
-                            // navigation.navigate('Sigin')
+                            navigation.navigate('Signin')
                         }}
                         textStyles={styles.textStyles}
                     />
