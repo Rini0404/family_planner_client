@@ -7,6 +7,9 @@ import PrimaryButton from '../PrimaryButton'
 import { post } from '../../api/post'
 import { validateEmail } from '../../utils/validators/EmailValidator'
 import LoadingOverlay from '../LoadingOverlay'
+import { useDispatch } from 'react-redux'
+import { handleLogin } from '../../utils/saveUserInApp'
+import { useNavigation } from '@react-navigation/native'
 
 type FormErrors = {
     email: string | null
@@ -14,6 +17,7 @@ type FormErrors = {
 }
 
 export const SignInForm: React.FC = ({}) => {
+    const navigation = useNavigation()
     const [email, setEmail] = React.useState<string>('')
     const [password, setPassword] = React.useState<string>('')
     const [isLoading, setIsLoading] = React.useState(false)
@@ -23,6 +27,8 @@ export const SignInForm: React.FC = ({}) => {
         email: null,
         password: null
     })
+
+    const dispatch = useDispatch()
 
     const handleSubmit = async () => {
         setIsLoading(true)
@@ -59,19 +65,14 @@ export const SignInForm: React.FC = ({}) => {
         }
 
         try {
-            const userData = {
-                email,
-                password
+            const user = await handleLogin(dispatch, { email, password })
+            if (user) {
+                alert('Logged in successfully')
+                navigation.navigate('HomeScreen')
             }
-
-            const response = await post('api/users/login', userData)
-
-            console.log('response: ', response)
         } catch (error) {
-            console.log('error in signup: ', error)
             const errorResponse = (error as Error).message
-            const errorMessage = 'Something went wrong!: ' + errorResponse
-            alert(errorMessage)
+            alert(`Something went wrong: ${errorResponse}`)
         } finally {
             setIsLoading(false)
         }
