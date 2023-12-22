@@ -3,7 +3,7 @@ import { Text, StyleSheet } from 'react-native'
 import { colors } from '../../theme'
 
 interface ErrorMessageProps {
-  message: string
+    message: string
 }
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
     errorText: {
         color: colors.error,
         fontSize: 12,
-        marginLeft: 10,
-    },
+        marginLeft: 10
+    }
 })
 
 export default ErrorMessage

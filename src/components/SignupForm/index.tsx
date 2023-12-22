@@ -1,23 +1,24 @@
 import React from 'react'
-import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { typography } from '../../theme/fonts'
-import { OutlinedButton } from '../OutlinedButton'
 import CustomTextInput from '../CustomTextInput'
 import { OptionChosen } from '../../screens/SignupScreen'
 import PrimaryButton from '../PrimaryButton'
 import { post } from '../../api/post'
+import { validateEmail } from '../../utils/validators/EmailValidator'
+import { validatePassword } from '../../utils/validators/PasswordValidator'
 
 type SignupFormProps = {
     optionChosen: OptionChosen | null
+}
+
+type FormErrors = {
+    email: string | null
+    password: string | null
+    firstName: string | null
+    lastName: string | null
+    groupCode: string | null
+    familyName: string | null
 }
 
 export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
@@ -25,17 +26,85 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
     const [password, setPassword] = React.useState<string>('')
     const [firstName, setFirstName] = React.useState<string>('')
     const [lastName, setLastName] = React.useState<string>('')
-    const [error, setError] = React.useState<string | null>(null)
     const [isLoading, setIsLoading] = React.useState(false)
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
-    const [userRole, setUserRole] = React.useState<string | null>(null)
     const [familyName, setFamilyName] = React.useState('')
-    const [memberType, setMemberType] = React.useState(null)
     const [groupCode, setGroupCode] = React.useState('')
+
+    const [errors, setErrors] = React.useState<FormErrors>({
+        email: null,
+        password: null,
+        firstName: null,
+        lastName: null,
+        groupCode: null,
+        familyName: null
+    })
 
     const handleSubmit = async () => {
         setIsLoading(true)
-        setError(null)
+        // Reset all errors
+        setErrors({
+            email: null,
+            password: null,
+            firstName: null,
+            lastName: null,
+            groupCode: null,
+            familyName: null
+        })
+
+        let hasError = false
+        let newErrors = { ...errors }
+
+        // Basic validation for empty fields
+        if (!email.trim()) {
+            newErrors.email = 'Email is required'
+            hasError = true
+        }
+
+        if (!password.trim()) {
+            newErrors.password = 'Password is required'
+            hasError = true
+        }
+
+        const validPassword = validatePassword(password)
+
+        if (!validPassword.isValid) {
+            console.log('valid password: ', validPassword)
+            newErrors.password = validPassword.message
+            hasError = true
+        }
+
+        if (!firstName.trim()) {
+            newErrors.firstName = 'First name is required'
+            hasError = true
+        }
+
+        if (!lastName.trim()) {
+            newErrors.lastName = 'Last name is required'
+            hasError = true
+        }
+
+        // Email format validation
+        if (!validateEmail(email)) {
+            newErrors.email = 'Invalid email format'
+            hasError = true
+        }
+
+        if (optionChosen === OptionChosen.Member && !groupCode.trim()) {
+            newErrors.groupCode = 'Group code is required'
+            hasError = true
+        }
+
+        if (optionChosen === OptionChosen.Creator && !familyName.trim()) {
+            newErrors.familyName = 'Family name is required'
+            hasError = true
+        }
+
+        if (hasError) {
+            setErrors(newErrors)
+            setIsLoading(false)
+            return
+        }
 
         try {
             const userData = {
@@ -47,28 +116,14 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                 ...(optionChosen === OptionChosen.Member ? { groupCode } : { familyName })
             }
 
-            await post('api/users/signup', userData)
-            // console.log('userData', userData)
-            // const response = await fetch('http://localhost:3001/api/users/signup', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify(userData)
-            // })
-
-            // console.log('response', response)
-            // const data = await response.json()
-
-            // console.log('data', data)
-            // if (!response.ok) {
-            //     Alert.alert(data.message || 'Failed to create account')
-            //     throw new Error(data.message || 'Failed to create account')
-            // }
+            const response = await post('api/users/signup', userData)
+            console.log('response: ', response)
         } catch (error) {
-            console.log(error.message)
+            console.log('error in signup: ', error)
+            const errorResponse = (error as Error).message
+            const errorMessage = 'Something went wrong!: ' + errorResponse
+            alert(errorMessage)
         } finally {
-            Alert.alert('Account created successfully!')
             setIsLoading(false)
         }
     }
@@ -91,9 +146,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                     value={firstName}
                     onChangeText={(text) => {
                         setFirstName(text)
-                        setError(null)
+                        setErrors({ ...errors, firstName: null })
                     }}
-                    error={error}
+                    error={errors.firstName}
                 />
                 <CustomTextInput
                     label='Last Name'
@@ -103,9 +158,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                     value={lastName}
                     onChangeText={(text) => {
                         setLastName(text)
-                        setError(null)
+                        setErrors({ ...errors, lastName: null })
                     }}
-                    error={error}
+                    error={errors.lastName}
                 />
                 <CustomTextInput
                     label='Email'
@@ -117,9 +172,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                     value={email}
                     onChangeText={(text) => {
                         setEmail(text)
-                        setError(null)
+                        setErrors({ ...errors, email: null })
                     }}
-                    error={error}
+                    error={errors.email}
                 />
                 <CustomTextInput
                     label='Password'
@@ -130,12 +185,14 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                     value={password}
                     onChangeText={(text) => {
                         setPassword(text)
-                        setError(null)
+                        setErrors({ ...errors, password: null })
                     }}
                     isPassword={true}
                     isPasswordVisible={isPasswordVisible}
-                    error={error}
+                    onIconPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                    error={errors.password}
                 />
+
                 {optionChosen === OptionChosen.Member ? (
                     <CustomTextInput
                         label='Group Code'
@@ -146,9 +203,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                         value={groupCode}
                         onChangeText={(text) => {
                             setGroupCode(text)
-                            setError(null)
+                            setErrors({ ...errors, groupCode: null })
                         }}
-                        error={error}
+                        error={errors.groupCode}
                     />
                 ) : (
                     <CustomTextInput
@@ -160,9 +217,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                         value={familyName}
                         onChangeText={(text) => {
                             setFamilyName(text)
-                            setError(null)
+                            setErrors({ ...errors, familyName: null })
                         }}
-                        error={error}
+                        error={errors.familyName}
                     />
                 )}
                 <PrimaryButton title='CREATE' onPress={() => handleSubmit()} disabled={isLoading} />
@@ -172,6 +229,10 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
 }
 
 const styles = StyleSheet.create({
+    iconContainer: {
+        marginTop: 20,
+        right: 25
+    },
     container: {
         width: '100%',
         paddingTop: '20%',
@@ -179,7 +240,7 @@ const styles = StyleSheet.create({
     },
     header: {
         width: '90%',
-        padding: 10
+        padding: '4%'
     },
     title: {
         fontSize: 16,
