@@ -1,5 +1,4 @@
 import { Dispatch } from 'redux'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { post } from '../api/post'
 import { saveStringToAsyncStorage } from './storage'
 import { UserType } from '../types/user'
