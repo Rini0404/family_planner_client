@@ -48,7 +48,7 @@ const AppStack = () => {
                 gestureEnabled: false, // Disable the gesture (swiping) to go back
                 headerLeft: () => null // Remove the back button from the header
             }}
-            initialRouteName={'Initial'}
+            initialRouteName={'SplashScreen'}
         >
             <Stack.Screen name='Initial' component={Initial} />
             <Stack.Screen name='Signup' component={SignupScreen} />
