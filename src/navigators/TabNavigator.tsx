@@ -94,7 +94,14 @@ export function TabNavigator() {
                                 <View
                                     style={{
                                         justifyContent: 'center',
-                                        alignItems: 'center'
+                                        alignItems: 'center',
+                                        backgroundColor: focused
+                                            ? palette.pastelBlue
+                                            : 'transparent',
+                                        borderRadius: 10,
+                                        height: 50,
+                                        width: 50,
+                                        padding: 20
                                     }}
                                 >
                                     <Icon testID={`${screen.name}-icon`} fill={'white'} />
@@ -111,8 +118,7 @@ export function TabNavigator() {
 const $tabBar: ViewStyle = {
     // pastel green background
     backgroundColor: palette.pastelNavbars,
-    // bottom: '4%',
-    bottom: '30%',
+    bottom: '4%',
     width: '90%',
     alignSelf: 'center',
     borderRadius: 20,
