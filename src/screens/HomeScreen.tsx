@@ -1,10 +1,11 @@
-import { Text, View } from 'react-native'
+import { StatusBar, Text, View } from 'react-native'
 import React from 'react'
-import { AppStackScreenProps } from '../navigators'
+import { AppStackParamList, AppStackScreenProps } from '../navigators'
 import { palette } from '../theme'
 import { useSelector } from 'react-redux'
 import { remove } from '../utils/storage'
-import { useNavigation } from '@react-navigation/native'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { FamilyCard } from '../components/FamilyCard'
 
 interface HomeScreenProps extends AppStackScreenProps<'HomeScreen'> {}
 
@@ -13,34 +14,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     const { family } = useSelector((state: any) => state.family)
 
-    const navigatae = useNavigation()
+    const navigation = useNavigation<NavigationProp<AppStackParamList>>()
 
     const clearStorage = async () => {
         await remove('token')
-        navigatae.navigate('Initial')
+        navigation.navigate('Initial')
     }
 
     return (
         <View
             style={{
                 flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                paddingTop: '15%'
             }}
         >
-            <Text>
-                {user?.firstName} {user?.lastName}{' '}
-            </Text>
-            <Text>The: {family?.familyName}'s</Text>
-
-            <Text
-                style={{
-                    color: palette.boxesPastelGreen
-                }}
-                onPress={clearStorage}
-            >
-                Clear Storage
-            </Text>
+            <FamilyCard family={family} user={user} />
         </View>
     )
 }

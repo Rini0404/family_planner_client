@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { typography } from '../../theme/fonts'
 import CustomTextInput from '../CustomTextInput'
 import { OptionChosen } from '../../screens/SignupScreen'
@@ -9,7 +9,8 @@ import { validateEmail } from '../../utils/validators/EmailValidator'
 import LoadingOverlay from '../LoadingOverlay'
 import { useDispatch } from 'react-redux'
 import { handleLogin } from '../../utils/saveUserInApp'
-import { useNavigation } from '@react-navigation/native'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { AppStackParamList } from '../../navigators'
 
 type FormErrors = {
     email: string | null
@@ -17,7 +18,7 @@ type FormErrors = {
 }
 
 export const SignInForm: React.FC = ({}) => {
-    const navigation = useNavigation()
+    const navigation = useNavigation<NavigationProp<AppStackParamList>>()
     const [email, setEmail] = React.useState<string>('')
     const [password, setPassword] = React.useState<string>('')
     const [isLoading, setIsLoading] = React.useState(false)
@@ -31,6 +32,7 @@ export const SignInForm: React.FC = ({}) => {
     const dispatch = useDispatch()
 
     const handleSubmit = async () => {
+        Keyboard.dismiss()
         setIsLoading(true)
         // Reset all errors
         setErrors({
@@ -67,8 +69,10 @@ export const SignInForm: React.FC = ({}) => {
         try {
             const user = await handleLogin(dispatch, { email, password })
             if (user) {
-                alert('Logged in successfully')
-                navigation.navigate('HomeScreen')
+                navigation.navigate({
+                    name: 'Tabs',
+                    key: 'Tabs'
+                })
             }
         } catch (error) {
             const errorResponse = (error as Error).message
