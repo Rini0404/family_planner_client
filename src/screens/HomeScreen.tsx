@@ -9,8 +9,6 @@ interface HomeScreenProps extends AppStackScreenProps<'HomeScreen'> {}
 export const HomeScreen: React.FC<HomeScreenProps> = () => {
     const { user } = useSelector((state: any) => state.user)
 
-    console.log('user', user)
-
     const { family } = useSelector((state: any) => state.family)
 
     return (
@@ -21,16 +19,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
                 alignItems: 'center'
             }}
         >
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>
-                Welcome: {''}
-                {user.firstName + ' ' + user.lastName}
-            </Text>
-            <View style={{ padding: 16 }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>
-                    Family: {''}
-                    {family.familyName}
-                </Text>
-            </View>
+            <Text>{user?.name} HOME SCREEN</Text>
         </View>
     )
 }

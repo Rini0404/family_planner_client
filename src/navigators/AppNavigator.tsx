@@ -24,6 +24,8 @@ export type AppStackParamList = {
     Signup: undefined
     Signin: undefined
     Initial: undefined
+    CalenderScreen: undefined
+    PostScreen: undefined
 }
 
 /**
@@ -54,7 +56,6 @@ const AppStack = () => {
             <Stack.Screen name='Signup' component={SignupScreen} />
             <Stack.Screen name='Signin' component={SignInScreen} />
             <Stack.Screen name='Tabs' component={TabNavigator} />
-            <Stack.Screen name='HomeScreen' component={HomeScreen} />
             <Stack.Screen name='SplashScreen' component={SplashScreen} />
         </Stack.Navigator>
     )
