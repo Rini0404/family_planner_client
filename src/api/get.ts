@@ -24,7 +24,6 @@ export const get = async <T = unknown>(endPoint: EndPoint, params: Params): Prom
         })
 
         const jsonResponse = await response.json()
-        console.log('GET response: ', jsonResponse)
         return jsonResponse as T
     } catch (error) {
         console.error('API Error:', error)

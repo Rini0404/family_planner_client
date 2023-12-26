@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { loadString } from '../utils/storage'
 import { fetchUserData } from '../utils/fetchUserData'
+import { useDispatch } from 'react-redux'
+import { updateFamilyDetails, updateUserDetails } from '../redux'
 
 export default function useCheckAuth() {
     const [isAuth, setIsAuth] = useState(false)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const checkAuthToken = async () => {
@@ -14,8 +17,8 @@ export default function useCheckAuth() {
                 setIsAuth(false)
                 return
             }
-            console.log('Token found: ', token)
-            await fetchUserData()
+
+            await fetchUserData({ dispatch })
 
             setIsAuth(true)
         }
