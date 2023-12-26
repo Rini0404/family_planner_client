@@ -49,7 +49,10 @@ export const palette = {
 
     boxesPastelGreen: '#69BA7B',
     pastelBlue: '#A3C4E5',
-    pastelOrange: '#DCB117'
+    pastelOrange: '#DCB117',
+    pastelBackground: '#BCD1D1',
+    pastelNavbars: '#51A0CD',
+    pastelNavbars50Shade: 'rgba(81, 160, 205, 0.2)'
 } as const
 
 export const colors = {

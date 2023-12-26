@@ -11,7 +11,7 @@ const SplashScreen = () => {
     useEffect(() => {
         console.log('isAuth', isAuth)
         if (isAuth) {
-            navigation.navigate('HomeScreen')
+            navigation.navigate('Tabs')
         } else {
             navigation.navigate('Initial')
         }

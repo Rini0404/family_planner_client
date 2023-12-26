@@ -1,29 +1,14 @@
 import * as React from 'react'
-import Svg, { Path } from 'react-native-svg'
-import { colors, palette } from '../../src/theme/colors'
+import Svg, { Path, SvgProps } from 'react-native-svg'
+import { colors } from '../../src/theme/colors'
 
-interface HomeProps {
-  fill: string;
-    testID: string;
-}
-
-const Home: React.FC<HomeProps> = ({ fill = colors.text, testID, ...props }) => {
+const Home: React.FC<SvgProps> = ({ fill = colors.text, testID, ...props }) => {
     return (
-        <Svg
-            width={26}
-            height={28}
-            fill={fill}
-            viewBox='0 0 16 16'
-            testID={testID}
-            {...props}
-        >
+        <Svg width='29' height='29' viewBox='0 0 50 50'>
             <Path
-                d={
-                    fill === palette.primary
-                        ? 'M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L8 2.207l6.646 6.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z M8 3.293l6 6V13.5a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13.5V9.293l6-6z'
-                        : 'M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5zM13 7.207V13.5a.5.5 0 01-.5.5h-9a.5.5 0 01-.5-.5V7.207l5-5 5 5z'
-                }
-            />
+                fill={fill}
+                d='M24.963 1.055a1 1 0 00-.578.209l-23 17.947a1 1 0 001.23 1.578L4 19.71V46a1 1 0 001 1h13.832a1 1 0 00.326 0h11.674a1 1 0 00.326 0H45a1 1 0 001-1V19.709l1.385 1.08a1 1 0 101.23-1.578L41 13.27V6h-6v2.586l-9.385-7.322a1 1 0 00-.652-.21zM25 3.322l19 14.826V45H32V26H18v19H6V18.148L25 3.322zM37 8h2v3.709l-2-1.563V8zM20 28h10v17H20V28z'
+            ></Path>
         </Svg>
     )
 }
