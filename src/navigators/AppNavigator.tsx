@@ -71,16 +71,13 @@ export const AppNavigator = (props: NavigationProps) => {
             ...theme,
             colors: {
                 ...theme.colors,
-                background: colors.background
+                background: colors.palette.pastelBackground
             }
         }
     }, [colorScheme])
 
     return (
-        <NavigationContainer
-            // theme={navTheme}
-            {...props}
-        >
+        <NavigationContainer theme={navTheme} {...props}>
             <AppStack />
         </NavigationContainer>
     )

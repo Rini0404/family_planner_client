@@ -18,8 +18,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
             style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: palette.boxesPastelGreen
+                alignItems: 'center'
             }}
         >
             <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>

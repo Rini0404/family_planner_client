@@ -49,7 +49,8 @@ export const palette = {
 
     boxesPastelGreen: '#69BA7B',
     pastelBlue: '#A3C4E5',
-    pastelOrange: '#DCB117'
+    pastelOrange: '#DCB117',
+    pastelBackground: '#BCD1D1'
 } as const
 
 export const colors = {
