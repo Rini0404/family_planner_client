@@ -8,3 +8,19 @@ export type UserType = {
     role: string
     family: FamilyType
 }
+
+export type UserResponseType = {
+    data: UserType
+    success: boolean
+    error: string
+    message: string
+}
+
+export type UserSignUpResponseType = {
+    data: {
+        user: UserType
+        family: FamilyType
+        token: string
+    }
+    message: string
+}

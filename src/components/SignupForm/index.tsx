@@ -8,6 +8,13 @@ import { post } from '../../api/post'
 import { validateEmail } from '../../utils/validators/EmailValidator'
 import { validatePassword } from '../../utils/validators/PasswordValidator'
 import LoadingOverlay from '../LoadingOverlay'
+import { UserResponseType, UserSignUpResponseType } from '../../types/user'
+import { useDispatch } from 'react-redux'
+import { updateFamilyDetails, updateUserDetails } from '../../redux'
+import { saveStringToAsyncStorage } from '../../utils/storage'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { AppStackParamList } from '../../navigators'
 
 type SignupFormProps = {
     optionChosen: OptionChosen | null
@@ -31,6 +38,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
     const [familyName, setFamilyName] = React.useState('')
     const [groupCode, setGroupCode] = React.useState('')
+
+    const dispatch = useDispatch()
+    const navigation = useNavigation<StackNavigationProp<AppStackParamList>>()
 
     const [errors, setErrors] = React.useState<FormErrors>({
         email: null,
@@ -114,16 +124,53 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                 firstName,
                 lastName,
                 // Include conditional fields based on the option chosen
-                ...(optionChosen === OptionChosen.Member ? { groupCode } : { familyName })
+                ...(optionChosen === OptionChosen.Member
+                    ? { invitationCode: groupCode }
+                    : { familyName })
             }
 
-            const response = await post('api/users/signup', userData)
+            const response = (await post('api/users/signup', userData)) as UserSignUpResponseType
+
             console.log('response: ', response)
+
+            // Handle errors
+            if (response.message && !response.data) {
+                console.log('response.message: ', response.message)
+
+                // Directly use the response message for error handling
+                const errorMessage = response.message
+
+                // Handle specific errors
+                if (errorMessage.startsWith('Email')) {
+                    setErrors({ ...errors, email: errorMessage })
+                } else if (errorMessage.startsWith('No')) {
+                    setErrors({ ...errors, groupCode: errorMessage })
+                } else {
+                    console.log('Other error: ', errorMessage)
+                }
+                setIsLoading(false)
+                return
+            }
+
+            // Update Redux state with user data
+            dispatch(updateUserDetails(response.data.user))
+
+            dispatch(updateFamilyDetails(response.data.family))
+
+            // Save token to AsyncStorage and update Redux state
+            await saveStringToAsyncStorage('token', response.data.token)
+
+            // Navigate to the next screen
+            navigation.navigate({ name: 'Tabs', key: 'Tabs' })
         } catch (error) {
-            console.log('error in signup: ', error)
-            const errorResponse = (error as Error).message
-            const errorMessage = 'Something went wrong!: ' + errorResponse
-            alert(errorMessage)
+            if (error instanceof Error) {
+                // Now TypeScript knows error is of type Error
+                console.log('Error message:', error.message)
+                alert('Something went wrong! Please try again.')
+            } else {
+                // Handle the case where error is not an Error object
+                console.log('An unknown error occurred')
+            }
         } finally {
             setIsLoading(false)
         }
