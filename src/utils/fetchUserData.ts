@@ -1,5 +1,6 @@
 import { get } from '../api/get'
 import { updateFamilyDetails, updateUserDetails } from '../redux'
+import { updateTasks } from '../redux/tasks/tasksActions'
 import { UserResponseType } from '../types/user'
 
 interface Action {
@@ -13,8 +14,6 @@ export const fetchUserData = async ({ dispatch }: { dispatch: DispatchFunction }
     try {
         const response = (await get('api/users/getMe', {})) as UserResponseType
 
-        console.log('Response from fetchUserData: ', response)
-
         if (!response.data) {
             throw new Error(response.error || 'No user found')
         }
@@ -22,6 +21,8 @@ export const fetchUserData = async ({ dispatch }: { dispatch: DispatchFunction }
         dispatch(updateUserDetails(response.data))
 
         dispatch(updateFamilyDetails(response.data.family))
+
+        dispatch(updateTasks(response.data.family.tasks))
     } catch (error) {
         console.log('Error in fetchUserData: ', error)
     }

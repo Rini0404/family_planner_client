@@ -18,12 +18,11 @@ type FamilyCardProps = {
 }
 
 export const FamilyCard: React.FC<FamilyCardProps> = ({ family, user }) => {
-    console.log(family)
     return (
         <View style={styles.container}>
             <View style={styles.familyAndName}>
                 <Text style={styles.familyHeader}>
-                    The {'\n'} {family.familyName}'s
+                    The {'\n'} {family?.familyName}'s
                 </Text>
                 <Text style={styles.userName}>Hello, {user.firstName} !</Text>
             </View>
