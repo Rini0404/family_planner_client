@@ -30,6 +30,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
             }}
         >
             <FamilyCard family={family} user={user} />
+            {/* clear token */}
+            <Text
+                style={{
+                    fontSize: 20
+                }}
+                onPress={clearStorage}
+            >
+                Clear Storage
+            </Text>
         </View>
     )
 }
