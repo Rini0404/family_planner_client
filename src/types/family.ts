@@ -1,6 +1,9 @@
+import { InterfaceTask } from './tasks'
+
 export type FamilyType = {
     id: number
     name: string
     members: string[]
-    inviteCode: string
+    invitationCode: string
+    tasks: InterfaceTask
 }

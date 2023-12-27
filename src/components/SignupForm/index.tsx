@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { typography } from '../../theme/fonts'
 import CustomTextInput from '../CustomTextInput'
 import { OptionChosen } from '../../screens/SignupScreen'
@@ -52,6 +52,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
     })
 
     const handleSubmit = async () => {
+        Keyboard.dismiss()
         setIsLoading(true)
         // Reset all errors
         setErrors({

@@ -8,6 +8,8 @@ export const get = async <T = unknown>(endPoint: EndPoint, params: Params): Prom
     try {
         const token = await loadString('token')
 
+        console.log('Token: ', token)
+
         // Convert params object into a query string
         const queryString = new URLSearchParams(params as Record<string, string>).toString()
 
