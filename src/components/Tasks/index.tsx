@@ -1,10 +1,13 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { StyleSheet, Text, View, Animated, Easing } from 'react-native'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import { InterfaceTask, Status } from '../../types/tasks'
 import Overdue from '../../../assets/task-icons/overdue'
 import DoneSvg from '../../../assets/task-icons/done'
+import { isTaskOverdue } from '../../utils/isTaskOverdue'
+import { put } from '../../api/put'
+
 type TaskCardProps = {
     task: InterfaceTask
 }
@@ -13,7 +16,7 @@ const getBackgroundColor = (status: Status) => {
     switch (status) {
         case Status.Pending:
             return palette.pastelNavbars
-        case Status.Completed: // Replace with your actual status
+        case Status.Completed:
             return palette.boxesPastelGreen
         case Status.Overdue:
             return palette.pastelOrange
@@ -22,11 +25,11 @@ const getBackgroundColor = (status: Status) => {
     }
 }
 
-const getText = (status: Status) => {
+const getText = (status: Status, time: string) => {
     switch (status) {
         case Status.Pending:
-            return 'Due before: '
-        case Status.Completed: // Replace with your actual status
+            return `Due before: ${time}`
+        case Status.Completed:
             return 'Done.'
         case Status.Overdue:
             return 'Overdue!'
@@ -37,7 +40,7 @@ const getText = (status: Status) => {
 
 const getIcon = (status: Status) => {
     switch (status) {
-        case Status.Completed: // Replace with your actual status
+        case Status.Completed:
             return DoneSvg
         case Status.Overdue:
             return Overdue
@@ -46,22 +49,92 @@ const getIcon = (status: Status) => {
     }
 }
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
-    const backgroundColor = getBackgroundColor(task.status)
-    const text = getText(task.status)
-    const Icon = getIcon(task.status)
+export const TaskCard: React.FC<
+    TaskCardProps & { onStatusUpdate: (taskId: string, newStatus: Status) => void }
+> = ({ task, onStatusUpdate }) => {
+    const borderColorAnim = useRef(new Animated.Value(0)).current
+
+    const startBorderColorAnimation = () => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(borderColorAnim, {
+                    toValue: 1,
+                    duration: 1000,
+                    easing: Easing.inOut(Easing.ease),
+                    useNativeDriver: false
+                }),
+                Animated.timing(borderColorAnim, {
+                    toValue: 0,
+                    duration: 1000,
+                    easing: Easing.inOut(Easing.ease),
+                    useNativeDriver: false
+                })
+            ])
+        ).start()
+    }
+
+    const interpolatedBorderColor = borderColorAnim.interpolate({
+        inputRange: [0, 0.5],
+        outputRange: ['rgba(0, 0, 0, 0)', palette.pastelOrange] // From transparent to orange
+    })
+
+    const animatedBorderStyle = {
+        borderColor: interpolatedBorderColor,
+        borderWidth: 2,
+        borderRadius: 20
+    }
+
+    let updatedStatus = task.status
+
+    if (isTaskOverdue(task) && task.status !== Status.Overdue) {
+        onStatusUpdate(task._id, Status.Overdue)
+        updatedStatus = Status.Overdue
+
+        const dataToUpdate = {
+            status: Status.Overdue
+        }
+
+        const taskUpdate = {
+            _id: task._id,
+            isUpdating: true
+        }
+
+        put('api/tasks/edit', dataToUpdate, taskUpdate)
+    }
+
+    useEffect(() => {
+        if (updatedStatus === Status.Overdue) {
+            startBorderColorAnimation()
+        }
+    }, [updatedStatus])
+
+    const backgroundColor = getBackgroundColor(updatedStatus)
+    const Icon = getIcon(updatedStatus)
+
+    const finalContainerStyle = [
+        styles.container, // Base style
+        { backgroundColor }, // Apply the background color
+        updatedStatus === Status.Overdue && animatedBorderStyle // Apply animated border style if overdue
+    ]
+
+    const dueOn = new Date(task.dueDate ?? '').toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric'
+    })
+
+    const text = getText(updatedStatus, dueOn)
 
     return (
-        <View style={{ ...styles.container, backgroundColor }}>
+        <Animated.View style={finalContainerStyle}>
             <View style={styles.verticalLine} />
             <View style={styles.taskInfo}>
                 <Text style={styles.taskName}>{task.title}</Text>
             </View>
             <View style={styles.status}>
-                {task.status !== Status.Pending ? <Icon /> : <View style={styles.circle} />}
+                {updatedStatus !== Status.Pending ? <Icon /> : <View style={styles.circle} />}
                 <Text style={styles.statusText}>{text}</Text>
             </View>
-        </View>
+        </Animated.View>
     )
 }
 
@@ -69,11 +142,12 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 20,
         width: '90%',
-        height: '80%',
         alignSelf: 'center',
         paddingLeft: '3%',
         alignItems: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: '5%',
+        paddingVertical: '4%'
     },
     circle: {
         width: 25,
@@ -112,6 +186,6 @@ const styles = StyleSheet.create({
         borderLeftWidth: 5,
         borderLeftColor: '#FFFF',
         borderRadius: 20,
-        height: '70%'
+        height: '100%'
     }
 })

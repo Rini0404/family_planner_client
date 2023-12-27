@@ -1,12 +1,13 @@
 import { FlatList, StatusBar, Text, View } from 'react-native'
 import React from 'react'
 import { AppStackParamList, AppStackScreenProps } from '../navigators'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { remove } from '../utils/storage'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { FamilyCard } from '../components/FamilyCard'
 import { TaskCard } from '../components/Tasks'
 import { InterfaceTask, Status } from '../types/tasks'
+import { updateTasks } from '../redux/tasks/tasksActions'
 
 interface HomeScreenProps extends AppStackScreenProps<'HomeScreen'> {}
 
@@ -40,21 +41,37 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
         })
     }, [tasks])
 
+    const dispatch = useDispatch()
+
+    const handleStatusUpdate = (taskId: string, newStatus: Status) => {
+        // Find the task and update its status
+        const updatedTasks = tasks.map((task: { _id: string }) =>
+            task._id === taskId ? { ...task, status: newStatus } : task
+        )
+
+        // Dispatch an action to update tasks in your global state
+
+        dispatch(updateTasks(updatedTasks))
+    }
+
     const renderItems = ({ item }: { item: InterfaceTask }) => {
-        return <TaskCard task={item} />
+        return <TaskCard task={item} onStatusUpdate={handleStatusUpdate} />
     }
 
     return (
         <View style={{ flex: 1, alignItems: 'center', paddingTop: '15%' }}>
-            <Text onPress={clearStorage}>Logout</Text>
+            {/* <Text onPress={clearStorage}>Logout</Text> */}
             <FamilyCard family={family} user={user} />
 
-            <FlatList
-                data={sortedTasks}
-                renderItem={renderItems}
-                keyExtractor={(item) => item._id}
-                style={{ width: '100%', marginTop: '5%' }}
-            />
+            <View style={{ width: '100%', height: '57%' }}>
+                <FlatList
+                    data={sortedTasks}
+                    renderItem={renderItems}
+                    keyExtractor={(item) => item._id}
+                    style={{ marginTop: '5%' }}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>
         </View>
     )
 }
