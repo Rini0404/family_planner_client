@@ -1,26 +1,26 @@
 import { InterfaceTask, Status } from '../types/tasks'
 
 export const isTaskOverdue = (task: InterfaceTask) => {
-    const now = new Date() // Current time in local timezone
+    const now = new Date()
     const dueDate = new Date(task.dueDate ?? '')
-    console.log('dueDate', dueDate)
-    // Convert both dates to UTC for comparison
-    const nowUtc = Date.UTC(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        now.getHours(),
-        now.getMinutes(),
-        now.getSeconds()
-    )
-    const dueDateUtc = Date.UTC(
-        dueDate.getFullYear(),
-        dueDate.getMonth(),
-        dueDate.getDate(),
-        dueDate.getHours(),
-        dueDate.getMinutes(),
-        dueDate.getSeconds()
-    )
-    console.log('nowUtc', nowUtc > dueDateUtc)
-    return nowUtc > dueDateUtc
+
+    // If the due date string ends with 'Z', it means the due date is in UTC
+    if (task.dueDate?.toString().endsWith('Z')) {
+        // Convert 'now' to UTC for a fair comparison
+        const nowUtc = new Date(
+            Date.UTC(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                now.getHours(),
+                now.getMinutes(),
+                now.getSeconds()
+            )
+        )
+        // console.log('Is task overdue?: ', nowUtc > dueDate, 'ID: ', task._id)
+        return nowUtc > dueDate
+    } else {
+        // If due date is not in UTC, compare it directly with the local time
+        return now > dueDate
+    }
 }

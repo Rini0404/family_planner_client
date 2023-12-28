@@ -31,26 +31,32 @@ const isPastDate = (date: Date | null) => {
     return date < today
 }
 
-export const DatePickerAndTime = () => {
-    const [date, setDate] = useState(new Date())
+type DatePickerProps = {
+    selectedValue: Date | null
+    onDateChange: (date: Date) => void
+}
+
+export const DatePickerAndTime: React.FC<DatePickerProps> = ({ selectedValue, onDateChange }) => {
     const [show, setShow] = useState(false)
 
-    const currentYear = date.getFullYear()
-    const currentMonth = date.getMonth() + 1
+    const validSelectedValue = selectedValue instanceof Date ? selectedValue : new Date()
+    // Validate that selectedValue is a Date object
+
+    const currentYear = validSelectedValue.getFullYear()
+    const currentMonth = validSelectedValue.getMonth() + 1
     const days = generateMonthDays(currentYear, currentMonth)
 
     const changeMonth = (increment: number) => {
         const newDate = new Date(currentYear, currentMonth - 1 + increment, 1)
-        setDate(newDate)
+        onDateChange(newDate)
     }
 
     const currentMonthName = monthNames[currentMonth - 1]
 
     return (
         <View>
-            <TouchableOpacity onPress={() => setShow(true)}>
+            <TouchableOpacity style={styles.datePickerButton} onPress={() => setShow(true)}>
                 <Text>Date picker</Text>
-                <Text>{date.toDateString()}</Text>
             </TouchableOpacity>
 
             <Modal animationType='slide' transparent={true} visible={show}>
@@ -99,7 +105,7 @@ export const DatePickerAndTime = () => {
                                 const isSelected =
                                     day &&
                                     day.toISOString().split('T')[0] ===
-                                        date.toISOString().split('T')[0]
+                                        validSelectedValue.toISOString().split('T')[0]
                                 return (
                                     <TouchableOpacity
                                         key={index}
@@ -110,7 +116,7 @@ export const DatePickerAndTime = () => {
                                         ]}
                                         onPress={() => {
                                             if (day && !isPastDate(day)) {
-                                                setDate(day)
+                                                onDateChange(day)
                                             }
                                         }}
                                         disabled={day ? isPastDate(day) : true}
@@ -148,6 +154,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center'
+    },
+    datePickerButton: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        padding: 10,
+        borderRadius: 4,
+        marginBottom: 10
     },
     x: {
         fontFamily: typography.primary,

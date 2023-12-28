@@ -4,74 +4,119 @@ import { useSelector } from 'react-redux'
 import { CustomPicker } from '../Picker'
 import { DatePickerAndTime } from '../DatePicker'
 import { TimePicker } from '../TimePicker'
+import { post } from '../../api/post'
+import LoadingOverlay from '../LoadingOverlay'
 
 export const CreateTask = () => {
-    const { user } = useSelector((state: any) => state.user)
     const { family } = useSelector((state: any) => state.family)
+
+    const [isLoading, setIsLoading] = useState(false)
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [assignedTo, setAssignedTo] = useState('')
+    const [dueDate, setDueDate] = useState<Date | null>(new Date())
+    const [dueTime, setDueTime] = useState<Date | null>(new Date())
 
     const familyId = family._id
 
-    const handleSubmit = () => {
-        // Convert local time to UTC
-        const dueDate = new Date()
-        const utcDueDate = new Date(
-            dueDate.getTime() - dueDate.getTimezoneOffset() * 60000
-        ).toISOString()
+    const handleSubmit = async () => {
+        setIsLoading(true)
+        try {
+            if (!title || !description || !assignedTo || !dueDate || !dueTime) {
+                throw new Error('Please fill out all fields')
+            }
 
-        const taskData = {
-            title,
-            description,
-            assignedTo,
-            dueDate: utcDueDate, // Use the converted UTC time
-            familyId
+            // Extracting date components
+            const year = dueDate.getFullYear()
+            const month = dueDate.getMonth() // getMonth() returns 0-11
+            const day = dueDate.getDate()
+
+            // Extracting time components
+            const hours = dueTime.getHours()
+            const minutes = dueTime.getMinutes()
+
+            // Combining date and time into a single local Date object
+            const combinedDateTime = new Date(year, month, day, hours, minutes)
+
+            // Adjust for local timezone offset to get UTC
+            const utcDueDate = new Date(
+                combinedDateTime.getTime() - combinedDateTime.getTimezoneOffset() * 60000
+            ).toISOString()
+
+            const taskData = {
+                title,
+                description,
+                assignedTo,
+                dueDate: utcDueDate,
+                familyId
+            }
+
+            console.log('For submit data: ', taskData)
+            // Here you would send `taskData` to your server or API endpoint
+
+            const response = await post('api/tasks/create', taskData)
+
+            console.log('response: ', response)
+        } catch (error) {
+            console.log('Error creating task: ', error)
+            alert((error as Error).message)
+        } finally {
+            setIsLoading(false)
         }
-
-        console.log(taskData)
-        // Here you would send `taskData` to your server or API endpoint
     }
 
     return (
-        <View style={styles.container}>
-            <Text>Create a Task</Text>
-            <TextInput
-                style={styles.input}
-                placeholder='Title'
-                value={title}
-                onChangeText={setTitle}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder='Description'
-                value={description}
-                onChangeText={setDescription}
-            />
-            <CustomPicker
-                options={family.members}
-                selectedValue={assignedTo}
-                onValueChange={setAssignedTo}
-            />
-            <View
-                style={{
-                    paddingTop: '30%'
-                }}
-            >
-                <DatePickerAndTime />
-            </View>
+        <>
+            <View style={styles.container}>
+                <Text>Create a Task</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder='Title'
+                    value={title}
+                    onChangeText={setTitle}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder='Description'
+                    value={description}
+                    onChangeText={setDescription}
+                />
+                <CustomPicker
+                    options={family.members}
+                    selectedValue={assignedTo}
+                    onValueChange={setAssignedTo}
+                />
 
-            <TimePicker />
+                <View
+                    style={{
+                        paddingTop: '5%'
+                    }}
+                >
+                    <DatePickerAndTime selectedValue={dueDate} onDateChange={setDueDate} />
+                    <TimePicker selectedValue={dueTime} onTimeChange={setDueTime} />
+                </View>
 
-            <View
-                style={{
-                    paddingTop: '30%'
-                }}
-            >
-                <Button title='Create Task' onPress={handleSubmit} />
+                <View style={styles.timeDateData}>
+                    <Text>Due Date: {dueDate?.toLocaleDateString()}</Text>
+                    <Text>
+                        Due Time:{' '}
+                        {dueTime?.toTimeString().split(':')[0] +
+                            ':' +
+                            dueTime?.toTimeString().split(':')[1]}
+                    </Text>
+                </View>
+
+                <View
+                    style={{
+                        paddingTop: '30%'
+                    }}
+                >
+                    <Button title='Create Task' onPress={handleSubmit} />
+                </View>
             </View>
-        </View>
+            {isLoading && <LoadingOverlay isVisible={isLoading} />}
+        </>
     )
 }
 const styles = StyleSheet.create({
@@ -80,6 +125,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20
+    },
+    timeDateData: {
+        paddingTop: '5%'
     },
     picker: {
         width: '100%',
