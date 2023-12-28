@@ -34,7 +34,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     // Sort tasks based on the defined status order
     const sortedTasks = React.useMemo(() => {
-        return [...tasks].sort((a, b) => {
+        const today = new Date()
+        today.setHours(0, 0, 0, 0) // Reset time to the start of the day
+
+        const tasksForToday = tasks.filter((task: { dueDate: string | number | Date }) => {
+            const taskDueDate = new Date(task.dueDate)
+            taskDueDate.setHours(0, 0, 0, 0) // Reset time for accurate date comparison
+            return taskDueDate.getTime() === today.getTime()
+        })
+
+        return tasksForToday.sort((a: { status: Status }, b: { status: Status }) => {
             const orderA = statusOrder[a.status as Status]
             const orderB = statusOrder[b.status as Status]
             return orderA - orderB

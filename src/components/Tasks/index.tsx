@@ -89,6 +89,7 @@ export const TaskCard: React.FC<
     if (isTaskOverdue(task) && task.status !== Status.Overdue) {
         onStatusUpdate(task._id, Status.Overdue)
         updatedStatus = Status.Overdue
+        console.log('Task is overdue! was due on: ', task.dueDate)
 
         const dataToUpdate = {
             status: Status.Overdue
@@ -121,6 +122,8 @@ export const TaskCard: React.FC<
         hour: 'numeric',
         minute: 'numeric'
     })
+
+    console.log('task.dueDate: ', dueOn)
 
     const text = getText(updatedStatus, dueOn)
 
