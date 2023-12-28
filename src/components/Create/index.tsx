@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal } from 'react-native'
 import { useSelector } from 'react-redux'
 import { CustomPicker } from '../Picker'
-import { DatePickerAndTime } from '../DateTimePicker'
+import { DatePickerAndTime } from '../DatePicker'
+import { TimePicker } from '../TimePicker'
 
 export const CreateTask = () => {
     const { user } = useSelector((state: any) => state.user)
@@ -60,6 +61,8 @@ export const CreateTask = () => {
             >
                 <DatePickerAndTime />
             </View>
+
+            <TimePicker />
 
             <View
                 style={{
