@@ -126,7 +126,7 @@ export const TaskCard: React.FC<
     const finalContainerStyle = [
         styles.container, // Base style
         { backgroundColor }, // Apply the background color
-        updatedStatus === Status.Overdue && animatedBorderStyle // Apply animated border style if overdue
+        updatedStatus === Status.Overdue && animatedBorderStyle
     ]
 
     const text = getText(updatedStatus, task.dueDate ? task.dueDate.toString() : '')

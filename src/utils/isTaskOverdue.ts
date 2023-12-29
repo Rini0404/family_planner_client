@@ -17,10 +17,8 @@ export const isTaskOverdue = (task: InterfaceTask) => {
                 now.getSeconds()
             )
         )
-        // console.log('Is task overdue?: ', nowUtc > dueDate, 'ID: ', task._id)
         return nowUtc > dueDate
     } else {
-        // If due date is not in UTC, compare it directly with the local time
         return now > dueDate
     }
 }

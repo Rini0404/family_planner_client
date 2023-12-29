@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { CustomPicker } from '../Picker'
 import { DatePickerAndTime } from '../DatePicker'
 import { TimePicker } from '../TimePicker'
 import { post } from '../../api/post'
 import LoadingOverlay from '../LoadingOverlay'
+import { TaskResponseType } from '../../types/tasks'
+import { addTask } from '../../redux/tasks/tasksActions'
 
 export const CreateTask = () => {
+    const dispatch = useDispatch()
     const { family } = useSelector((state: any) => state.family)
-
     const [isLoading, setIsLoading] = useState(false)
 
     const [title, setTitle] = useState('')
@@ -55,9 +57,22 @@ export const CreateTask = () => {
             console.log('For submit data: ', taskData)
             // Here you would send `taskData` to your server or API endpoint
 
-            const response = await post('api/tasks/create', taskData)
+            const response = (await post('api/tasks/create', taskData)) as TaskResponseType
 
             console.log('response: ', response)
+
+            if (response.message && !response.data) {
+                throw new Error(response.message)
+            }
+
+            alert('Task created successfully!')
+            dispatch(addTask(response.data))
+
+            setTitle('')
+            setDescription('')
+            setAssignedTo('')
+            setDueDate(new Date())
+            setDueTime(new Date())
         } catch (error) {
             console.log('Error creating task: ', error)
             alert((error as Error).message)

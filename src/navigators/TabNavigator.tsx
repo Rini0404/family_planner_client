@@ -29,7 +29,6 @@ export type TabScreenProps<T extends keyof TabParamList> = CompositeScreenProps<
 
 type ScreenComponentType =
     | FC<TabScreenProps<'HomeScreen'>>
-    | FC<TabScreenProps<'Settings'>>
     | FC<TabScreenProps<'PostScreen'>>
     | FC<TabScreenProps<'CalenderScreen'>>
     | ComponentType
@@ -46,16 +45,12 @@ const screens: Screen[] = [
         component: HomeScreen as unknown as FC<TabScreenProps<'HomeScreen'>>
     },
     {
-        name: 'CalenderScreen',
-        component: CalenderScreen as unknown as FC<TabScreenProps<'CalenderScreen'>>
-    },
-    {
         name: 'PostScreen',
         component: PostScreen as unknown as FC<TabScreenProps<'PostScreen'>>
     },
     {
-        name: 'Settings',
-        component: Settings as unknown as FC<TabScreenProps<'Settings'>>
+        name: 'CalenderScreen',
+        component: CalenderScreen as unknown as FC<TabScreenProps<'CalenderScreen'>>
     }
 ]
 
