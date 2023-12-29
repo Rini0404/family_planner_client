@@ -15,6 +15,8 @@ import SplashScreen from '../screens/SplashScreen'
 import SignupScreen from '../screens/SignupScreen'
 import { Initial } from '../screens/Iniitial'
 import { SignInScreen } from '../screens/Signin'
+import { InformationalTask } from '../screens/InformationalTask'
+import { InterfaceTask } from '../types/tasks'
 
 export type AppStackParamList = {
     Tabs: NavigatorScreenParams<TabParamList>
@@ -26,6 +28,7 @@ export type AppStackParamList = {
     Initial: undefined
     CalenderScreen: undefined
     PostScreen: undefined
+    InformationalTask: InterfaceTask
 }
 
 /**
@@ -56,6 +59,7 @@ const AppStack = () => {
             <Stack.Screen name='Signup' component={SignupScreen} />
             <Stack.Screen name='Signin' component={SignInScreen} />
             <Stack.Screen name='Tabs' component={TabNavigator} />
+            <Stack.Screen name='InformationalTask' component={InformationalTask} />
             <Stack.Screen name='SplashScreen' component={SplashScreen} />
         </Stack.Navigator>
     )

@@ -28,6 +28,8 @@ export const put = async <T = unknown>(
         url = `${url}/${endPoint}`
     }
 
+    console.log('PUT TO: ', url)
+
     try {
         const response = await fetch(url, {
             method: 'PUT',
@@ -39,7 +41,6 @@ export const put = async <T = unknown>(
         })
 
         const jsonResponse = await response.json()
-        console.log('API Response:', jsonResponse)
         return jsonResponse as T
     } catch (error) {
         console.error('API Error:', error)

@@ -1,5 +1,5 @@
 import { InterfaceTask } from '../../types/tasks'
-import { TASKS, ADD_TASK } from './tasksTypes'
+import { TASKS, ADD_TASK, UPDATE_TASK, DELETE_TASK } from './tasksTypes'
 
 const initialState = {
     tasks: []
@@ -7,7 +7,7 @@ const initialState = {
 
 // Adjust TaskAction to handle different types of actions
 type TaskAction = {
-    type: typeof TASKS | typeof ADD_TASK
+    type: typeof TASKS | typeof ADD_TASK | typeof UPDATE_TASK | typeof DELETE_TASK
     data: InterfaceTask | InterfaceTask[] // Single task or array of tasks
 }
 
@@ -27,6 +27,30 @@ const familyReducer = (state = initialState, action: TaskAction) => {
                     ...state.tasks,
                     ...(Array.isArray(action.data) ? action.data : [action.data])
                 ]
+            }
+        case UPDATE_TASK:
+            return {
+                ...state,
+                tasks: state.tasks.map((task: InterfaceTask) => {
+                    if (
+                        Array.isArray(action.data)
+                            ? task._id === action.data[0]._id
+                            : task._id === action.data._id
+                    ) {
+                        return action.data
+                    }
+                    return task
+                })
+            }
+        case DELETE_TASK:
+            return {
+                ...state,
+                tasks: state.tasks.filter((task: InterfaceTask) => {
+                    if (Array.isArray(action.data)) {
+                        return !action.data.some((deletedTask) => deletedTask._id === task._id)
+                    }
+                    return task._id !== action.data._id
+                })
             }
         default:
             return state
