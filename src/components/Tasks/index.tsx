@@ -25,10 +25,19 @@ const getBackgroundColor = (status: Status) => {
     }
 }
 
-const getText = (status: Status, time: string) => {
+const getText = (status: Status, dueDate: string) => {
+    const dueDateObject = new Date(dueDate)
+
+    const options = {
+        hour: 'numeric' as const,
+        minute: 'numeric' as const,
+        timeZone: 'UTC' // or specify your desired time zone
+    }
+    const dueTime = dueDateObject.toLocaleTimeString('en-US', options)
+
     switch (status) {
         case Status.Pending:
-            return `Due before: ${time}`
+            return `Due before: ${dueTime}`
         case Status.Completed:
             return 'Done.'
         case Status.Overdue:
@@ -86,6 +95,8 @@ export const TaskCard: React.FC<
 
     let updatedStatus = task.status
 
+    // console.log('task: ', task)
+
     if (isTaskOverdue(task) && task.status !== Status.Overdue) {
         onStatusUpdate(task._id, Status.Overdue)
         updatedStatus = Status.Overdue
@@ -115,17 +126,10 @@ export const TaskCard: React.FC<
     const finalContainerStyle = [
         styles.container, // Base style
         { backgroundColor }, // Apply the background color
-        updatedStatus === Status.Overdue && animatedBorderStyle // Apply animated border style if overdue
+        updatedStatus === Status.Overdue && animatedBorderStyle
     ]
 
-    const dueOn = new Date(task.dueDate ?? '').toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric'
-    })
-
-    console.log('task.dueDate: ', dueOn)
-
-    const text = getText(updatedStatus, dueOn)
+    const text = getText(updatedStatus, task.dueDate ? task.dueDate.toString() : '')
 
     return (
         <Animated.View style={finalContainerStyle}>

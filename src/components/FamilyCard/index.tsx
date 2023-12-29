@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     familyHeader: {
-        paddingTop: '3%',
+        paddingTop: '5%',
         fontSize: 30,
         fontFamily: typography.quaternary,
         fontWeight: 'bold',

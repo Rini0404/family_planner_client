@@ -15,3 +15,11 @@ export interface InterfaceTask {
     dueDate?: Date
     status: Status
 }
+
+export interface TaskResponseType {
+    data: InterfaceTask
+    success: boolean
+    error: string
+    message: string
+    status: number
+}
