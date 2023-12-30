@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, Text, View, Animated, Easing } from 'react-native'
+import { StyleSheet, Text, View, Animated, Easing, TouchableOpacity } from 'react-native'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import { InterfaceTask, Status } from '../../types/tasks'
@@ -7,44 +7,12 @@ import Overdue from '../../../assets/task-icons/overdue'
 import DoneSvg from '../../../assets/task-icons/done'
 import { isTaskOverdue } from '../../utils/isTaskOverdue'
 import { put } from '../../api/put'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { AppStackParamList } from '../../navigators'
+import { getBackgroundColor, getText } from '../../utils/taskDataUi'
 
 type TaskCardProps = {
     task: InterfaceTask
-}
-
-const getBackgroundColor = (status: Status) => {
-    switch (status) {
-        case Status.Pending:
-            return palette.pastelNavbars
-        case Status.Completed:
-            return palette.boxesPastelGreen
-        case Status.Overdue:
-            return palette.pastelOrange
-        default:
-            return palette.pastelNavbars
-    }
-}
-
-const getText = (status: Status, dueDate: string) => {
-    const dueDateObject = new Date(dueDate)
-
-    const options = {
-        hour: 'numeric' as const,
-        minute: 'numeric' as const,
-        timeZone: 'UTC' // or specify your desired time zone
-    }
-    const dueTime = dueDateObject.toLocaleTimeString('en-US', options)
-
-    switch (status) {
-        case Status.Pending:
-            return `Due before: ${dueTime}`
-        case Status.Completed:
-            return 'Done.'
-        case Status.Overdue:
-            return 'Overdue!'
-        default:
-            return 'Pending'
-    }
 }
 
 const getIcon = (status: Status) => {
@@ -61,6 +29,8 @@ const getIcon = (status: Status) => {
 export const TaskCard: React.FC<
     TaskCardProps & { onStatusUpdate: (taskId: string, newStatus: Status) => void }
 > = ({ task, onStatusUpdate }) => {
+    const navigation = useNavigation<NavigationProp<AppStackParamList>>()
+
     const borderColorAnim = useRef(new Animated.Value(0)).current
 
     const startBorderColorAnimation = () => {
@@ -131,17 +101,31 @@ export const TaskCard: React.FC<
 
     const text = getText(updatedStatus, task.dueDate ? task.dueDate.toString() : '')
 
+    const navigateToTaskScreen = (task: InterfaceTask) => {
+        console.log('TEST', task)
+
+        const taskData = {
+            ...task,
+            updatedTextForDueBefore: text,
+            backgroundColorUI: backgroundColor
+        }
+
+        navigation.navigate('InformationalTask', taskData)
+    }
+
     return (
-        <Animated.View style={finalContainerStyle}>
-            <View style={styles.verticalLine} />
-            <View style={styles.taskInfo}>
-                <Text style={styles.taskName}>{task.title}</Text>
-            </View>
-            <View style={styles.status}>
-                {updatedStatus !== Status.Pending ? <Icon /> : <View style={styles.circle} />}
-                <Text style={styles.statusText}>{text}</Text>
-            </View>
-        </Animated.View>
+        <TouchableOpacity onPress={() => navigateToTaskScreen(task)}>
+            <Animated.View style={finalContainerStyle}>
+                <View style={styles.verticalLine} />
+                <View style={styles.taskInfo}>
+                    <Text style={styles.taskName}>{task.title}</Text>
+                </View>
+                <View style={styles.status}>
+                    {updatedStatus !== Status.Pending ? <Icon /> : <View style={styles.circle} />}
+                    <Text style={styles.statusText}>{text}</Text>
+                </View>
+            </Animated.View>
+        </TouchableOpacity>
     )
 }
 
@@ -174,6 +158,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontFamily: typography.tertiary,
         color: '#FFFF',
+        width: '80%',
         textAlign: 'center',
         position: 'relative',
         top: '5%'

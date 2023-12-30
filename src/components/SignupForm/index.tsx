@@ -130,7 +130,11 @@ export const SignupForm: React.FC<SignupFormProps> = ({ optionChosen }) => {
                     : { familyName })
             }
 
-            const response = (await post('api/users/signup', userData)) as UserSignUpResponseType
+            const response = (await post(
+                'api/users/signup',
+                userData,
+                false
+            )) as UserSignUpResponseType
 
             console.log('response: ', response)
 

@@ -11,7 +11,7 @@ import React from 'react'
 import { AppStackParamList } from '../navigators'
 import { StackScreenProps } from '@react-navigation/stack'
 import BackArrow from '../components/BackArrow'
-import { BackDrop } from '../components/BackDropGreen'
+import { BackDrop } from '../components/BackDrop'
 import { typography } from '../theme/fonts'
 import { SignInForm } from '../components/SignIn'
 

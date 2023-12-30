@@ -69,7 +69,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     return (
         <View style={{ flex: 1, alignItems: 'center', paddingTop: '15%' }}>
-            {/* <Text onPress={clearStorage}>Logout</Text> */}
+            <Text onPress={clearStorage}>t</Text>
             <FamilyCard family={family} user={user} />
 
             <View style={{ width: '100%', height: '57%' }}>

@@ -21,7 +21,7 @@ export const handleLogin = async (
     userData: { email: string; password: string }
 ) => {
     try {
-        const response = await post<UserResponse>('api/users/login', userData)
+        const response = await post<UserResponse>('api/users/login', userData, true)
 
         // Check if the response contains the required data
         if (!response.data) {

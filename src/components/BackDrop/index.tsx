@@ -2,8 +2,17 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { palette } from '../../theme'
 
-export const BackDrop: React.FC = () => {
-    return <View style={styles.container}></View>
+export type BackDropProps = {
+    color?: string
+    children: React.ReactNode
+}
+
+export const BackDrop: React.FC<BackDropProps> = ({ color, children }) => {
+    return (
+        <View style={[styles.container, { backgroundColor: color }]}>
+            <View>{children}</View>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -14,7 +23,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: '-20%',
         borderTopLeftRadius: 50,
-        borderTopRightRadius: 50,
-        backgroundColor: palette.boxesPastelGreen
+        backgroundColor: palette.pastelBackground,
+        borderTopRightRadius: 50
     }
 })

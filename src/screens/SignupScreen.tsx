@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { AppStackScreenProps } from '../navigators'
 import { typography } from '../theme/fonts'
-import { BackDrop } from '../components/BackDropGreen'
+import { BackDrop } from '../components/BackDrop'
 import { OptionSignup } from '../components/OptionSignup'
 import { SignupForm } from '../components/SignupForm'
 import BackArrow from '../components/BackArrow'
