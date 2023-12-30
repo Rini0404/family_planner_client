@@ -1,5 +1,6 @@
+import { DeleteTaskAction } from '../../types/taskRedux'
 import { InterfaceTask } from '../../types/tasks'
-import { ADD_TASK, TASKS, UPDATE_TASK } from './tasksTypes'
+import { ADD_TASK, DELETE_TASK, TASKS, UPDATE_TASK } from './tasksTypes'
 
 export const updateTasks = (data: InterfaceTask) => {
     return {
@@ -22,9 +23,9 @@ export const updateEditedTask = (data: InterfaceTask) => {
     }
 }
 
-export const deleteTask = (data: InterfaceTask) => {
+export const deleteTask = (id: string): DeleteTaskAction => {
     return {
-        type: DelayNode,
-        data
+        type: DELETE_TASK,
+        data: { _id: id }
     }
 }

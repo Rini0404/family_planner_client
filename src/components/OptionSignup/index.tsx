@@ -1,9 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import { OutlinedButton } from '../OutlinedButton'
-import { OptionChosen } from '../../screens/SignupScreen'
+import { OptionChosen } from '../../types/optionChosen'
 
 type OptionSignupProps = {
     optionChosen: OptionChosen | null

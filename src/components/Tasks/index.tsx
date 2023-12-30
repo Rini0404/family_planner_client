@@ -67,7 +67,7 @@ export const TaskCard: React.FC<
 
     // console.log('task: ', task)
 
-    if (isTaskOverdue(task) && task.status !== Status.Overdue) {
+    if (isTaskOverdue(task) && task.status !== Status.Overdue && task.status !== Status.Completed) {
         onStatusUpdate(task._id, Status.Overdue)
         updatedStatus = Status.Overdue
         console.log('Task is overdue! was due on: ', task.dueDate)

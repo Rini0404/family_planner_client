@@ -14,13 +14,15 @@ import { BackDrop } from '../components/BackDrop'
 import { OptionSignup } from '../components/OptionSignup'
 import { SignupForm } from '../components/SignupForm'
 import BackArrow from '../components/BackArrow'
+import { OptionChosen } from '../types/optionChosen'
 
 interface SignupProps extends AppStackScreenProps<'Signup'> {}
 
-export enum OptionChosen {
-    Creator = 'Creator',
-    Member = 'Member'
-}
+//! this causes issues in circular renders!!!!!!
+// export enum OptionChosen {
+//     Creator = 'Creator',
+//     Member = 'Member'
+// }
 
 export const SignupScreen: React.FC<SignupProps> = ({ navigation }) => {
     const [optionChosen, setOptionChosen] = useState<OptionChosen | null>(null)

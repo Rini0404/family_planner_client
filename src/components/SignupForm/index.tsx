@@ -2,7 +2,6 @@ import React from 'react'
 import { Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { typography } from '../../theme/fonts'
 import CustomTextInput from '../CustomTextInput'
-import { OptionChosen } from '../../screens/SignupScreen'
 import PrimaryButton from '../PrimaryButton'
 import { post } from '../../api/post'
 import { validateEmail } from '../../utils/validators/EmailValidator'
@@ -15,6 +14,7 @@ import { saveStringToAsyncStorage } from '../../utils/storage'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { AppStackParamList } from '../../navigators'
+import { OptionChosen } from '../../types/optionChosen'
 
 type SignupFormProps = {
     optionChosen: OptionChosen | null
