@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { NavigationProp } from '@react-navigation/native'
 import { AppStackParamList } from '../../navigators'
 import { typography } from '../../theme/fonts'
+import { palette } from '../../theme'
 
 interface NoTasksProps {
     navigation: NavigationProp<AppStackParamList>
@@ -14,6 +15,14 @@ export const NoTasks: React.FC<NoTasksProps> = ({ navigation }) => {
             <Text style={styles.title}>No tasks for today</Text>
             <Text style={styles.subtitle}>Create a new task to get started</Text>
             <View style={styles.buttonContainer}></View>
+            <View style={{ flex: 1, width: '90%' }}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate('PostScreen')}
+                >
+                    <Text style={styles.buttonText}>Create Task</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -28,6 +37,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1
+    },
+    button: {
+        backgroundColor: palette.pastelNavbars,
+        padding: 15,
+        width: '100%',
+        borderRadius: 20,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontFamily: typography.primary
     },
     title: {
         fontSize: 24,
