@@ -4,7 +4,7 @@ import { palette } from '../../theme'
 
 export type BackDropProps = {
     color?: string
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
 export const BackDrop: React.FC<BackDropProps> = ({ color, children }) => {

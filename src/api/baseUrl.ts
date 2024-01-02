@@ -7,7 +7,9 @@
 // export const BASE_URL = 'http://192.168.1.204:3001'
 
 // Nats house
-export const BASE_URL = 'http://192.168.0.44:3001'
+// export const BASE_URL = 'http://192.168.0.44:3001'
+
+export const BASE_URL = 'http://3.142.186.4:5000'
 
 export const GOOGLE_REDIRECT_URI = 'https://5fjrs4-3000.csb.app/google'
 
