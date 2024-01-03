@@ -3,47 +3,41 @@ import { StyleSheet, View, Text, Modal, TouchableOpacity } from 'react-native'
 
 interface CustomPickerProps {
     options: string[]
-    selectedValue: string
+    openPicker: boolean
     onValueChange: (value: string) => void
+    setOpenPicker: (value: boolean) => void
 }
 
 export const CustomPicker: React.FC<CustomPickerProps> = ({
     options,
-    selectedValue,
-    onValueChange
+    onValueChange,
+    openPicker,
+    setOpenPicker
 }) => {
-    const [modalVisible, setModalVisible] = useState(false)
-
     return (
         <View>
-            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.pickerButton}>
-                <Text>
-                    {selectedValue
-                        ? `Member ${options.indexOf(selectedValue) + 1}`
-                        : 'Select Member'}
-                </Text>
-            </TouchableOpacity>
-
-            <Modal
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalView}>
-                    {options.map((option, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={styles.option}
-                            onPress={() => {
-                                onValueChange(option)
-                                setModalVisible(false)
-                            }}
-                        >
-                            <Text>{`Member ${index + 1}`}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </Modal>
+            {openPicker && (
+                <Modal
+                    transparent={true}
+                    visible={openPicker}
+                    onRequestClose={() => setOpenPicker(false)}
+                >
+                    <View style={styles.modalView}>
+                        {options.map((option, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={styles.option}
+                                onPress={() => {
+                                    onValueChange(option)
+                                    setOpenPicker(false)
+                                }}
+                            >
+                                <Text>{`Member ${index + 1}`}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </Modal>
+            )}
         </View>
     )
 }

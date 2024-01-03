@@ -8,11 +8,15 @@ import { post } from '../../api/post'
 import LoadingOverlay from '../LoadingOverlay'
 import { TaskResponseType } from '../../types/tasks'
 import { addTask } from '../../redux/tasks/tasksActions'
+import { palette } from '../../theme'
+import { typography } from '../../theme/fonts'
+import { TextInputPost } from '../TextInputPost'
 
 export const CreateTask = () => {
     const dispatch = useDispatch()
     const { family } = useSelector((state: any) => state.family)
     const [isLoading, setIsLoading] = useState(false)
+    const [openPicker, setOpenPicker] = useState(false)
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -82,89 +86,45 @@ export const CreateTask = () => {
     }
 
     return (
-        <>
-            <View style={styles.container}>
-                <Text>Create a Task</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder='Title'
-                    value={title}
-                    onChangeText={setTitle}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder='Description'
-                    value={description}
-                    onChangeText={setDescription}
-                />
-                <CustomPicker
-                    options={family.members}
-                    selectedValue={assignedTo}
-                    onValueChange={setAssignedTo}
-                />
+        <View style={styles.container}>
+            <TouchableOpacity style={styles.chooseMember} onPress={() => setOpenPicker(true)}>
+                <Text style={styles.memberChosenText}>
+                    {assignedTo ? assignedTo : 'Choose Member'}
+                </Text>
+            </TouchableOpacity>
 
-                <View
-                    style={{
-                        paddingTop: '5%'
-                    }}
-                >
-                    <DatePickerAndTime selectedValue={dueDate} onDateChange={setDueDate} />
-                    <TimePicker selectedValue={dueTime} onTimeChange={setDueTime} />
-                </View>
+            <TextInputPost placeholder='Title' value={title} onChangeText={setTitle} />
 
-                <View style={styles.timeDateData}>
-                    <Text>Due Date: {dueDate?.toLocaleDateString()}</Text>
-                    <Text>
-                        Due Time:{' '}
-                        {dueTime?.toTimeString().split(':')[0] +
-                            ':' +
-                            dueTime?.toTimeString().split(':')[1]}
-                    </Text>
-                </View>
-
-                <View
-                    style={{
-                        paddingTop: '30%'
-                    }}
-                >
-                    <Button title='Create Task' onPress={handleSubmit} />
-                </View>
-            </View>
-            {isLoading && <LoadingOverlay isVisible={isLoading} />}
-        </>
+            <CustomPicker
+                setOpenPicker={setOpenPicker}
+                openPicker={openPicker}
+                options={['Member 1', 'Member 2', 'Member 3']}
+                onValueChange={setAssignedTo}
+            />
+        </View>
     )
 }
+
+// <DatePickerAndTime selectedValue={dueDate} onDateChange={setDueDate} />
+// <TimePicker selectedValue={dueTime} onTimeChange={setDueTime} />
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingTop: '15%',
+        alignItems: 'center'
+    },
+    memberChosenText: {
+        fontSize: 18,
+        fontFamily: typography.tertiary,
+        color: '#fff'
+    },
+    chooseMember: {
+        backgroundColor: palette.boxesPastelGreen,
+        width: '90%',
+        height: '8%',
+        borderRadius: 10,
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20
-    },
-    timeDateData: {
-        paddingTop: '5%'
-    },
-    picker: {
-        width: '100%',
-        height: '10%',
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 4
-    },
-    input: {
-        width: '100%',
-        padding: 10,
-        marginVertical: 10,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 4
-    },
-    datePickerButton: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        padding: 10,
-        borderRadius: 4,
-        marginBottom: 10
+        justifyContent: 'center'
     },
     centeredView: {
         flex: 1,
