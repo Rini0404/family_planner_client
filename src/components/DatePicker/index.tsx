@@ -57,8 +57,6 @@ export const DatePickerAndTime: React.FC<DatePickerProps> = ({
 
     const currentMonthName = monthNames[currentMonth - 1]
 
-    console.log('Opened Date: ', openedDate)
-
     return (
         <Modal animationType='slide' transparent={true} visible={openedDate}>
             <View style={styles.centeredView}>

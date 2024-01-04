@@ -8,7 +8,6 @@ import { addTask } from '../../redux/tasks/tasksActions'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import { TextInputPost } from '../TextInputPost'
-import BackArrow from '../BackArrow'
 import { TextDescription } from '../TextDescriptionComponent'
 import { DateTimeButtons } from '../DateAndTimeButtons'
 import { DatePickerAndTime } from '../DatePicker'
@@ -138,6 +137,17 @@ export const CreateTask = () => {
                 setOpenedTime={setOpenedTime}
             />
 
+            <View style={styles.timeData}>
+                <Text style={styles.dateText}>Due on: </Text>
+                <Text style={styles.dateText}>
+                    {dueDate?.toLocaleDateString()} @ {dueTime?.toLocaleTimeString()}
+                </Text>
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Create Task</Text>
+            </TouchableOpacity>
+
             <CustomPicker
                 setOpenPicker={setOpenPicker}
                 openPicker={openPicker}
@@ -153,6 +163,20 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: '15%',
         alignItems: 'center'
+    },
+    timeData: {
+        marginTop: '5%',
+        width: '90%',
+        height: '12%',
+        borderRadius: 10,
+        backgroundColor: palette.pastelNavbars,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    dateText: {
+        fontSize: 20,
+        fontFamily: typography.quaternary,
+        color: '#fff'
     },
     memberText: {
         paddingLeft: '12%',
@@ -193,5 +217,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
+    },
+    button: {
+        backgroundColor: palette.boxesPastelGreen,
+        width: '90%',
+        height: '8%',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '5%'
+    },
+    buttonText: {
+        fontSize: 20,
+        fontFamily: typography.quaternary,
+        color: '#fff'
     }
 })

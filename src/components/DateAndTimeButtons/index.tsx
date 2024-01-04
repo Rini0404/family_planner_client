@@ -49,7 +49,7 @@ export const DateTimeButtons: React.FC<TextInputPostProps> = ({
 const styles = StyleSheet.create({
     container: {
         width: '90%',
-        height: '25%',
+        height: '15%',
         marginTop: '5%',
         alignItems: 'center'
     },
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     buttons: {
         backgroundColor: palette.boxesPastelGreen,
         width: '48%',
-        height: '70%',
+        height: '100%',
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center'
