@@ -12,8 +12,12 @@ import { TextDescription } from '../TextDescriptionComponent'
 import { DateTimeButtons } from '../DateAndTimeButtons'
 import { DatePickerAndTime } from '../DatePicker'
 import { TimePicker } from '../TimePicker'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { AppStackParamList } from '../../navigators'
 
 export const CreateTask = () => {
+    const navigation = useNavigation<StackNavigationProp<AppStackParamList>>()
     const dispatch = useDispatch()
     const { family } = useSelector((state: any) => state.family)
     const [isLoading, setIsLoading] = useState(false)
@@ -81,6 +85,7 @@ export const CreateTask = () => {
             setAssignedTo('')
             setDueDate(new Date())
             setDueTime(new Date())
+            navigation.navigate('HomeScreen')
         } catch (error) {
             console.log('Error creating task: ', error)
             alert((error as Error).message)
@@ -151,7 +156,7 @@ export const CreateTask = () => {
             <CustomPicker
                 setOpenPicker={setOpenPicker}
                 openPicker={openPicker}
-                options={['Member 1', 'Member 2', 'Member 3']}
+                options={family.members}
                 onValueChange={setAssignedTo}
             />
         </View>

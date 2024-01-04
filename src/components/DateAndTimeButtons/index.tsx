@@ -28,7 +28,7 @@ export const DateTimeButtons: React.FC<TextInputPostProps> = ({
                     }}
                     style={styles.buttons}
                 >
-                    <CalendarSvg width={60} height={60} />
+                    <CalendarSvg width={55} height={55} />
                     <Text style={styles.buttonText}>Due Date</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -38,7 +38,7 @@ export const DateTimeButtons: React.FC<TextInputPostProps> = ({
                     }}
                     style={styles.buttons}
                 >
-                    <TimeSvg width={60} height={60} />
+                    <TimeSvg width={55} height={55} />
                     <Text style={styles.buttonText}>Due Time</Text>
                 </TouchableOpacity>
             </View>
@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
         height: '100%',
         borderRadius: 15,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        padding: '5%'
     },
     buttonsRow: {
         width: '100%',
