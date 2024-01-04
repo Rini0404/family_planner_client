@@ -1,18 +1,23 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { CustomPicker } from '../Picker'
-import { DatePickerAndTime } from '../DatePicker'
-import { TimePicker } from '../TimePicker'
 import { post } from '../../api/post'
-import LoadingOverlay from '../LoadingOverlay'
 import { TaskResponseType } from '../../types/tasks'
 import { addTask } from '../../redux/tasks/tasksActions'
+import { palette } from '../../theme'
+import { typography } from '../../theme/fonts'
+import { TextInputPost } from '../TextInputPost'
+import { TextDescription } from '../TextDescriptionComponent'
+import { DateTimeButtons } from '../DateAndTimeButtons'
+import { DatePickerAndTime } from '../DatePicker'
+import { TimePicker } from '../TimePicker'
 
 export const CreateTask = () => {
     const dispatch = useDispatch()
     const { family } = useSelector((state: any) => state.family)
     const [isLoading, setIsLoading] = useState(false)
+    const [openPicker, setOpenPicker] = useState(false)
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -21,6 +26,9 @@ export const CreateTask = () => {
     const [dueTime, setDueTime] = useState<Date | null>(new Date())
 
     const familyId = family._id
+
+    const [openedDate, setOpenedDate] = useState(false)
+    const [openedTime, setOpenedTime] = useState(false)
 
     const handleSubmit = async () => {
         setIsLoading(true)
@@ -82,89 +90,112 @@ export const CreateTask = () => {
     }
 
     return (
-        <>
-            <View style={styles.container}>
-                <Text>Create a Task</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder='Title'
-                    value={title}
-                    onChangeText={setTitle}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder='Description'
-                    value={description}
-                    onChangeText={setDescription}
-                />
-                <CustomPicker
-                    options={family.members}
-                    selectedValue={assignedTo}
-                    onValueChange={setAssignedTo}
-                />
-
-                <View
-                    style={{
-                        paddingTop: '5%'
-                    }}
-                >
-                    <DatePickerAndTime selectedValue={dueDate} onDateChange={setDueDate} />
-                    <TimePicker selectedValue={dueTime} onTimeChange={setDueTime} />
-                </View>
-
-                <View style={styles.timeDateData}>
-                    <Text>Due Date: {dueDate?.toLocaleDateString()}</Text>
-                    <Text>
-                        Due Time:{' '}
-                        {dueTime?.toTimeString().split(':')[0] +
-                            ':' +
-                            dueTime?.toTimeString().split(':')[1]}
+        <View style={styles.container}>
+            <TouchableOpacity style={styles.chooseMember} onPress={() => setOpenPicker(true)}>
+                <View style={styles.memberText}>
+                    <Text style={styles.memberChosenText}>
+                        {assignedTo ? assignedTo : 'Choose Member'}
                     </Text>
                 </View>
-
-                <View
+                <Text
                     style={{
-                        paddingTop: '30%'
+                        paddingRight: '3%',
+                        fontSize: 18,
+                        fontFamily: typography.tertiary,
+                        color: '#fff'
                     }}
                 >
-                    <Button title='Create Task' onPress={handleSubmit} />
-                </View>
+                    ▼
+                </Text>
+            </TouchableOpacity>
+            <TextInputPost placeholder='What is the task?' value={title} onChangeText={setTitle} />
+
+            <TextDescription
+                placeholder='Description'
+                value={description}
+                onChangeText={setDescription}
+            />
+
+            <DateTimeButtons
+                openedDate={openedDate}
+                setOpenedDate={setOpenedDate}
+                openedTime={openedTime}
+                setOpenedTime={setOpenedTime}
+            />
+
+            <DatePickerAndTime
+                selectedValue={dueDate}
+                onDateChange={setDueDate}
+                openedDate={openedDate}
+                setOpenedDate={setOpenedDate}
+            />
+
+            <TimePicker
+                selectedValue={dueTime}
+                onTimeChange={setDueTime}
+                openedTime={openedTime}
+                setOpenedTime={setOpenedTime}
+            />
+
+            <View style={styles.timeData}>
+                <Text style={styles.dateText}>Due on: </Text>
+                <Text style={styles.dateText}>
+                    {dueDate?.toLocaleDateString()} @ {dueTime?.toLocaleTimeString()}
+                </Text>
             </View>
-            {isLoading && <LoadingOverlay isVisible={isLoading} />}
-        </>
+
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Create Task</Text>
+            </TouchableOpacity>
+
+            <CustomPicker
+                setOpenPicker={setOpenPicker}
+                openPicker={openPicker}
+                options={['Member 1', 'Member 2', 'Member 3']}
+                onValueChange={setAssignedTo}
+            />
+        </View>
     )
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
+        paddingTop: '15%',
+        alignItems: 'center'
+    },
+    timeData: {
+        marginTop: '5%',
+        width: '90%',
+        height: '12%',
+        borderRadius: 10,
+        backgroundColor: palette.pastelNavbars,
         justifyContent: 'center',
-        padding: 20
+        alignItems: 'center'
     },
-    timeDateData: {
-        paddingTop: '5%'
+    dateText: {
+        fontSize: 20,
+        fontFamily: typography.quaternary,
+        color: '#fff'
     },
-    picker: {
-        width: '100%',
-        height: '10%',
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 4
+    memberText: {
+        paddingLeft: '12%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    input: {
-        width: '100%',
-        padding: 10,
-        marginVertical: 10,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 4
+    memberChosenText: {
+        fontSize: 18,
+        fontFamily: typography.tertiary,
+        color: '#fff'
     },
-    datePickerButton: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        padding: 10,
-        borderRadius: 4,
-        marginBottom: 10
+    chooseMember: {
+        backgroundColor: palette.boxesPastelGreen,
+        width: '90%',
+        height: '8%',
+        borderRadius: 10,
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     centeredView: {
         flex: 1,
@@ -186,5 +217,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
+    },
+    button: {
+        backgroundColor: palette.boxesPastelGreen,
+        width: '90%',
+        height: '8%',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '5%'
+    },
+    buttonText: {
+        fontSize: 20,
+        fontFamily: typography.quaternary,
+        color: '#fff'
     }
 })

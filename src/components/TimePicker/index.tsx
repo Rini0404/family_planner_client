@@ -8,10 +8,16 @@ import { palette } from '../../theme'
 type TimePickerProps = {
     selectedValue: Date | null
     onTimeChange: (newTime: Date) => void
+    openedTime: boolean
+    setOpenedTime: (openedTime: boolean) => void
 }
 
-export const TimePicker: React.FC<TimePickerProps> = ({ selectedValue, onTimeChange }) => {
-    const [showTimePicker, setShowTimePicker] = useState(false)
+export const TimePicker: React.FC<TimePickerProps> = ({
+    selectedValue,
+    onTimeChange,
+    openedTime,
+    setOpenedTime
+}) => {
     const [is24HourFormat, setIs24HourFormat] = useState(true) // State to track 24-hour format
     // Ensure selectedValue is a valid Date object, fallback to new Date() if null
     const validSelectedValue = selectedValue instanceof Date ? selectedValue : new Date()
@@ -90,34 +96,26 @@ export const TimePicker: React.FC<TimePickerProps> = ({ selectedValue, onTimeCha
     }
 
     return (
-        <View>
-            <TouchableOpacity
-                style={styles.datePickerButton}
-                onPress={() => setShowTimePicker(true)}
-            >
-                <Text>Time picker</Text>
-            </TouchableOpacity>
-
-            <Modal animationType='slide' transparent={true} visible={showTimePicker}>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center',
-                                marginBottom: '1%'
-                            }}
+        <Modal animationType='slide' transparent={true} visible={openedTime}>
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <View
+                        style={{
+                            width: '100%',
+                            alignItems: 'center',
+                            marginBottom: '1%'
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={styles.circleX}
+                            onPress={() => setOpenedTime(false)}
                         >
-                            <TouchableOpacity
-                                style={styles.circleX}
-                                onPress={() => setShowTimePicker(false)}
-                            >
-                                <Text style={styles.x}>X</Text>
-                            </TouchableOpacity>
-                        </View>
-                        {/* Toggle for 24-hour and 12-hour formats */}
+                            <Text style={styles.x}>X</Text>
+                        </TouchableOpacity>
+                    </View>
+                    {/* Toggle for 24-hour and 12-hour formats */}
 
-                        {/* <View style={styles.toggleView}>
+                    {/* <View style={styles.toggleView}>
                             <TouchableOpacity onPress={() => handleToggleFormat(true)}>
                                 <Text style={styles.toggleText}>24hr</Text>
                             </TouchableOpacity>
@@ -127,65 +125,61 @@ export const TimePicker: React.FC<TimePickerProps> = ({ selectedValue, onTimeCha
                             </TouchableOpacity>
                         </View> */}
 
-                        <View style={styles.timePickerView}>
-                            <View style={styles.columnWithLabel}>
-                                <Text style={styles.columnLabel}>Hours</Text>
-                                <ScrollView
-                                    style={styles.timeScrollView}
-                                    showsVerticalScrollIndicator={false}
-                                >
-                                    {hours.map((hour) => (
-                                        <TouchableOpacity
-                                            key={hour}
-                                            style={[
-                                                styles.timePickerItem,
-                                                isSelectedTime(
-                                                    hour,
-                                                    validSelectedValue.getMinutes()
-                                                ) && styles.selectedTime
-                                            ]}
-                                            onPress={() => {
-                                                const newTime = new Date(
-                                                    validSelectedValue.setHours(hour)
-                                                )
-                                                onTimeChange(newTime)
-                                            }}
-                                        >
-                                            <Text style={styles.timeText}>{hour}</Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </ScrollView>
-                            </View>
-                            <View style={styles.columnWithLabel}>
-                                <Text style={styles.columnLabel}>Minutes</Text>
-                                <ScrollView
-                                    style={styles.timeScrollView}
-                                    showsVerticalScrollIndicator={false}
-                                >
-                                    {minutes.map((minute) => (
-                                        <TouchableOpacity
-                                            key={minute}
-                                            style={[
-                                                styles.timePickerItem,
-                                                isSelectedTime(
-                                                    validSelectedValue.getHours(),
-                                                    minute
-                                                ) && styles.selectedTime
-                                            ]}
-                                            onPress={() => {
-                                                const newTime = new Date(
-                                                    validSelectedValue.setMinutes(minute)
-                                                )
-                                                onTimeChange(newTime)
-                                            }}
-                                        >
-                                            <Text style={styles.timeText}>{minute}</Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </ScrollView>
-                            </View>
+                    <View style={styles.timePickerView}>
+                        <View style={styles.columnWithLabel}>
+                            <Text style={styles.columnLabel}>Hours</Text>
+                            <ScrollView
+                                style={styles.timeScrollView}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                {hours.map((hour) => (
+                                    <TouchableOpacity
+                                        key={hour}
+                                        style={[
+                                            styles.timePickerItem,
+                                            isSelectedTime(hour, validSelectedValue.getMinutes()) &&
+                                                styles.selectedTime
+                                        ]}
+                                        onPress={() => {
+                                            const newTime = new Date(
+                                                validSelectedValue.setHours(hour)
+                                            )
+                                            onTimeChange(newTime)
+                                        }}
+                                    >
+                                        <Text style={styles.timeText}>{hour}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
                         </View>
-                        {/* {!is24HourFormat && (
+                        <View style={styles.columnWithLabel}>
+                            <Text style={styles.columnLabel}>Minutes</Text>
+                            <ScrollView
+                                style={styles.timeScrollView}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                {minutes.map((minute) => (
+                                    <TouchableOpacity
+                                        key={minute}
+                                        style={[
+                                            styles.timePickerItem,
+                                            isSelectedTime(validSelectedValue.getHours(), minute) &&
+                                                styles.selectedTime
+                                        ]}
+                                        onPress={() => {
+                                            const newTime = new Date(
+                                                validSelectedValue.setMinutes(minute)
+                                            )
+                                            onTimeChange(newTime)
+                                        }}
+                                    >
+                                        <Text style={styles.timeText}>{minute}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+                        </View>
+                    </View>
+                    {/* {!is24HourFormat && (
                             <View style={styles.amPmToggle}>
                                 <TouchableOpacity onPress={() => handleToggleAmPm(true)}>
                                     <Text style={styles.amPmText}>AM</Text>
@@ -196,13 +190,12 @@ export const TimePicker: React.FC<TimePickerProps> = ({ selectedValue, onTimeCha
                                 </TouchableOpacity>
                             </View>
                         )} */}
-                        <TouchableOpacity onPress={() => setShowTimePicker(false)}>
-                            <Text style={styles.confirmText}>Confirm</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity onPress={() => setOpenedTime(false)}>
+                        <Text style={styles.confirmText}>Confirm</Text>
+                    </TouchableOpacity>
                 </View>
-            </Modal>
-        </View>
+            </View>
+        </Modal>
     )
 }
 
