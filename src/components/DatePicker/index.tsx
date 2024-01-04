@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native'
 import { monthNames, weekDays } from '../../constants/dates'
-import BackArrow from '../BackArrow'
 import { typography } from '../../theme/fonts'
 import { palette } from '../../theme'
 
@@ -34,11 +33,16 @@ const isPastDate = (date: Date | null) => {
 type DatePickerProps = {
     selectedValue: Date | null
     onDateChange: (date: Date) => void
+    openedDate: boolean
+    setOpenedDate: (openedDate: boolean) => void
 }
 
-export const DatePickerAndTime: React.FC<DatePickerProps> = ({ selectedValue, onDateChange }) => {
-    const [show, setShow] = useState(false)
-
+export const DatePickerAndTime: React.FC<DatePickerProps> = ({
+    selectedValue,
+    onDateChange,
+    openedDate,
+    setOpenedDate
+}) => {
     const validSelectedValue = selectedValue instanceof Date ? selectedValue : new Date()
     // Validate that selectedValue is a Date object
 
@@ -53,99 +57,90 @@ export const DatePickerAndTime: React.FC<DatePickerProps> = ({ selectedValue, on
 
     const currentMonthName = monthNames[currentMonth - 1]
 
+    console.log('Opened Date: ', openedDate)
+
     return (
-        <View>
-            <TouchableOpacity style={styles.datePickerButton} onPress={() => setShow(true)}>
-                <Text>Date picker</Text>
-            </TouchableOpacity>
-
-            <Modal animationType='slide' transparent={true} visible={show}>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center',
-                                marginBottom: '1%'
-                            }}
+        <Modal animationType='slide' transparent={true} visible={openedDate}>
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <View
+                        style={{
+                            width: '100%',
+                            alignItems: 'center',
+                            marginBottom: '1%'
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={styles.circleX}
+                            onPress={() => setOpenedDate(false)}
                         >
-                            <TouchableOpacity style={styles.circleX} onPress={() => setShow(false)}>
-                                <Text style={styles.x}>X</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={styles.monthNavigation}>
-                            <TouchableOpacity
-                                onPress={() => changeMonth(-1)}
-                                style={styles.navButton}
-                            >
-                                <Text style={styles.navButtonText}>{'<'}</Text>
-                            </TouchableOpacity>
-                            <Text
-                                style={{
-                                    fontFamily: typography.primary
-                                }}
-                            >{`${currentMonthName} ${currentYear}`}</Text>
-                            <TouchableOpacity
-                                onPress={() => changeMonth(1)}
-                                style={styles.navButton}
-                            >
-                                <Text style={styles.navButtonText}>{'>'}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.weekDaysView}>
-                            {weekDays.map((dayName, index) => (
-                                <Text key={index} style={styles.weekDay}>
-                                    {dayName}
-                                </Text>
-                            ))}
-                        </View>
-                        <View style={styles.calendarView}>
-                            {days.map((day, index) => {
-                                const isSelected =
-                                    day &&
-                                    day.toISOString().split('T')[0] ===
-                                        validSelectedValue.toISOString().split('T')[0]
-                                return (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={[
-                                            styles.dayButton,
-                                            day && isPastDate(day) && styles.pastDay,
-                                            isSelected && styles.selectedDay
-                                        ]}
-                                        onPress={() => {
-                                            if (day && !isPastDate(day)) {
-                                                onDateChange(day)
-                                            }
-                                        }}
-                                        disabled={day ? isPastDate(day) : true}
-                                    >
-                                        <Text
-                                            style={day && isPastDate(day) ? styles.pastDayText : {}}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily: typography.primary
-                                                }}
-                                            >
-                                                {day ? day.getDate() : ''}
-                                            </Text>
-                                        </Text>
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </View>
-
-                        <TouchableOpacity onPress={() => setShow(false)}>
-                            <Text style={{ paddingTop: '3%', fontFamily: typography.primary }}>
-                                Confirm
-                            </Text>
+                            <Text style={styles.x}>X</Text>
                         </TouchableOpacity>
                     </View>
+
+                    <View style={styles.monthNavigation}>
+                        <TouchableOpacity onPress={() => changeMonth(-1)} style={styles.navButton}>
+                            <Text style={styles.navButtonText}>{'<'}</Text>
+                        </TouchableOpacity>
+                        <Text
+                            style={{
+                                fontFamily: typography.primary
+                            }}
+                        >{`${currentMonthName} ${currentYear}`}</Text>
+                        <TouchableOpacity onPress={() => changeMonth(1)} style={styles.navButton}>
+                            <Text style={styles.navButtonText}>{'>'}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.weekDaysView}>
+                        {weekDays.map((dayName, index) => (
+                            <Text key={index} style={styles.weekDay}>
+                                {dayName}
+                            </Text>
+                        ))}
+                    </View>
+                    <View style={styles.calendarView}>
+                        {days.map((day, index) => {
+                            const isSelected =
+                                day &&
+                                day.toISOString().split('T')[0] ===
+                                    validSelectedValue.toISOString().split('T')[0]
+                            return (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={[
+                                        styles.dayButton,
+                                        day && isPastDate(day) && styles.pastDay,
+                                        isSelected && styles.selectedDay
+                                    ]}
+                                    onPress={() => {
+                                        if (day && !isPastDate(day)) {
+                                            onDateChange(day)
+                                        }
+                                    }}
+                                    disabled={day ? isPastDate(day) : true}
+                                >
+                                    <Text style={day && isPastDate(day) ? styles.pastDayText : {}}>
+                                        <Text
+                                            style={{
+                                                fontFamily: typography.primary
+                                            }}
+                                        >
+                                            {day ? day.getDate() : ''}
+                                        </Text>
+                                    </Text>
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </View>
+
+                    <TouchableOpacity onPress={() => setOpenedDate(false)}>
+                        <Text style={{ paddingTop: '3%', fontFamily: typography.primary }}>
+                            Confirm
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-            </Modal>
-        </View>
+            </View>
+        </Modal>
     )
 }
 

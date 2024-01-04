@@ -9,7 +9,7 @@ type TextInputPostProps = {
     onChangeText: (text: string) => void
 }
 
-export const TextInputPost: React.FC<TextInputPostProps> = ({
+export const TextDescription: React.FC<TextInputPostProps> = ({
     placeholder,
     value,
     onChangeText
@@ -25,7 +25,7 @@ export const TextInputPost: React.FC<TextInputPostProps> = ({
                     multiline
                     textAlignVertical='center'
                     style={styles.input}
-                    maxLength={70}
+                    maxLength={250}
                 />
             </View>
         </View>
@@ -36,13 +36,13 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: palette.pastelNavbars,
         width: '90%',
-        height: '15%',
+        height: '20%',
         borderRadius: 20,
         marginTop: '5%',
         alignItems: 'center'
     },
     input: {
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: typography.tertiary,
         color: '#fff'
     },

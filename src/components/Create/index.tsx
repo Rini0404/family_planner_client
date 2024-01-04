@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { CustomPicker } from '../Picker'
-import { DatePickerAndTime } from '../DatePicker'
-import { TimePicker } from '../TimePicker'
 import { post } from '../../api/post'
-import LoadingOverlay from '../LoadingOverlay'
 import { TaskResponseType } from '../../types/tasks'
 import { addTask } from '../../redux/tasks/tasksActions'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import { TextInputPost } from '../TextInputPost'
+import BackArrow from '../BackArrow'
+import { TextDescription } from '../TextDescriptionComponent'
+import { DateTimeButtons } from '../DateAndTimeButtons'
+import { DatePickerAndTime } from '../DatePicker'
+import { TimePicker } from '../TimePicker'
 
 export const CreateTask = () => {
     const dispatch = useDispatch()
@@ -25,6 +27,9 @@ export const CreateTask = () => {
     const [dueTime, setDueTime] = useState<Date | null>(new Date())
 
     const familyId = family._id
+
+    const [openedDate, setOpenedDate] = useState(false)
+    const [openedTime, setOpenedTime] = useState(false)
 
     const handleSubmit = async () => {
         setIsLoading(true)
@@ -88,12 +93,50 @@ export const CreateTask = () => {
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.chooseMember} onPress={() => setOpenPicker(true)}>
-                <Text style={styles.memberChosenText}>
-                    {assignedTo ? assignedTo : 'Choose Member'}
+                <View style={styles.memberText}>
+                    <Text style={styles.memberChosenText}>
+                        {assignedTo ? assignedTo : 'Choose Member'}
+                    </Text>
+                </View>
+                <Text
+                    style={{
+                        paddingRight: '3%',
+                        fontSize: 18,
+                        fontFamily: typography.tertiary,
+                        color: '#fff'
+                    }}
+                >
+                    ▼
                 </Text>
             </TouchableOpacity>
+            <TextInputPost placeholder='What is the task?' value={title} onChangeText={setTitle} />
 
-            <TextInputPost placeholder='Title' value={title} onChangeText={setTitle} />
+            <TextDescription
+                placeholder='Description'
+                value={description}
+                onChangeText={setDescription}
+            />
+
+            <DateTimeButtons
+                openedDate={openedDate}
+                setOpenedDate={setOpenedDate}
+                openedTime={openedTime}
+                setOpenedTime={setOpenedTime}
+            />
+
+            <DatePickerAndTime
+                selectedValue={dueDate}
+                onDateChange={setDueDate}
+                openedDate={openedDate}
+                setOpenedDate={setOpenedDate}
+            />
+
+            <TimePicker
+                selectedValue={dueTime}
+                onTimeChange={setDueTime}
+                openedTime={openedTime}
+                setOpenedTime={setOpenedTime}
+            />
 
             <CustomPicker
                 setOpenPicker={setOpenPicker}
@@ -105,12 +148,16 @@ export const CreateTask = () => {
     )
 }
 
-// <DatePickerAndTime selectedValue={dueDate} onDateChange={setDueDate} />
-// <TimePicker selectedValue={dueTime} onTimeChange={setDueTime} />
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: '15%',
+        alignItems: 'center'
+    },
+    memberText: {
+        paddingLeft: '12%',
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center'
     },
     memberChosenText: {
@@ -123,8 +170,8 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '8%',
         borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center'
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     centeredView: {
         flex: 1,
