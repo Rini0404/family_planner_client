@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Animated } from 'react-native'
 import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
-import BackArrow from '../BackArrow'
 import { typography } from '../../theme/fonts'
 import { palette } from '../../theme'
 
