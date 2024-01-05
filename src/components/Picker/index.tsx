@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { StyleSheet, View, Text, Modal, TouchableOpacity } from 'react-native'
 
 interface CustomPickerProps {
-    options: string[]
+    options: { _id: string; firstName: string }[]
     openPicker: boolean
-    onValueChange: (value: string) => void
+    onValueChange: (value: { _id: string; firstName: string }) => void
     setOpenPicker: (value: boolean) => void
 }
 
@@ -25,14 +25,17 @@ export const CustomPicker: React.FC<CustomPickerProps> = ({
                     <View style={styles.modalView}>
                         {options.map((option, index) => (
                             <TouchableOpacity
-                                key={index}
+                                key={option._id} // Use _id for the key
                                 style={styles.option}
                                 onPress={() => {
-                                    onValueChange(option)
+                                    onValueChange({
+                                        _id: option._id,
+                                        firstName: option.firstName
+                                    })
                                     setOpenPicker(false)
                                 }}
                             >
-                                <Text>{`Member ${index + 1}`}</Text>
+                                <Text>{option.firstName}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>

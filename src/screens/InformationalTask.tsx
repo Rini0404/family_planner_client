@@ -137,7 +137,9 @@ export const InformationalTask: React.FC<InformationalTaskProps> = ({ route }) =
                 <BackDrop color='#fff'>
                     <View style={styles.backDropContainer}>
                         <View style={styles.assignedCard}>
-                            <Text style={styles.assignedBy}>Assigned by: {'\n'} Natalie Roman</Text>
+                            <Text style={styles.assignedBy}>
+                                Assigned To: {'\n'} {params.assignedTo?.firstName}
+                            </Text>
                             <Text style={{ ...styles.assignedBy, paddingTop: '3%' }}>
                                 Status: {generateStatusText}
                             </Text>
@@ -301,7 +303,7 @@ const styles = StyleSheet.create({
     assignedBy: {
         fontSize: 20,
         width: '80%',
-        marginTop: '5%',
+        marginTop: '6%',
         alignSelf: 'center',
         fontFamily: typography.quaternary,
         textAlign: 'center'

@@ -1,3 +1,5 @@
+import { UserType } from './user'
+
 export enum Status {
     Pending = 'pending',
     InProgress = 'in progress',
@@ -10,7 +12,7 @@ export interface InterfaceTask {
     title: string
     description?: string
     createdBy: string
-    assignedTo?: string
+    assignedTo?: UserType
     family: string
     dueDate?: Date
     status: Status

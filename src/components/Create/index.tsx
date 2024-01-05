@@ -25,7 +25,7 @@ export const CreateTask = () => {
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const [assignedTo, setAssignedTo] = useState('')
+    const [assignedTo, setAssignedTo] = useState<{ _id: string; firstName: string } | null>(null)
     const [dueDate, setDueDate] = useState<Date | null>()
     const [dueTime, setDueTime] = useState<Date | null>()
 
@@ -61,7 +61,7 @@ export const CreateTask = () => {
             const taskData = {
                 title,
                 description,
-                assignedTo,
+                assignedTo: assignedTo ? assignedTo._id : null,
                 dueDate: utcDueDate,
                 familyId
             }
@@ -81,7 +81,7 @@ export const CreateTask = () => {
 
             setTitle('')
             setDescription('')
-            setAssignedTo('')
+            setAssignedTo(null)
             setDueDate(new Date())
             setDueTime(new Date())
             navigation.navigate('HomeScreen')
@@ -98,7 +98,9 @@ export const CreateTask = () => {
             <TouchableOpacity style={styles.chooseMember} onPress={() => setOpenPicker(true)}>
                 <View style={styles.memberText}>
                     <Text style={styles.memberChosenText}>
-                        {assignedTo ? assignedTo : 'Choose Member'}
+                        <Text style={styles.memberChosenText}>
+                            {assignedTo ? assignedTo.firstName : 'Choose Member'}
+                        </Text>
                     </Text>
                 </View>
                 <Text
@@ -113,27 +115,23 @@ export const CreateTask = () => {
                 </Text>
             </TouchableOpacity>
             <TextInputPost placeholder='What is the task?' value={title} onChangeText={setTitle} />
-
             <TextDescription
                 placeholder='Description'
                 value={description}
                 onChangeText={setDescription}
             />
-
             <DateTimeButtons
                 openedDate={openedDate}
                 setOpenedDate={setOpenedDate}
                 openedTime={openedTime}
                 setOpenedTime={setOpenedTime}
             />
-
             <DatePickerAndTime
                 selectedValue={dueDate}
                 onDateChange={setDueDate}
                 openedDate={openedDate}
                 setOpenedDate={setOpenedDate}
             />
-
             <TimePicker
                 selectedValue={dueTime}
                 onTimeChange={setDueTime}
@@ -141,7 +139,6 @@ export const CreateTask = () => {
                 setOpenedTime={setOpenedTime}
                 dateChose={dueDate}
             />
-
             <View style={styles.timeData}>
                 <Text style={styles.dateText}>Due on: </Text>
                 <Text style={styles.dateText}>
@@ -151,16 +148,17 @@ export const CreateTask = () => {
                         : ''}
                 </Text>
             </View>
-
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Create Task</Text>
             </TouchableOpacity>
-
             <CustomPicker
                 setOpenPicker={setOpenPicker}
                 openPicker={openPicker}
-                options={family.members}
-                onValueChange={setAssignedTo}
+                options={family.members.map((member: { _id: string; firstName: string }) => ({
+                    _id: member._id,
+                    firstName: member.firstName
+                }))}
+                onValueChange={(selectedMember) => setAssignedTo(selectedMember)}
             />
         </View>
     )
