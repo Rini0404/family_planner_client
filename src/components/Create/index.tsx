@@ -26,8 +26,8 @@ export const CreateTask = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [assignedTo, setAssignedTo] = useState('')
-    const [dueDate, setDueDate] = useState<Date | null>(new Date())
-    const [dueTime, setDueTime] = useState<Date | null>(new Date())
+    const [dueDate, setDueDate] = useState<Date | null>()
+    const [dueTime, setDueTime] = useState<Date | null>()
 
     const familyId = family._id
 
@@ -77,7 +77,6 @@ export const CreateTask = () => {
                 throw new Error(response.message)
             }
 
-            alert('Task created successfully!')
             dispatch(addTask(response.data))
 
             setTitle('')
@@ -140,12 +139,16 @@ export const CreateTask = () => {
                 onTimeChange={setDueTime}
                 openedTime={openedTime}
                 setOpenedTime={setOpenedTime}
+                dateChose={dueDate}
             />
 
             <View style={styles.timeData}>
                 <Text style={styles.dateText}>Due on: </Text>
                 <Text style={styles.dateText}>
-                    {dueDate?.toLocaleDateString()} @ {dueTime?.toLocaleTimeString()}
+                    {dueDate ? dueDate?.toLocaleDateString() : ''} @{' '}
+                    {dueTime
+                        ? dueTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        : ''}
                 </Text>
             </View>
 
