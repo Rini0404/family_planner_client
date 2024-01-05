@@ -31,7 +31,7 @@ const isPastDate = (date: Date | null) => {
 }
 
 type DatePickerProps = {
-    selectedValue: Date | null
+    selectedValue: Date | null | undefined
     onDateChange: (date: Date) => void
     openedDate: boolean
     setOpenedDate: (openedDate: boolean) => void
@@ -52,10 +52,32 @@ export const DatePickerAndTime: React.FC<DatePickerProps> = ({
 
     const changeMonth = (increment: number) => {
         const newDate = new Date(currentYear, currentMonth - 1 + increment, 1)
-        onDateChange(newDate)
+        const newDays = generateMonthDays(newDate.getFullYear(), newDate.getMonth() + 1)
+        const firstFutureDate = newDays.find((day) => day && !isPastDate(day))
+
+        if (firstFutureDate) {
+            onDateChange(firstFutureDate) // Set to the first available day in the new month
+        } else {
+            onDateChange(newDate) // Fallback in case no future dates are available
+        }
     }
 
     const currentMonthName = monthNames[currentMonth - 1]
+
+    React.useEffect(() => {
+        // If the selected date is in the past or null, update it to the current date or the first available future date
+        if (!selectedValue || isPastDate(validSelectedValue)) {
+            const today = new Date()
+            if (today.getMonth() + 1 === currentMonth && today.getFullYear() === currentYear) {
+                onDateChange(today) // If current month and year, set today
+            } else {
+                const firstFutureDate = days.find((day) => day && !isPastDate(day))
+                if (firstFutureDate) {
+                    onDateChange(firstFutureDate) // If not, set to the first available day in the new month
+                }
+            }
+        }
+    }, [])
 
     return (
         <Modal animationType='slide' transparent={true} visible={openedDate}>

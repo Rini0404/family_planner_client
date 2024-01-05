@@ -6,20 +6,22 @@ import { typography } from '../../theme/fonts'
 import { palette } from '../../theme'
 
 type TimePickerProps = {
-    selectedValue: Date | null
+    selectedValue: Date | null | undefined
     onTimeChange: (newTime: Date) => void
     openedTime: boolean
     setOpenedTime: (openedTime: boolean) => void
+    dateChose: Date | null | undefined
 }
 
 export const TimePicker: React.FC<TimePickerProps> = ({
     selectedValue,
     onTimeChange,
     openedTime,
-    setOpenedTime
+    setOpenedTime,
+    dateChose
 }) => {
-    const [is24HourFormat, setIs24HourFormat] = useState(true) // State to track 24-hour format
-    // Ensure selectedValue is a valid Date object, fallback to new Date() if null
+    const [is24HourFormat, setIs24HourFormat] = useState(true)
+
     const validSelectedValue = selectedValue instanceof Date ? selectedValue : new Date()
 
     // Determine if it's AM or PM based on validSelectedValue
@@ -95,6 +97,28 @@ export const TimePicker: React.FC<TimePickerProps> = ({
         return hour // No change for 24-hour format or 12 PM
     }
 
+    const isTimeInPast = (hour: number, minute: number) => {
+        const now = new Date()
+
+        if (dateChose && dateChose.toDateString() !== now.toDateString()) {
+            // If the chosen date is not today, do not mark any time as past
+            return false
+        }
+
+        const timeToCheck = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute)
+        return timeToCheck < now
+    }
+
+    React.useEffect(() => {
+        const now = new Date()
+        if (dateChose && dateChose > now) {
+            // If the chosen date is in the future, set the time to 00:00
+            const newTime = new Date(dateChose)
+            newTime.setHours(0, 0, 0, 0) // Set to 00:00
+            onTimeChange(newTime)
+        }
+    }, [dateChose, onTimeChange])
+
     return (
         <Modal animationType='slide' transparent={true} visible={openedTime}>
             <View style={styles.centeredView}>
@@ -132,24 +156,43 @@ export const TimePicker: React.FC<TimePickerProps> = ({
                                 style={styles.timeScrollView}
                                 showsVerticalScrollIndicator={false}
                             >
-                                {hours.map((hour) => (
-                                    <TouchableOpacity
-                                        key={hour}
-                                        style={[
-                                            styles.timePickerItem,
-                                            isSelectedTime(hour, validSelectedValue.getMinutes()) &&
-                                                styles.selectedTime
-                                        ]}
-                                        onPress={() => {
-                                            const newTime = new Date(
-                                                validSelectedValue.setHours(hour)
-                                            )
-                                            onTimeChange(newTime)
-                                        }}
-                                    >
-                                        <Text style={styles.timeText}>{hour}</Text>
-                                    </TouchableOpacity>
-                                ))}
+                                {hours.map((hour) => {
+                                    const isPast = isTimeInPast(
+                                        hour,
+                                        validSelectedValue.getMinutes()
+                                    )
+                                    return (
+                                        <TouchableOpacity
+                                            key={hour}
+                                            style={[
+                                                styles.timePickerItem,
+                                                isSelectedTime(
+                                                    hour,
+                                                    validSelectedValue.getMinutes()
+                                                ) && styles.selectedTime,
+                                                isPast && styles.pastTime // Add a style for past times
+                                            ]}
+                                            onPress={() => {
+                                                if (!isPast) {
+                                                    const newTime = new Date(
+                                                        validSelectedValue.setHours(hour)
+                                                    )
+                                                    onTimeChange(newTime)
+                                                }
+                                            }}
+                                            disabled={isPast} // Disable the button if the time is in the past
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.timeText,
+                                                    isPast && styles.pastTimeText
+                                                ]}
+                                            >
+                                                {hour}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    )
+                                })}
                             </ScrollView>
                         </View>
                         <View style={styles.columnWithLabel}>
@@ -212,6 +255,14 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 4,
         marginBottom: 10
+    },
+    pastTime: {
+        backgroundColor: '#f0f0f0',
+        paddingVertical: 10,
+        paddingHorizontal: 15
+    },
+    pastTimeText: {
+        color: '#a0a0a0'
     },
     x: {
         fontFamily: typography.primary,
@@ -299,7 +350,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     timeText: {
-        fontFamily: typography.primary
+        fontFamily: typography.primary,
+        margin: 2
     },
     confirmText: {
         paddingTop: '3%',

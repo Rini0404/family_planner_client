@@ -12,8 +12,12 @@ import { TextDescription } from '../TextDescriptionComponent'
 import { DateTimeButtons } from '../DateAndTimeButtons'
 import { DatePickerAndTime } from '../DatePicker'
 import { TimePicker } from '../TimePicker'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { AppStackParamList } from '../../navigators'
 
 export const CreateTask = () => {
+    const navigation = useNavigation<StackNavigationProp<AppStackParamList>>()
     const dispatch = useDispatch()
     const { family } = useSelector((state: any) => state.family)
     const [isLoading, setIsLoading] = useState(false)
@@ -22,8 +26,8 @@ export const CreateTask = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [assignedTo, setAssignedTo] = useState('')
-    const [dueDate, setDueDate] = useState<Date | null>(new Date())
-    const [dueTime, setDueTime] = useState<Date | null>(new Date())
+    const [dueDate, setDueDate] = useState<Date | null>()
+    const [dueTime, setDueTime] = useState<Date | null>()
 
     const familyId = family._id
 
@@ -73,7 +77,6 @@ export const CreateTask = () => {
                 throw new Error(response.message)
             }
 
-            alert('Task created successfully!')
             dispatch(addTask(response.data))
 
             setTitle('')
@@ -81,6 +84,7 @@ export const CreateTask = () => {
             setAssignedTo('')
             setDueDate(new Date())
             setDueTime(new Date())
+            navigation.navigate('HomeScreen')
         } catch (error) {
             console.log('Error creating task: ', error)
             alert((error as Error).message)
@@ -135,12 +139,16 @@ export const CreateTask = () => {
                 onTimeChange={setDueTime}
                 openedTime={openedTime}
                 setOpenedTime={setOpenedTime}
+                dateChose={dueDate}
             />
 
             <View style={styles.timeData}>
                 <Text style={styles.dateText}>Due on: </Text>
                 <Text style={styles.dateText}>
-                    {dueDate?.toLocaleDateString()} @ {dueTime?.toLocaleTimeString()}
+                    {dueDate ? dueDate?.toLocaleDateString() : ''} @{' '}
+                    {dueTime
+                        ? dueTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        : ''}
                 </Text>
             </View>
 
@@ -151,7 +159,7 @@ export const CreateTask = () => {
             <CustomPicker
                 setOpenPicker={setOpenPicker}
                 openPicker={openPicker}
-                options={['Member 1', 'Member 2', 'Member 3']}
+                options={family.members}
                 onValueChange={setAssignedTo}
             />
         </View>
