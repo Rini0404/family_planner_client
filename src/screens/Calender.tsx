@@ -7,6 +7,7 @@ import { weekDays } from '../constants/dates'
 import { palette } from '../theme'
 import { MainCalendar } from '../components/MainCalendar'
 import { useSelector } from 'react-redux'
+import { CalenderTaskList } from '../components/CalenderTaskList'
 
 interface CalenderScreenProps extends AppStackScreenProps<'CalenderScreen'> {}
 
@@ -26,6 +27,7 @@ export const CalenderScreen: React.FC<CalenderScreenProps> = () => {
                 ))}
             </View>
             <MainCalendar tasks={tasks} currentDate={currentDate} />
+            <CalenderTaskList tasks={tasks} currentDate={currentDate}/>
         </View>
     )
 }
