@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     userName: {
-        paddingTop: '5%',
+        paddingTop: '1%',
         fontSize: 16,
         fontFamily: typography.tertiary,
         fontWeight: 'bold',

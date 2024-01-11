@@ -15,6 +15,7 @@ import { OptionSignup } from '../components/OptionSignup'
 import { SignupForm } from '../components/SignupForm'
 import BackArrow from '../components/BackArrow'
 import { OptionChosen } from '../types/optionChosen'
+import { palette } from '../theme'
 
 interface SignupProps extends AppStackScreenProps<'Signup'> {}
 
@@ -47,7 +48,7 @@ export const SignupScreen: React.FC<SignupProps> = ({ navigation }) => {
                         <BackArrow onPress={handleBackPress} />
                         <Text style={styles.headerText}>Register</Text>
                     </View>
-                    <BackDrop />
+                    <BackDrop color={palette.boxesPastelGreen} />
 
                     {!optionChosen && (
                         <OptionSignup

@@ -14,6 +14,7 @@ import BackArrow from '../components/BackArrow'
 import { BackDrop } from '../components/BackDrop'
 import { typography } from '../theme/fonts'
 import { SignInForm } from '../components/SignIn'
+import { palette } from '../theme'
 
 type SignInProps = StackScreenProps<AppStackParamList, 'Signin'>
 
@@ -36,7 +37,7 @@ export const SignInScreen: React.FC<SignInProps> = ({ navigation, route }) => {
                         <BackArrow onPress={handleBackPress} />
                         <Text style={styles.headerText}>Log in</Text>
                     </View>
-                    <BackDrop />
+                    <BackDrop color={palette.boxesPastelGreen} />
                     <SignInForm />
                 </View>
             </ScrollView>

@@ -134,81 +134,79 @@ export const InformationalTask: React.FC<InformationalTaskProps> = ({ route }) =
                     <Text style={styles.taskName}>{params.title}</Text>
                 </View>
 
-                <BackDrop color='#fff'>
-                    <View style={styles.backDropContainer}>
-                        <View style={styles.assignedCard}>
-                            <Text style={styles.assignedBy}>
-                                Assigned To: {'\n'} {params.assignedTo?.firstName}
-                            </Text>
-                            <Text style={{ ...styles.assignedBy, paddingTop: '3%' }}>
-                                Status: {generateStatusText}
-                            </Text>
-                            <View
-                                style={{
-                                    ...styles.statusBox,
-                                    backgroundColor: backgroundColor
+                <View style={styles.backDropContainer}>
+                    <View style={styles.assignedCard}>
+                        <Text style={styles.assignedBy}>
+                            Assigned To: {'\n'} {params.assignedTo?.firstName}
+                        </Text>
+                        <Text style={{ ...styles.assignedBy, paddingTop: '3%' }}>
+                            Status: {generateStatusText}
+                        </Text>
+                        <View
+                            style={{
+                                ...styles.statusBox,
+                                backgroundColor: backgroundColor
+                            }}
+                        >
+                            <Text style={styles.dueText}>{statusText}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.additionalDetailsContainer}>
+                        <Text style={styles.additionalDetailsText}>Additional Details: </Text>
+                        <Text style={styles.additionalDescriptions}>{params.description}</Text>
+                    </View>
+
+                    {taskStatus !== Status.Completed && (
+                        <View style={styles.updateTaskContainer}>
+                            <Text style={styles.updateTaskText}>Finished with this task?</Text>
+                            <TouchableOpacity
+                                style={styles.doneButton}
+                                onPress={() => {
+                                    handleUpdateTask(Status.Completed)
                                 }}
                             >
-                                <Text style={styles.dueText}>{statusText}</Text>
-                            </View>
+                                <Text style={styles.markAsDone}>Mark as done</Text>
+                            </TouchableOpacity>
                         </View>
+                    )}
 
-                        <View style={styles.additionalDetailsContainer}>
-                            <Text style={styles.additionalDetailsText}>Additional Details: </Text>
-                            <Text style={styles.additionalDescriptions}>{params.description}</Text>
+                    {taskStatus === Status.Completed && (
+                        <View style={styles.updateTaskContainer}>
+                            <Text style={styles.updateTaskText}>Is this not done?</Text>
+                            <TouchableOpacity
+                                style={{
+                                    ...styles.doneButton,
+                                    backgroundColor: palette.pastelOrange
+                                }}
+                                onPress={() => {
+                                    handleUpdateTask(Status.Pending)
+                                }}
+                            >
+                                <Text style={styles.markAsDone}>Undo as done</Text>
+                            </TouchableOpacity>
                         </View>
+                    )}
 
-                        {taskStatus !== Status.Completed && (
-                            <View style={styles.updateTaskContainer}>
-                                <Text style={styles.updateTaskText}>Finished with this task?</Text>
-                                <TouchableOpacity
-                                    style={styles.doneButton}
-                                    onPress={() => {
-                                        handleUpdateTask(Status.Completed)
-                                    }}
-                                >
-                                    <Text style={styles.markAsDone}>Mark as done</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-
-                        {taskStatus === Status.Completed && (
-                            <View style={styles.updateTaskContainer}>
-                                <Text style={styles.updateTaskText}>Is this not done?</Text>
-                                <TouchableOpacity
-                                    style={{
-                                        ...styles.doneButton,
-                                        backgroundColor: palette.pastelOrange
-                                    }}
-                                    onPress={() => {
-                                        handleUpdateTask(Status.Pending)
-                                    }}
-                                >
-                                    <Text style={styles.markAsDone}>Undo as done</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-
-                        {taskStatus === Status.Completed && (
-                            <View style={styles.updateTaskContainer}>
-                                <Text style={styles.updateTaskText}>
-                                    Do you want to delete this task?
-                                </Text>
-                                <TouchableOpacity
-                                    style={{
-                                        ...styles.doneButton,
-                                        backgroundColor: palette.angry500
-                                    }}
-                                    onPress={() => {
-                                        handleDeleteTask(params._id)
-                                    }}
-                                >
-                                    <Text style={styles.markAsDone}>Delete</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                    </View>
-                </BackDrop>
+                    {taskStatus === Status.Completed && (
+                        <View style={styles.updateTaskContainer}>
+                            <Text style={styles.updateTaskText}>
+                                Do you want to delete this task?
+                            </Text>
+                            <TouchableOpacity
+                                style={{
+                                    ...styles.doneButton,
+                                    backgroundColor: palette.angry500
+                                }}
+                                onPress={() => {
+                                    handleDeleteTask(params._id)
+                                }}
+                            >
+                                <Text style={styles.markAsDone}>Delete</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
             </View>
             {isLoading && <LoadingOverlay isVisible={isLoading} />}
         </>
@@ -233,17 +231,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: '3%',
         borderRadius: 15,
-        justifyContent: 'center',
-        backgroundColor: palette.boxesPastelGreen,
-        marginTop: '1%'
+        backgroundColor: palette.boxesPastelGreen
     },
     updateTaskContainer: {
         width: '90%',
         alignSelf: 'center',
         borderRadius: 15,
-        justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: '8%'
+        marginTop: '5%'
     },
     updateTaskText: {
         fontSize: 20,
@@ -252,7 +247,10 @@ const styles = StyleSheet.create({
     },
     backDropContainer: {
         height: '100%',
-        width: '100%'
+        width: '100%',
+        backgroundColor: palette.neutral100,
+        borderRadius: 25,
+        marginTop: '8%'
     },
     additionalDescriptions: {
         fontSize: 16,
@@ -283,19 +281,19 @@ const styles = StyleSheet.create({
         color: '#FFFF'
     },
     statusBox: {
-        height: '25%',
         width: '90%',
         alignSelf: 'center',
         borderRadius: 15,
         marginTop: '5%',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        padding: '1%',
+        marginBottom: '5%'
     },
     assignedCard: {
-        flex: 0.45,
         alignSelf: 'center',
         width: '90%',
-        backgroundColor: palette.pastelBackground,
         borderRadius: 25,
+        backgroundColor: palette.pastelBackground,
         marginTop: '5%',
         borderWidth: 1,
         borderColor: palette.pastelNavbars
@@ -303,7 +301,7 @@ const styles = StyleSheet.create({
     assignedBy: {
         fontSize: 20,
         width: '80%',
-        marginTop: '6%',
+        marginTop: '2%',
         alignSelf: 'center',
         fontFamily: typography.quaternary,
         textAlign: 'center'

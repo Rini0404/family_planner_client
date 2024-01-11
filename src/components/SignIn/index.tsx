@@ -87,8 +87,15 @@ export const SignInForm: React.FC = ({}) => {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.title}>
-                        Don't have an account?
-                        <Text style={styles.link}> Register</Text>
+                        Don't have an account?{' '}
+                        <Text
+                            style={styles.link}
+                            onPress={() => {
+                                navigation.navigate('Signup')
+                            }}
+                        >
+                            Register
+                        </Text>
                     </Text>
                 </View>
 
