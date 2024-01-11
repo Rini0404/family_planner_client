@@ -33,13 +33,14 @@ const styles = StyleSheet.create({
         width: '90%',
         alignSelf: 'center',
         paddingVertical: '2%',
-        backgroundColor: palette.pastelLightGreen,
+        backgroundColor: palette.boxesPastelGreen,
         borderRadius: 5,
         marginBottom: '2%'
     },
     weekDay: {
         width: '14.28%',
         textAlign: 'center',
-        fontFamily: typography.primary
+        fontFamily: typography.quaternary,
+        color: '#fff'
     }
 })

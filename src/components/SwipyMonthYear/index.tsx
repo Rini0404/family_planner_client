@@ -55,7 +55,11 @@ export const SwipableMonthYear: React.FC = () => {
     const nextMonthDate = getNextMonthDate()
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView
+            style={{
+                height: '10%'
+            }}
+        >
             <PanGestureHandler
                 onGestureEvent={onGestureEvent}
                 onHandlerStateChange={onHandlerStateChange}
@@ -81,7 +85,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         width: '150%',
-        height: '10%',
+        height: '100%',
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingLeft: '8%'
