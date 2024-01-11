@@ -14,7 +14,7 @@ export interface InterfaceTask {
     createdBy: string
     assignedTo?: UserType
     family: string
-    dueDate?: Date
+    dueDate?: Date | null
     status: Status
 }
 
