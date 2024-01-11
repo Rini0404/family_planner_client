@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Platform, Keyboard } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { CustomPicker } from '../Picker'
 import { post } from '../../api/post'
@@ -15,6 +15,7 @@ import { TimePicker } from '../TimePicker'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { AppStackParamList } from '../../navigators'
+import LoadingOverlay from '../LoadingOverlay'
 
 export const CreateTask = () => {
     const navigation = useNavigation<StackNavigationProp<AppStackParamList>>()
@@ -93,74 +94,114 @@ export const CreateTask = () => {
         }
     }
 
+    const [textSize, setTextSize] = useState(18)
+
+    React.useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            if (Platform.OS === 'android') {
+                setTextSize(14)
+            }
+        })
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            if (Platform.OS === 'android') {
+                setTextSize(18)
+            }
+        })
+
+        return () => {
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
+        }
+    }, [])
+
     return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.chooseMember} onPress={() => setOpenPicker(true)}>
-                <View style={styles.memberText}>
-                    <Text style={styles.memberChosenText}>
+        <>
+            <View style={styles.container}>
+                <TouchableOpacity style={styles.chooseMember} onPress={() => setOpenPicker(true)}>
+                    <View style={styles.memberText}>
                         <Text style={styles.memberChosenText}>
-                            {assignedTo ? assignedTo.firstName : 'Choose Member'}
+                            <Text style={styles.memberChosenText}>
+                                {assignedTo ? assignedTo.firstName : 'Choose Member'}
+                            </Text>
                         </Text>
+                    </View>
+                    <Text
+                        style={{
+                            paddingRight: '3%',
+                            fontSize: 18,
+                            fontFamily: typography.tertiary,
+                            color: '#fff'
+                        }}
+                    >
+                        ▼
+                    </Text>
+                </TouchableOpacity>
+                <TextInputPost
+                    placeholder='What is the task?'
+                    value={title}
+                    onChangeText={setTitle}
+                />
+                <TextDescription
+                    placeholder='Description'
+                    value={description}
+                    onChangeText={setDescription}
+                />
+                <DateTimeButtons
+                    openedDate={openedDate}
+                    setOpenedDate={setOpenedDate}
+                    openedTime={openedTime}
+                    setOpenedTime={setOpenedTime}
+                />
+                <DatePickerAndTime
+                    selectedValue={dueDate}
+                    onDateChange={setDueDate}
+                    openedDate={openedDate}
+                    setOpenedDate={setOpenedDate}
+                />
+                <TimePicker
+                    selectedValue={dueTime}
+                    onTimeChange={setDueTime}
+                    openedTime={openedTime}
+                    setOpenedTime={setOpenedTime}
+                    dateChose={dueDate}
+                />
+
+                <View style={styles.timeData}>
+                    <Text
+                        style={{
+                            ...styles.dateText,
+                            fontSize: textSize
+                        }}
+                    >
+                        Due on:{' '}
+                    </Text>
+                    <Text
+                        style={{
+                            ...styles.dateText,
+                            fontSize: textSize
+                        }}
+                    >
+                        {dueDate ? dueDate?.toLocaleDateString() : ''} @{' '}
+                        {dueTime
+                            ? dueTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : ''}
                     </Text>
                 </View>
-                <Text
-                    style={{
-                        paddingRight: '3%',
-                        fontSize: 18,
-                        fontFamily: typography.tertiary,
-                        color: '#fff'
-                    }}
-                >
-                    ▼
-                </Text>
-            </TouchableOpacity>
-            <TextInputPost placeholder='What is the task?' value={title} onChangeText={setTitle} />
-            <TextDescription
-                placeholder='Description'
-                value={description}
-                onChangeText={setDescription}
-            />
-            <DateTimeButtons
-                openedDate={openedDate}
-                setOpenedDate={setOpenedDate}
-                openedTime={openedTime}
-                setOpenedTime={setOpenedTime}
-            />
-            <DatePickerAndTime
-                selectedValue={dueDate}
-                onDateChange={setDueDate}
-                openedDate={openedDate}
-                setOpenedDate={setOpenedDate}
-            />
-            <TimePicker
-                selectedValue={dueTime}
-                onTimeChange={setDueTime}
-                openedTime={openedTime}
-                setOpenedTime={setOpenedTime}
-                dateChose={dueDate}
-            />
-            <View style={styles.timeData}>
-                <Text style={styles.dateText}>Due on: </Text>
-                <Text style={styles.dateText}>
-                    {dueDate ? dueDate?.toLocaleDateString() : ''} @{' '}
-                    {dueTime
-                        ? dueTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        : ''}
-                </Text>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Create Task</Text>
+                </TouchableOpacity>
+                <CustomPicker
+                    setOpenPicker={setOpenPicker}
+                    openPicker={openPicker}
+                    options={family.members.map((member: { _id: string; firstName: string }) => ({
+                        _id: member._id,
+                        firstName: member.firstName
+                    }))}
+                    onValueChange={(selectedMember) => setAssignedTo(selectedMember)}
+                />
             </View>
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Create Task</Text>
-            </TouchableOpacity>
-            <CustomPicker
-                setOpenPicker={setOpenPicker}
-                openPicker={openPicker}
-                options={family.members.map((member: { _id: string; firstName: string }) => ({
-                    _id: member._id,
-                    firstName: member.firstName
-                }))}
-                onValueChange={(selectedMember) => setAssignedTo(selectedMember)}
-            />
-        </View>
+            {isLoading && <LoadingOverlay isVisible={isLoading} />}
+        </>
     )
 }
 

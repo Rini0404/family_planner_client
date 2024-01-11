@@ -1,5 +1,5 @@
-import React from 'react'
-import { StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, View, TouchableOpacity, Text, Keyboard, Platform } from 'react-native'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import CalendarSvg from '../../../assets/navbar-icons/calendar'
@@ -18,6 +18,30 @@ export const DateTimeButtons: React.FC<TextInputPostProps> = ({
     setOpenedDate,
     setOpenedTime
 }) => {
+    const [iconSize, setIconSize] = useState(55)
+
+    const [textSize, setTextSize] = useState(18)
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            if (Platform.OS === 'android') {
+                setIconSize(35)
+                setTextSize(14)
+            }
+        })
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            if (Platform.OS === 'android') {
+                setIconSize(55)
+                setTextSize(18)
+            }
+        })
+
+        return () => {
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
+        }
+    }, [])
+
     return (
         <View style={styles.container}>
             <View style={styles.buttonsRow}>
@@ -28,8 +52,15 @@ export const DateTimeButtons: React.FC<TextInputPostProps> = ({
                     }}
                     style={styles.buttons}
                 >
-                    <CalendarSvg width={55} height={55} />
-                    <Text style={styles.buttonText}>Due Date</Text>
+                    <CalendarSvg width={iconSize} height={iconSize} />
+                    <Text
+                        style={{
+                            ...styles.buttonText,
+                            fontSize: textSize
+                        }}
+                    >
+                        Due Date
+                    </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
@@ -38,8 +69,15 @@ export const DateTimeButtons: React.FC<TextInputPostProps> = ({
                     }}
                     style={styles.buttons}
                 >
-                    <TimeSvg width={55} height={55} />
-                    <Text style={styles.buttonText}>Due Time</Text>
+                    <TimeSvg width={iconSize} height={iconSize} />
+                    <Text
+                        style={{
+                            ...styles.buttonText,
+                            fontSize: textSize
+                        }}
+                    >
+                        Due Time
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -54,7 +92,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     buttonText: {
-        fontSize: 18,
         paddingTop: '5%',
         fontFamily: typography.tertiary,
         color: '#fff'

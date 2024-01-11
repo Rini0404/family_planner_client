@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 18,
         fontFamily: typography.tertiary,
-        color: '#fff'
+        color: '#fff',
+        height: Platform.OS === 'android' ? '100%' : undefined
     },
     textInput: {
         width: '90%',

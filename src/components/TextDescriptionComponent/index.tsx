@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, TextInput } from 'react-native'
+import { StyleSheet, View, TextInput, Platform } from 'react-native'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 
@@ -44,7 +44,9 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 16,
         fontFamily: typography.tertiary,
-        color: '#fff'
+        color: '#fff',
+        height: Platform.OS === 'android' ? '100%' : undefined,
+        width: '40%'
     },
     textInput: {
         width: '90%',
