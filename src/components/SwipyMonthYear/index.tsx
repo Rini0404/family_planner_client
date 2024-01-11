@@ -3,8 +3,15 @@ import { StyleSheet, Text, View, Animated } from 'react-native'
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler'
 import { typography } from '../../theme/fonts'
 
-export const SwipableMonthYear: React.FC = () => {
-    const [currentDate, setCurrentDate] = useState(new Date())
+type SwipableMonthYearProps = {
+    currentDate: Date
+    setCurrentDate: (date: Date) => void
+}
+
+export const SwipableMonthYear: React.FC<SwipableMonthYearProps> = ({
+    currentDate,
+    setCurrentDate
+}) => {
     const translateX = useRef(new Animated.Value(0)).current // For animation
 
     const getNextMonthDate = () => {

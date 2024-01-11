@@ -5,13 +5,19 @@ import { SwipableMonthYear } from '../components/SwipyMonthYear'
 import { typography } from '../theme/fonts'
 import { weekDays } from '../constants/dates'
 import { palette } from '../theme'
+import { MainCalendar } from '../components/MainCalendar'
+import { useSelector } from 'react-redux'
 
 interface CalenderScreenProps extends AppStackScreenProps<'CalenderScreen'> {}
 
 export const CalenderScreen: React.FC<CalenderScreenProps> = () => {
+    const [currentDate, setCurrentDate] = React.useState(new Date())
+    const { tasks } = useSelector((state: any) => state.tasks)
+
     return (
         <View style={styles.container}>
-            <SwipableMonthYear />
+            <SwipableMonthYear currentDate={currentDate} setCurrentDate={setCurrentDate} />
+
             <View style={styles.weekDaysView}>
                 {weekDays.map((dayName, index) => (
                     <Text key={index} style={styles.weekDay}>
@@ -19,6 +25,7 @@ export const CalenderScreen: React.FC<CalenderScreenProps> = () => {
                     </Text>
                 ))}
             </View>
+            <MainCalendar tasks={tasks} currentDate={currentDate} />
         </View>
     )
 }
@@ -32,7 +39,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         width: '90%',
         alignSelf: 'center',
-        paddingVertical: '2%',
+        paddingVertical: '3%',
         backgroundColor: palette.boxesPastelGreen,
         borderRadius: 5,
         marginBottom: '2%'
