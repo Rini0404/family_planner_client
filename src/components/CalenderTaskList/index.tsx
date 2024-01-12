@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import { InterfaceTask } from '../../types/tasks'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { InterfaceTask, Status } from '../../types/tasks'
 import { palette } from '../../theme'
 import Line from '../Line'
 import { typography } from '../../theme/fonts'
+import { extractTaskDates, getTaskIndicatorStyle } from '../../utils/daysUtils'
+import { NoListCalendar } from '../NoTaskCalendar'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { AppStackParamList } from '../../navigators'
 
 type CalenderTaskListProps = {
     currentDate: Date
@@ -11,95 +15,93 @@ type CalenderTaskListProps = {
 }
 
 export const CalenderTaskList: React.FC<CalenderTaskListProps> = ({ tasks, currentDate }) => {
-    const [days, setDays] = useState<Date[]>([])
+    const navigation = useNavigation<NavigationProp<AppStackParamList>>()
+
     const [taskStatusByDate, setTaskStatusByDate] = useState<Map<string, string>>(new Map())
-
-    const getMonthDays = (year: number, month: number) => {
-        return new Date(year, month, 0).getDate()
-    }
-
-    const getFirstDayOfMonth = (year: number, month: number) => {
-        return new Date(year, month, 1).getDay()
-    }
-
-    const extractTaskDates = () => {
-        const statusMap = new Map<string, string>()
-        tasks.forEach((task) => {
-            const taskDate = new Date(task.dueDate ?? '')
-            const dateString = taskDate.toISOString().split('T')[0]
-            const existingStatus = statusMap.get(dateString)
-            if (
-                !existingStatus ||
-                task.status === 'overdue' ||
-                (task.status === 'pending' && existingStatus !== 'overdue')
-            ) {
-                statusMap.set(dateString, task.status)
-            }
-        })
-        setTaskStatusByDate(statusMap)
-    }
-
-    const getTaskIndicatorStyle = (dueDate: string | null) => {
-        const dateString = new Date(dueDate ?? '').toISOString().split('T')[0]
-        const status = taskStatusByDate.get(dateString)
-        switch (status) {
-            case 'completed':
-                return styles.taskIndicatorCompleted
-            case 'pending':
-                return styles.taskIndicatorPending
-            case 'overdue':
-                return styles.taskIndicatorOverdue
-            default:
-                return null
-        }
-    }
-
-    const generateDays = () => {
-        const year = currentDate.getFullYear()
-        const month = currentDate.getMonth()
-        const numDays = getMonthDays(year, month + 1)
-        const firstDay = getFirstDayOfMonth(year, month)
-
-        const daysArray = new Array(firstDay).fill(null)
-
-        for (let day = 1; day <= numDays; day++) {
-            daysArray.push(new Date(year, month, day))
-        }
-
-        while (daysArray.length % 7 !== 0) {
-            daysArray.push(null)
-        }
-
-        setDays(daysArray)
-    }
+    const [filteredTasks, setFilteredTasks] = useState<InterfaceTask[]>([])
 
     useEffect(() => {
-        extractTaskDates()
-        generateDays()
+        const extractedDates = extractTaskDates(tasks)
+        setTaskStatusByDate(extractedDates)
+    }, [tasks])
+
+    useEffect(() => {
+        filterTasksByDate()
     }, [currentDate, tasks])
 
-    const renderItem = ({ item, index }: { item: InterfaceTask; index: number }) => (
-        <View key={index} style={styles.taskRow}>
-            <View style={getTaskIndicatorStyle(item.dueDate)} />
-            <View style={styles.taskDetails}>
-                <Text style={styles.taskText}>
-                    {item.title}. {item.description}
-                </Text>
-                <View style={styles.line}>
-                    <Line />
+    const filterTasksByDate = () => {
+        const selectedDateString = currentDate.toISOString().split('T')[0]
+        const filtered = tasks.filter((task) => {
+            const taskDate = task.dueDate
+                ? new Date(task.dueDate).toISOString().split('T')[0]
+                : null
+            return taskDate === selectedDateString
+        })
+        setFilteredTasks(filtered)
+    }
+
+    const renderItem = ({ item, index }: { item: InterfaceTask; index: number }) => {
+        const handlePress = () => {
+            const taskData = {
+                ...item,
+                updatedTextForDueBefore: 'text'
+                // backgroundColorUI: backgroundColor
+            }
+
+            navigation.navigate('InformationalTask', taskData)
+        }
+
+        return (
+            <TouchableOpacity onPress={handlePress} key={index} style={styles.taskRow}>
+                <View
+                    style={getTaskIndicatorStyle(
+                        item.dueDate ? new Date(item.dueDate) : undefined,
+                        taskStatusByDate,
+                        styles
+                    )}
+                />
+                <View style={styles.taskDetails}>
+                    <Text style={styles.taskText}>
+                        {item.title}. {item.description}
+                    </Text>
+                    <View style={styles.line}>
+                        <Line />
+                    </View>
                 </View>
-            </View>
-        </View>
-    )
+            </TouchableOpacity>
+        )
+    }
+
+    const displayWhatDayItIs = () => {
+        // if today say today
+        const today = new Date()
+        const todayString = today.toISOString().split('T')[0]
+        const selectedDateString = currentDate.toISOString().split('T')[0]
+        if (todayString === selectedDateString) {
+            return 'Today'
+        }
+
+        return currentDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        })
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.CurrentDaysTasks}>
-                <Text style={styles.CurrentDaysTitle}>Today</Text>
-                <Text style={styles.CurrentDaysTitle}>{tasks.length} Tasks</Text>
+                <Text style={styles.CurrentDaysTitle}>{displayWhatDayItIs()}</Text>
+                <Text style={styles.CurrentDaysTitle}>{filteredTasks.length} Tasks</Text>
             </View>
             <Line />
-            <FlatList data={tasks} renderItem={renderItem} />
+            <FlatList
+                data={filteredTasks}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                // empty list component
+                ListEmptyComponent={() => <NoListCalendar />}
+            />
         </View>
     )
 }
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         marginTop: '2%',
-        height: '35%',
+        height: '38%',
         width: '90%',
         alignSelf: 'center',
         borderRadius: 20,
