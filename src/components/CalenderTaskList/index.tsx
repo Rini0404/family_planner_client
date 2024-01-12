@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { InterfaceTask, Status } from '../../types/tasks'
 import { palette } from '../../theme'
 import Line from '../Line'
 import { typography } from '../../theme/fonts'
 import { extractTaskDates, getTaskIndicatorStyle } from '../../utils/daysUtils'
 import { NoListCalendar } from '../NoTaskCalendar'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { AppStackParamList } from '../../navigators'
 
 type CalenderTaskListProps = {
     currentDate: Date
@@ -13,6 +15,8 @@ type CalenderTaskListProps = {
 }
 
 export const CalenderTaskList: React.FC<CalenderTaskListProps> = ({ tasks, currentDate }) => {
+    const navigation = useNavigation<NavigationProp<AppStackParamList>>()
+
     const [taskStatusByDate, setTaskStatusByDate] = useState<Map<string, string>>(new Map())
     const [filteredTasks, setFilteredTasks] = useState<InterfaceTask[]>([])
 
@@ -36,25 +40,37 @@ export const CalenderTaskList: React.FC<CalenderTaskListProps> = ({ tasks, curre
         setFilteredTasks(filtered)
     }
 
-    const renderItem = ({ item, index }: { item: InterfaceTask; index: number }) => (
-        <View key={index} style={styles.taskRow}>
-            <View
-                style={getTaskIndicatorStyle(
-                    item.dueDate ? new Date(item.dueDate) : undefined,
-                    taskStatusByDate,
-                    styles
-                )}
-            />
-            <View style={styles.taskDetails}>
-                <Text style={styles.taskText}>
-                    {item.title}. {item.description}
-                </Text>
-                <View style={styles.line}>
-                    <Line />
+    const renderItem = ({ item, index }: { item: InterfaceTask; index: number }) => {
+        const handlePress = () => {
+            const taskData = {
+                ...item,
+                updatedTextForDueBefore: 'text'
+                // backgroundColorUI: backgroundColor
+            }
+
+            navigation.navigate('InformationalTask', taskData)
+        }
+
+        return (
+            <TouchableOpacity onPress={handlePress} key={index} style={styles.taskRow}>
+                <View
+                    style={getTaskIndicatorStyle(
+                        item.dueDate ? new Date(item.dueDate) : undefined,
+                        taskStatusByDate,
+                        styles
+                    )}
+                />
+                <View style={styles.taskDetails}>
+                    <Text style={styles.taskText}>
+                        {item.title}. {item.description}
+                    </Text>
+                    <View style={styles.line}>
+                        <Line />
+                    </View>
                 </View>
-            </View>
-        </View>
-    )
+            </TouchableOpacity>
+        )
+    }
 
     const displayWhatDayItIs = () => {
         // if today say today
