@@ -5,6 +5,7 @@ import { palette } from '../../theme'
 import Line from '../Line'
 import { typography } from '../../theme/fonts'
 import { extractTaskDates, getTaskIndicatorStyle } from '../../utils/daysUtils'
+import { NoListCalendar } from '../NoTaskCalendar'
 
 type CalenderTaskListProps = {
     currentDate: Date
@@ -55,10 +56,26 @@ export const CalenderTaskList: React.FC<CalenderTaskListProps> = ({ tasks, curre
         </View>
     )
 
+    const displayWhatDayItIs = () => {
+        // if today say today
+        const today = new Date()
+        const todayString = today.toISOString().split('T')[0]
+        const selectedDateString = currentDate.toISOString().split('T')[0]
+        if (todayString === selectedDateString) {
+            return 'Today'
+        }
+
+        return currentDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        })
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.CurrentDaysTasks}>
-                <Text style={styles.CurrentDaysTitle}>Today</Text>
+                <Text style={styles.CurrentDaysTitle}>{displayWhatDayItIs()}</Text>
                 <Text style={styles.CurrentDaysTitle}>{filteredTasks.length} Tasks</Text>
             </View>
             <Line />
@@ -67,11 +84,7 @@ export const CalenderTaskList: React.FC<CalenderTaskListProps> = ({ tasks, curre
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
                 // empty list component
-                ListEmptyComponent={() => (
-                    <View style={{ padding: 10 }}>
-                        <Text style={styles.taskText}>No tasks for today</Text>
-                    </View>
-                )}
+                ListEmptyComponent={() => <NoListCalendar />}
             />
         </View>
     )
@@ -81,7 +94,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         marginTop: '2%',
-        height: '35%',
+        height: '38%',
         width: '90%',
         alignSelf: 'center',
         borderRadius: 20,

@@ -33,29 +33,36 @@ export const MainCalendar: React.FC<MainCalendarProps> = ({
     return (
         <View style={styles.container}>
             <View style={styles.grid}>
-                {days.map((day, index) => (
-                    <TouchableOpacity
-                        onPress={() => handleDayPress(day)}
-                        key={index}
-                        style={styles.day}
-                    >
-                        <Text>{day ? day.getDate() : ''}</Text>
-                        <View style={getTaskIndicatorStyle(day, taskStatusByDate, styles)} />
-                    </TouchableOpacity>
-                ))}
+                {days.map((day, index) => {
+                    const isCurrentDay = day && day.toDateString() === currentDate.toDateString()
+                    return (
+                        <TouchableOpacity
+                            onPress={() => handleDayPress(day)}
+                            key={index}
+                            style={[styles.day, isCurrentDay ? styles.currentDay : null]}
+                        >
+                            <Text>{day ? day.getDate() : ''}</Text>
+                            <View style={getTaskIndicatorStyle(day, taskStatusByDate, styles)} />
+                        </TouchableOpacity>
+                    )
+                })}
             </View>
         </View>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
-        height: '40%',
+        height: '38%',
         width: '90%',
         alignSelf: 'center',
         borderRadius: 20,
         padding: 10
+    },
+    currentDay: {
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: palette.pastelNavbars
     },
     taskIndicatorCompleted: {
         marginTop: 5,
