@@ -26,8 +26,8 @@ export const CalenderScreen: React.FC<CalenderScreenProps> = () => {
                     </Text>
                 ))}
             </View>
-            <MainCalendar tasks={tasks} currentDate={currentDate} />
-            <CalenderTaskList tasks={tasks} currentDate={currentDate}/>
+            <MainCalendar tasks={tasks} currentDate={currentDate} setCurrentDate={setCurrentDate} />
+            <CalenderTaskList tasks={tasks} currentDate={currentDate} />
         </View>
     )
 }

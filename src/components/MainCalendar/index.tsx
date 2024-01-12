@@ -1,95 +1,47 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { InterfaceTask } from '../../types/tasks'
 import { palette } from '../../theme'
+import { extractTaskDates, generateDays, getTaskIndicatorStyle } from '../../utils/daysUtils'
 
 type MainCalendarProps = {
     currentDate: Date
     tasks: InterfaceTask[]
+    setCurrentDate: React.Dispatch<React.SetStateAction<Date>>
 }
 
-export const MainCalendar: React.FC<MainCalendarProps> = ({ currentDate, tasks }) => {
+export const MainCalendar: React.FC<MainCalendarProps> = ({
+    currentDate,
+    tasks,
+    setCurrentDate
+}) => {
     const [days, setDays] = useState<Date[]>([])
     const [taskStatusByDate, setTaskStatusByDate] = useState<Map<string, string>>(new Map())
-    const [taskDates, setTaskDates] = useState<Set<string>>(new Set())
-
-    const getMonthDays = (year: number, month: number) => {
-        return new Date(year, month, 0).getDate()
-    }
-
-    const getFirstDayOfMonth = (year: number, month: number) => {
-        return new Date(year, month, 1).getDay()
-    }
-
-    const extractTaskDates = () => {
-        const statusMap = new Map<string, string>()
-        tasks.forEach((task) => {
-            const taskDate = new Date(task.dueDate ?? '')
-            const dateString = taskDate.toISOString().split('T')[0]
-            // Assuming that the most urgent status should be shown if multiple tasks fall on the same day
-            const existingStatus = statusMap.get(dateString)
-            if (
-                !existingStatus ||
-                task.status === 'overdue' ||
-                (task.status === 'pending' && existingStatus !== 'overdue')
-            ) {
-                statusMap.set(dateString, task.status)
-            }
-        })
-        setTaskStatusByDate(statusMap)
-    }
-
-    const getTaskIndicatorStyle = (day: { toISOString: () => string }) => {
-        const dateString = day ? day.toISOString().split('T')[0] : ''
-        const status = taskStatusByDate.get(dateString)
-        switch (status) {
-            case 'completed':
-                return styles.taskIndicatorCompleted
-            case 'pending':
-                return styles.taskIndicatorPending
-            case 'overdue':
-                return styles.taskIndicatorOverdue
-            default:
-                return null
-        }
-    }
-
-    const generateDays = () => {
-        const year = currentDate.getFullYear()
-        const month = currentDate.getMonth()
-        const numDays = getMonthDays(year, month + 1)
-        const firstDay = getFirstDayOfMonth(year, month)
-
-        const daysArray = new Array(firstDay).fill(null)
-
-        for (let day = 1; day <= numDays; day++) {
-            daysArray.push(new Date(year, month, day))
-        }
-
-        while (daysArray.length % 7 !== 0) {
-            daysArray.push(null)
-        }
-
-        setDays(daysArray)
-    }
 
     useEffect(() => {
-        extractTaskDates()
-        generateDays()
+        const extractedDates = extractTaskDates(tasks)
+        setTaskStatusByDate(extractedDates)
+
+        const daysGenerated = generateDays(currentDate)
+        setDays(daysGenerated)
     }, [currentDate, tasks])
 
-    const isTaskDay = (day: Date) => {
-        return day ? taskDates.has(day.toISOString().split('T')[0]) : false
+    const handleDayPress = (day: Date) => {
+        setCurrentDate(day)
     }
 
     return (
         <View style={styles.container}>
             <View style={styles.grid}>
                 {days.map((day, index) => (
-                    <View key={index} style={styles.day}>
+                    <TouchableOpacity
+                        onPress={() => handleDayPress(day)}
+                        key={index}
+                        style={styles.day}
+                    >
                         <Text>{day ? day.getDate() : ''}</Text>
-                        <View style={getTaskIndicatorStyle(day)} />
-                    </View>
+                        <View style={getTaskIndicatorStyle(day, taskStatusByDate, styles)} />
+                    </TouchableOpacity>
                 ))}
             </View>
         </View>
