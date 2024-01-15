@@ -9,6 +9,7 @@ import { TaskCard } from '../components/Tasks'
 import { InterfaceTask, Status } from '../types/tasks'
 import { updateTasks } from '../redux/tasks/tasksActions'
 import { NoTasks } from '../components/EmptyTasks'
+import { UserTab } from '../components/UserTab'
 
 interface HomeScreenProps extends AppStackScreenProps<'HomeScreen'> {}
 
@@ -70,6 +71,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     return (
         <View style={{ flex: 1, alignItems: 'center', paddingTop: '15%' }}>
+            <UserTab user={user} />
+
             <FamilyCard family={family} user={user} />
 
             <View style={{ width: '100%', height: '57%' }}>
@@ -82,16 +85,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
                     ListEmptyComponent={<NoTasks navigation={navigation} />}
                 />
             </View>
-            <Text
-                style={{
-                    color: 'tomato',
-                    fontSize: 24,
-                    fontWeight: 'bold'
-                }}
-                onPress={clearStorage}
-            >
-                CLEAR TOKEN
-            </Text>
         </View>
     )
 }
