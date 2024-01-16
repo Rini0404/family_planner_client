@@ -12,7 +12,7 @@ import { colors } from '../theme'
 import { TabNavigator, TabParamList } from './TabNavigator'
 import { HomeScreen } from '../screens/HomeScreen'
 import { Settings } from '../screens/Settings'
-import { Family } from '../screens/Family'
+import { FamilyScreen } from '../screens/FamilyScreen'
 import SplashScreen from '../screens/SplashScreen'
 import SignupScreen from '../screens/SignupScreen'
 import { Initial } from '../screens/Iniitial'
@@ -31,7 +31,7 @@ export type AppStackParamList = {
     CalenderScreen: undefined
     PostScreen: undefined
     InformationalTask: InterfaceTask
-    Family: undefined
+    FamilyScreen: undefined
 }
 
 /**
@@ -65,7 +65,7 @@ const AppStack = () => {
             <Stack.Screen name='InformationalTask' component={InformationalTask} />
             <Stack.Screen name='SplashScreen' component={SplashScreen} />
             <Stack.Screen name='Settings' component={Settings} />
-            <Stack.Screen name='Family' component={Family} />
+            <Stack.Screen name='FamilyScreen' component={FamilyScreen} />
         </Stack.Navigator>
     )
 }

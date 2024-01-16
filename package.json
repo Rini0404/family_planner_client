@@ -29,6 +29,8 @@
     "dependencies": {
         "@expo-google-fonts/comfortaa": "^0.2.3",
         "@react-native-async-storage/async-storage": "1.18.2",
+        "@react-native-clipboard/clipboard": "^1.13.2",
+        "@react-native-community/clipboard": "^1.5.1",
         "@react-native-community/datetimepicker": "^7.6.2",
         "@react-navigation/bottom-tabs": "^6.3.2",
         "@react-navigation/native": "^6.1.7",

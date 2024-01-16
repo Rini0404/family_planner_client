@@ -29,7 +29,7 @@ export const FamilyCard: React.FC<FamilyCardProps> = ({ family, user }) => {
             <View style={styles.familyAndName}>
                 <View style={styles.familyIcon}>
                 <FamilyIcon onPress={()=> {
-                    navigation.navigate('Family')
+                    navigation.navigate('FamilyScreen')
                 }} />
                 </View>
                 <Text style={styles.familyHeader}>
