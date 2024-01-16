@@ -11,6 +11,8 @@ import { useColorScheme } from 'react-native'
 import { colors } from '../theme'
 import { TabNavigator, TabParamList } from './TabNavigator'
 import { HomeScreen } from '../screens/HomeScreen'
+import { Settings } from '../screens/Settings'
+import { Family } from '../screens/Family'
 import SplashScreen from '../screens/SplashScreen'
 import SignupScreen from '../screens/SignupScreen'
 import { Initial } from '../screens/Iniitial'
@@ -29,6 +31,7 @@ export type AppStackParamList = {
     CalenderScreen: undefined
     PostScreen: undefined
     InformationalTask: InterfaceTask
+    Family: undefined
 }
 
 /**
@@ -61,6 +64,8 @@ const AppStack = () => {
             <Stack.Screen name='Tabs' component={TabNavigator} />
             <Stack.Screen name='InformationalTask' component={InformationalTask} />
             <Stack.Screen name='SplashScreen' component={SplashScreen} />
+            <Stack.Screen name='Settings' component={Settings} />
+            <Stack.Screen name='Family' component={Family} />
         </Stack.Navigator>
     )
 }

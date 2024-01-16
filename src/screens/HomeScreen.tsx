@@ -9,6 +9,7 @@ import { TaskCard } from '../components/Tasks'
 import { InterfaceTask, Status } from '../types/tasks'
 import { updateTasks } from '../redux/tasks/tasksActions'
 import { NoTasks } from '../components/EmptyTasks'
+import { UserBar } from '../components/UserBar'
 
 interface HomeScreenProps extends AppStackScreenProps<'HomeScreen'> {}
 
@@ -70,6 +71,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     return (
         <View style={{ flex: 1, alignItems: 'center', paddingTop: '15%' }}>
+            <UserBar family={family} user={user}/>
             <FamilyCard family={family} user={user} />
 
             <View style={{ width: '100%', height: '57%' }}>
