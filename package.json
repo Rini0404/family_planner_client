@@ -29,8 +29,6 @@
     "dependencies": {
         "@expo-google-fonts/comfortaa": "^0.2.3",
         "@react-native-async-storage/async-storage": "1.18.2",
-        "@react-native-clipboard/clipboard": "^1.13.2",
-        "@react-native-community/clipboard": "^1.5.1",
         "@react-native-community/datetimepicker": "^7.6.2",
         "@react-navigation/bottom-tabs": "^6.3.2",
         "@react-navigation/native": "^6.1.7",
@@ -39,6 +37,7 @@
         "@reduxjs/toolkit": "^1.9.5",
         "@tanstack/react-query": "^4.32.6",
         "expo": "~49.0.5",
+        "expo-clipboard": "~4.3.1",
         "expo-font": "^11.6.0",
         "expo-status-bar": "~1.6.0",
         "expo-updates": "^0.18.11",
