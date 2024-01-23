@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, StatusBar, Platform, FlatList } from 'react-native'
+import { Text, View, StyleSheet, StatusBar, Platform, FlatList, Image } from 'react-native'
 import { AppStackParamList, AppStackScreenProps } from '../navigators'
 import { typography } from '../theme/fonts'
 import BackArrow from '../components/BackArrow'
@@ -60,6 +60,10 @@ export const FamilyScreen: React.FC<FamilyScreenProps> = () => {
                 <BackArrow onPress={handleBackPress} />
                 <Text style={styles.headerText}>Family</Text>
             </View>
+            <Image
+                source={require('../../assets/images/initial.png')}
+                style={styles.familyPicture}
+            />
             <View style={styles.inviteCard}>
                 <Text style={styles.inviteText}>{family.familyName}'s Invite Code:</Text>
                 <Text style={styles.inviteCodeText}>
@@ -106,6 +110,16 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    familyPicture: {
+        height: '15%',
+        width: '95%',
+        borderRadius: 20,
+        alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
     },
     inviteCard: {
         height: '15%',
