@@ -29,22 +29,33 @@ export const UserBar: React.FC<UserBarProps> = ({ user, family }) => {
     return (
         <View style={styles.container}>
             <View style={styles.user}>
-                <TouchableOpacity onPress={() => {
-                    Alert.alert('Profile')
-                }}>
-                <Text style={styles.initials}>{userInitials}</Text>
+                <TouchableOpacity
+                    onPress={() => {
+                        Alert.alert('Profile')
+                    }}
+                >
+                    <Text style={styles.initials}>{userInitials}</Text>
                 </TouchableOpacity>
                 <Text style={styles.userName}>
                     {user.firstName} {user.lastName}
                 </Text>
             </View>
             <View style={styles.notifications}>
-                <BellIcon onPress={()=>{
-                    Alert.alert('Notifications')
-                }}/>
-                    <SettingsIcon onPress={() => {
-                            navigation.navigate('Settings')
-                        }}/>
+                <TouchableOpacity
+                    onPress={() => {
+                        Alert.alert('Notifications')
+                    }}
+                >
+                    <BellIcon />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('Settings')
+                    }}
+                >
+                    <SettingsIcon />
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -79,7 +90,6 @@ const styles = StyleSheet.create({
         marginRight: 10,
         fontSize: 16,
         fontFamily: typography.quaternary
-
     },
     notifications: {
         width: '22%',

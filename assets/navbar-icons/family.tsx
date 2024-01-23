@@ -5,12 +5,10 @@ import { colors } from '../../src/theme'
 
 interface FamilyIconProps {
     fill?: string
-    onPress?: () => void
 }
 
-const FamilyIcon: React.FC<FamilyIconProps> = (props, onPress) => {
+const FamilyIcon: React.FC<FamilyIconProps> = (props) => {
     return (
-        <TouchableOpacity onPress={onPress}>
         <Svg fill={colors.text} height='30' width='30' viewBox='0 0 512 512' {...props}>
             <Path
                 d='M176.053,256.645c-18.445-14.116-41.436-22.59-66.452-22.59C49.07,234.055,0,283.125,0,343.656
@@ -43,7 +41,6 @@ const FamilyIcon: React.FC<FamilyIconProps> = (props, onPress) => {
 			C350.21,229.245,358.691,245.131,371.705,255.646z'
             ></Path>
         </Svg>
-        </TouchableOpacity>
     )
 }
 

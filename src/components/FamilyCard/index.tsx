@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { UserType } from '../../types/user'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
@@ -28,17 +28,25 @@ export const FamilyCard: React.FC<FamilyCardProps> = ({ family, user }) => {
         <View style={styles.container}>
             <View style={styles.familyAndName}>
                 <View style={styles.familyIcon}>
-                <FamilyIcon onPress={()=> {
-                    navigation.navigate('FamilyScreen')
-                }} />
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('FamilyScreen')
+                        }}
+                    >
+                        <FamilyIcon />
+                    </TouchableOpacity>
                 </View>
                 <Text style={styles.familyHeader}>
                     The {'\n'} {family?.familyName}'s
                 </Text>
                 <View style={styles.filterIcon}>
-                <FilterIcon onPress={()=>{
-                    Alert.alert('Filter')
-                }} />
+                    <TouchableOpacity
+                        onPress={() => {
+                            Alert.alert('Filter')
+                        }}
+                    >
+                        <FilterIcon />
+                    </TouchableOpacity>
                 </View>
                 {/* <Text style={styles.userName}>Hello, {user.firstName} !</Text> */}
             </View>

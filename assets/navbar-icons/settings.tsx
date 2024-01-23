@@ -5,14 +5,10 @@ import { palette } from '../../src/theme'
 
 interface SettingsIconProps {
     fill?: string
-	onPress?: () => void
 }
 
-const SettingsIcon: React.FC<SettingsIconProps> = (props,
-	onPress) => {
-
+const SettingsIcon: React.FC<SettingsIconProps> = (props) => {
     return (
-		<TouchableOpacity onPress={onPress}>
         <Svg fill={palette.neutral800} height='30' width='30' viewBox='0 0 512 512' {...props}>
             <Path
                 d='M491.584,192.579l-55.918-6.914c-0.919-2.351-1.884-4.682-2.892-6.993l34.648-44.428
@@ -46,7 +42,6 @@ const SettingsIcon: React.FC<SettingsIconProps> = (props,
 			C310.303,285.947,285.941,310.303,255.997,310.303z'
             ></Path>
         </Svg>
-		</TouchableOpacity>
     )
 }
 
