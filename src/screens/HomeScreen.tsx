@@ -71,8 +71,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     return (
         <View style={{ flex: 1, alignItems: 'center', paddingTop: '15%' }}>
-            <UserBar family={family} user={user}/>
-            <FamilyCard family={family} user={user} />
+            <UserBar family={family} user={user} />
+            <FamilyCard family={family} />
 
             <View style={{ width: '100%', height: '57%' }}>
                 <FlatList
