@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
         fontFamily: typography.quaternary
     },
     initialCircle: {
-        width: 31,
-        height: 31,
+        width: 35,
+        height: 35,
         borderRadius: 50,
         borderColor: palette.neutral800,
         borderWidth: 1,

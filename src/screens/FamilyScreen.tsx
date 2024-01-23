@@ -56,7 +56,9 @@ export const FamilyScreen: React.FC<FamilyScreenProps> = () => {
                     const taskText = taskCount === 1 ? 'Task' : 'Tasks'
                     return (
                         <View key={index} style={styles.familyMemberList}>
-                            <Text style={styles.initials}>{initials}</Text>
+                            <View style={styles.initialCircle}>
+                                <Text style={styles.initials}>{initials}</Text>
+                            </View>
                             <Text style={styles.familyMemberText}>
                                 {member.firstName} {member.lastName}
                             </Text>
@@ -74,8 +76,17 @@ export const FamilyScreen: React.FC<FamilyScreenProps> = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : '10%',
         paddingHorizontal: 10
+    },
+    initialCircle: {
+        width: 31,
+        height: 31,
+        borderRadius: 20,
+        borderColor: palette.neutral800,
+        borderWidth: 2,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     headerText: {
         fontFamily: typography.tertiary,
@@ -147,11 +158,6 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     initials: {
-        width: 31,
-        height: 31,
-        borderRadius: 20,
-        borderColor: palette.neutral800,
-        borderWidth: 2,
         fontSize: 16,
         fontFamily: typography.quaternary,
         textAlign: 'center',
