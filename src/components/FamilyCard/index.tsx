@@ -1,9 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 import { UserType } from '../../types/user'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import { formatDate } from '../../utils/formatDate'
+import FamilyIcon from '../../../assets/navbar-icons/family'
+import FilterIcon from '../../../assets/navbar-icons/filter'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { AppStackParamList } from '../../navigators'
 
 type FamilyData = {
     familyName: string
@@ -18,13 +22,25 @@ type FamilyCardProps = {
 }
 
 export const FamilyCard: React.FC<FamilyCardProps> = ({ family, user }) => {
+    const navigation = useNavigation<NavigationProp<AppStackParamList>>()
+
     return (
         <View style={styles.container}>
             <View style={styles.familyAndName}>
+                <View style={styles.familyIcon}>
+                <FamilyIcon onPress={()=> {
+                    navigation.navigate('FamilyScreen')
+                }} />
+                </View>
                 <Text style={styles.familyHeader}>
                     The {'\n'} {family?.familyName}'s
                 </Text>
-                <Text style={styles.userName}>Hello, {user.firstName} !</Text>
+                <View style={styles.filterIcon}>
+                <FilterIcon onPress={()=>{
+                    Alert.alert('Filter')
+                }} />
+                </View>
+                {/* <Text style={styles.userName}>Hello, {user.firstName} !</Text> */}
             </View>
 
             <View style={styles.secondContainer}>
@@ -40,7 +56,7 @@ const styles = StyleSheet.create({
         backgroundColor: palette.pastelNavbars,
         borderRadius: 20,
         width: '90%',
-        height: '35%'
+        height: '26%'
     },
     dateNow: {
         paddingTop: '3%',
@@ -53,14 +69,13 @@ const styles = StyleSheet.create({
         fontFamily: typography.quaternary,
         textAlign: 'center'
     },
-    userName: {
-        paddingTop: '1%',
-        fontSize: 16,
-        fontFamily: typography.tertiary,
-        fontWeight: 'bold',
-        color: 'white',
-        textAlign: 'center'
-    },
+    // userName: {
+    //     fontSize: 16,
+    //     fontFamily: typography.tertiary,
+    //     fontWeight: 'bold',
+    //     color: 'white',
+    //     textAlign: 'center'
+    // },
     familyHeader: {
         paddingTop: '5%',
         fontSize: 30,
@@ -71,6 +86,18 @@ const styles = StyleSheet.create({
     },
     familyAndName: {
         alignItems: 'center'
+    },
+    familyIcon: {
+        position: 'absolute',
+        alignSelf: 'flex-start',
+        top: '8%',
+        left: '3%'
+    },
+    filterIcon: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        top: '6%',
+        right: '3%'
     },
     secondContainer: {
         backgroundColor: 'white',
