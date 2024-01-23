@@ -33,6 +33,7 @@ export const UserBar: React.FC<UserBarProps> = ({ user, family }) => {
                     onPress={() => {
                         Alert.alert('Profile')
                     }}
+                    style={styles.initialCircle}
                 >
                     <Text style={styles.initials}>{userInitials}</Text>
                 </TouchableOpacity>
@@ -78,16 +79,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: typography.quaternary
     },
-    initials: {
+    initialCircle: {
         width: 31,
         height: 31,
         borderRadius: 50,
         borderColor: palette.neutral800,
         borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: palette.pastelNavbars,
+        marginRight: 10
+    },
+    initials: {
         textAlign: 'center',
-        textAlignVertical: 'center',
-        marginRight: 10,
         fontSize: 16,
         fontFamily: typography.quaternary
     },
