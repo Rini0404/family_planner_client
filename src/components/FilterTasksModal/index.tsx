@@ -7,6 +7,8 @@ import { Status } from '../../types/tasks'
 import { Picker } from '@react-native-picker/picker'
 import { DateChosen, SelectedMember } from '../../types/filter'
 import { DatePickerAndTime } from '../DatePicker'
+import { useDispatch } from 'react-redux'
+import { setFilteredTasks } from '../../redux/tasks/tasksActions'
 
 type FilterModalProps = {
     openFilter: boolean
@@ -33,6 +35,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     realDateChosen,
     setRealDateChosen
 }) => {
+    const dispatch = useDispatch()
     const [isPickerVisible, setIsPickerVisible] = React.useState<boolean>(false)
     const [isDatePickerVisible, setIsDatePickerVisible] = React.useState<boolean>(false)
 
@@ -60,10 +63,12 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         const filterOptions = {
             member: selectedByMember,
             status: selectedStatus,
-            date: realDateChosen
+            date: realDateChosen ? realDateChosen.toISOString() : null
         }
 
         console.log('OPTIONS CHOSEN: ', filterOptions)
+
+        dispatch(setFilteredTasks(filterOptions))
 
         setOpenFilter(!openFilter)
     }

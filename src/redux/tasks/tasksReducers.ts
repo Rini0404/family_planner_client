@@ -1,18 +1,24 @@
+import { FilterOptions } from '../../types/filter'
 import { DeleteTaskAction } from '../../types/taskRedux'
 import { InterfaceTask } from '../../types/tasks'
-import { TASKS, ADD_TASK, UPDATE_TASK, DELETE_TASK } from './tasksTypes'
+import { TASKS, ADD_TASK, UPDATE_TASK, DELETE_TASK, SET_FILTERED_TASKS } from './tasksTypes'
 
 const initialState = {
-    tasks: []
+    tasks: [],
+    filteredTasks: []
+}
+type SetFilteredTasksAction = {
+    type: typeof SET_FILTERED_TASKS
+    data: FilterOptions
 }
 
-// Adjusted TaskAction to include DeleteTaskAction
 type TaskAction =
     | {
           type: typeof TASKS | typeof ADD_TASK | typeof UPDATE_TASK
           data: InterfaceTask | InterfaceTask[]
       }
     | DeleteTaskAction
+    | SetFilteredTasksAction
 
 // Modify reducer to handle different action types
 const familyReducer = (state = initialState, action: TaskAction) => {
@@ -50,7 +56,34 @@ const familyReducer = (state = initialState, action: TaskAction) => {
                 ...state,
                 tasks: state.tasks.filter((task: InterfaceTask) => task._id !== action.data._id)
             }
+        case SET_FILTERED_TASKS: {
+            const tasks: InterfaceTask[] = state.tasks as InterfaceTask[]
+            const filterOptions: FilterOptions = action.data
 
+            const filteredTasks = tasks.filter((task) => {
+                let taskDueDate
+                if (task.dueDate) {
+                    taskDueDate = new Date(task.dueDate)
+                }
+
+                let filterDate
+                if (filterOptions.date) {
+                    filterDate = new Date(filterOptions.date)
+                }
+
+                // not finnished
+                let dateMatch = filterOptions.date ? taskDueDate <= filterDate : true
+                let statusMatch =
+                    filterOptions.status !== 'all' ? task.status === filterOptions.status : true
+
+                return dateMatch && statusMatch
+            })
+
+            return {
+                ...state,
+                filteredTasks: filteredTasks
+            }
+        }
         default:
             return state
     }

@@ -1,6 +1,7 @@
+import { FilterOptions } from '../../types/filter'
 import { DeleteTaskAction } from '../../types/taskRedux'
 import { InterfaceTask } from '../../types/tasks'
-import { ADD_TASK, DELETE_TASK, TASKS, UPDATE_TASK } from './tasksTypes'
+import { ADD_TASK, DELETE_TASK, SET_FILTERED_TASKS, TASKS, UPDATE_TASK } from './tasksTypes'
 
 export const updateTasks = (data: InterfaceTask) => {
     return {
@@ -27,5 +28,12 @@ export const deleteTask = (id: string): DeleteTaskAction => {
     return {
         type: DELETE_TASK,
         data: { _id: id }
+    }
+}
+
+export const setFilteredTasks = (data: FilterOptions) => {
+    return {
+        type: SET_FILTERED_TASKS,
+        data
     }
 }
