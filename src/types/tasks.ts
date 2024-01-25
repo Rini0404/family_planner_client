@@ -1,6 +1,7 @@
 import { UserType } from './user'
 
 export enum Status {
+    All = 'all',
     Pending = 'pending',
     InProgress = 'in progress',
     Completed = 'completed',

@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         height: 20,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: palette.angry500,
+        borderColor: palette.boxesPastelGreen,
         backgroundColor: palette.neutral100,
         marginRight: 10
     },
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         height: 20,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: palette.angry500,
+        borderColor: palette.boxesPastelGreen,
         backgroundColor: palette.neutral100,
         justifyContent: 'center',
         alignItems: 'center',
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         width: 10,
         height: 10,
         borderRadius: 5,
-        backgroundColor: palette.angry500
+        backgroundColor: palette.boxesPastelGreen
     }
 })
 
