@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, StatusBar, Platform } from 'react-native'
+import { Text, View, StyleSheet, StatusBar, Platform, FlatList, Image } from 'react-native'
 import { AppStackParamList, AppStackScreenProps } from '../navigators'
 import { typography } from '../theme/fonts'
 import BackArrow from '../components/BackArrow'
@@ -35,39 +35,49 @@ export const FamilyScreen: React.FC<FamilyScreenProps> = () => {
         return tasks.filter((task: InterfaceTask) => task.assignedTo?._id === userId).length
     }
 
+    const renderItem = ({ item: member }: { item: any }) => {
+        const initials = getUserInitials(member.firstName, member.lastName)
+        const taskCount = getTaskCountForUser(member._id)
+        const taskText = taskCount === 1 ? 'Task' : 'Tasks'
+        return (
+            <View style={styles.familyMemberList}>
+                <View style={styles.initialCircle}>
+                    <Text style={styles.initials}>{initials}</Text>
+                </View>
+                <Text style={styles.familyMemberText}>
+                    {member.firstName} {member.lastName}
+                </Text>
+                <Text style={styles.familyMemberText}>
+                    {taskCount} {taskText}
+                </Text>
+            </View>
+        )
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <BackArrow onPress={handleBackPress} />
                 <Text style={styles.headerText}>Family</Text>
             </View>
+            <Image
+                source={require('../../assets/images/initial.png')}
+                style={styles.familyPicture}
+            />
             <View style={styles.inviteCard}>
                 <Text style={styles.inviteText}>{family.familyName}'s Invite Code:</Text>
-                <Text style={styles.inviteText}>
+                <Text style={styles.inviteCodeText}>
                     {family.invitationCode}
                     <CopyIcon onPress={copyToClipboard} />
                 </Text>
             </View>
             <View style={styles.familyMembersCard}>
                 <Text style={styles.familyMembersCardText}>Family Members</Text>
-                {family.members.map((member: UserType, index: number) => {
-                    const initials = getUserInitials(member.firstName, member.lastName)
-                    const taskCount = getTaskCountForUser(member._id)
-                    const taskText = taskCount === 1 ? 'Task' : 'Tasks'
-                    return (
-                        <View key={index} style={styles.familyMemberList}>
-                            <View style={styles.initialCircle}>
-                                <Text style={styles.initials}>{initials}</Text>
-                            </View>
-                            <Text style={styles.familyMemberText}>
-                                {member.firstName} {member.lastName}
-                            </Text>
-                            <Text style={styles.familyMemberText}>
-                                {taskCount} {taskText}
-                            </Text>
-                        </View>
-                    )
-                })}
+                <FlatList
+                    data={family.members}
+                    renderItem={renderItem}
+                    keyExtractor={(member) => member._id}
+                />
             </View>
         </View>
     )
@@ -80,13 +90,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     initialCircle: {
-        width: 31,
-        height: 31,
+        width: 33,
+        height: 33,
         borderRadius: 20,
         borderColor: palette.neutral800,
         borderWidth: 2,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 2
     },
     headerText: {
         fontFamily: typography.tertiary,
@@ -100,9 +111,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
+    familyPicture: {
+        height: '15%',
+        width: '95%',
+        borderRadius: 20,
+        alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+    },
     inviteCard: {
         height: '15%',
-        width: '90%',
+        width: '95%',
         backgroundColor: palette.neutral100,
         borderRadius: 20,
         alignSelf: 'center',
@@ -121,9 +142,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center'
     },
+    inviteCodeText: {
+        fontFamily: typography.quaternary,
+        fontSize: 20,
+        textAlign: 'center'
+    },
     familyMembersCard: {
         height: '50%',
-        width: '90%',
+        width: '95%',
         alignSelf: 'center',
         backgroundColor: palette.neutral100,
         borderRadius: 20,
@@ -142,8 +168,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     familyMemberList: {
-        height: '12%',
-        width: '90%',
+        width: '95%',
         alignSelf: 'center',
         marginBottom: '5%',
         flexDirection: 'row',

@@ -1,5 +1,5 @@
 // Alans house
-// export const BASE_URL = 'http://192.168.5.14:3002'
+// export const BASE_URL = 'http://192.168.5.31:3001'
 
 // export const BASE_URL = 'http://localhost:3001'
 
