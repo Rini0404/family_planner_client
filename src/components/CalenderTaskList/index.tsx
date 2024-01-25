@@ -59,14 +59,9 @@ export const CalenderTaskList: React.FC<CalenderTaskListProps> = ({ tasks, curre
                         taskStatusByDate,
                         styles
                     )}
-                />
-                <View style={styles.taskDetails}>
-                    <Text style={styles.taskText}>
-                        {item.title}. {item.description}
-                    </Text>
-                    <View style={styles.line}>
-                        <Line />
-                    </View>
+                >
+                    <Text style={styles.taskText}>{item.title}</Text>
+                    <View style={styles.line}></View>
                 </View>
             </TouchableOpacity>
         )
@@ -88,17 +83,22 @@ export const CalenderTaskList: React.FC<CalenderTaskListProps> = ({ tasks, curre
         })
     }
 
+    const taskText = filteredTasks.length === 1 ? 'Task' : 'Tasks'
+
     return (
         <View style={styles.container}>
             <View style={styles.CurrentDaysTasks}>
                 <Text style={styles.CurrentDaysTitle}>{displayWhatDayItIs()}</Text>
-                <Text style={styles.CurrentDaysTitle}>{filteredTasks.length} Tasks</Text>
+                <Text style={styles.CurrentDaysTitle}>
+                    {filteredTasks.length} {taskText}
+                </Text>
             </View>
             <Line />
             <FlatList
                 data={filteredTasks}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
+                numColumns={3}
                 // empty list component
                 ListEmptyComponent={() => <NoListCalendar />}
             />
@@ -114,14 +114,16 @@ const styles = StyleSheet.create({
         width: '90%',
         alignSelf: 'center',
         borderRadius: 20,
-        padding: 10
+        padding: 5
     },
     line: {
         width: '90%'
     },
     taskText: {
         fontSize: 14,
-        fontFamily: typography.quaternary
+        fontFamily: typography.quaternary,
+        textAlign: 'center',
+        padding: 5
     },
     CurrentDaysTasks: {
         padding: 5,
@@ -133,30 +135,25 @@ const styles = StyleSheet.create({
         fontFamily: typography.quaternary
     },
     taskIndicatorCompleted: {
-        width: 6,
-        height: 6,
-        borderRadius: 3,
-        backgroundColor: palette.boxesPastelGreen
+        height: 90,
+        borderRadius: 20,
+        backgroundColor: palette.boxesPastelGreen,
+        justifyContent: 'center'
     },
     taskIndicatorPending: {
-        width: 6,
-        height: 6,
-        borderRadius: 3,
-        backgroundColor: palette.pastelNavbars
+        height: 90,
+        borderRadius: 20,
+        backgroundColor: palette.pastelNavbars,
+        justifyContent: 'center'
     },
     taskIndicatorOverdue: {
-        width: 6,
-        height: 6,
-        borderRadius: 3,
-        backgroundColor: palette.pastelOrange
+        height: 90,
+        borderRadius: 20,
+        backgroundColor: palette.pastelOrange,
+        justifyContent: 'center'
     },
     taskRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 5
-    },
-    taskDetails: {
-        marginLeft: 10,
-        width: '100%'
+        width: '30%',
+        margin: 5
     }
 })
