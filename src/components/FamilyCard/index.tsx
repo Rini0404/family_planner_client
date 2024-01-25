@@ -1,6 +1,5 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { UserType } from '../../types/user'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { palette } from '../../theme'
 import { typography } from '../../theme/fonts'
 import { formatDate } from '../../utils/formatDate'
@@ -9,6 +8,8 @@ import FilterIcon from '../../../assets/navbar-icons/filter'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { AppStackParamList } from '../../navigators'
 import { FilterModal } from '../FilterTasksModal'
+import { DateChosen, SelectedMember } from '../../types/filter'
+import { Status } from '../../types/tasks'
 
 type FamilyData = {
     familyName: string
@@ -25,6 +26,16 @@ export const FamilyCard: React.FC<FamilyCardProps> = ({ family }) => {
     const navigation = useNavigation<NavigationProp<AppStackParamList>>()
 
     const [openFilter, setOpenFilter] = React.useState<boolean>(false)
+
+    const [selectedByMember, setSelectedByMember] = React.useState<SelectedMember>(
+        SelectedMember.ME
+    )
+
+    const [selectedStatus, setSelectedStatus] = React.useState<Status>(Status.All)
+
+    const [selectedDate, setSelectedDate] = React.useState<DateChosen | null>(DateChosen.TODAY)
+
+    const [realDateChosen, setRealDateChosen] = React.useState<Date | null>(new Date())
 
     return (
         <>
@@ -58,7 +69,20 @@ export const FamilyCard: React.FC<FamilyCardProps> = ({ family }) => {
                     <Text style={styles.dateNow}>{formatDate()}</Text>
                 </View>
             </View>
-            {openFilter && <FilterModal openFilter={openFilter} setOpenFilter={setOpenFilter} />}
+            {openFilter && (
+                <FilterModal
+                    openFilter={openFilter}
+                    setOpenFilter={setOpenFilter}
+                    selectedByMember={selectedByMember}
+                    setSelectedByMember={setSelectedByMember}
+                    selectedStatus={selectedStatus}
+                    setSelectedStatus={setSelectedStatus}
+                    selectedDate={selectedDate}
+                    setSelectedDate={setSelectedDate}
+                    realDateChosen={realDateChosen}
+                    setRealDateChosen={setRealDateChosen}
+                />
+            )}
         </>
     )
 }
@@ -81,13 +105,6 @@ const styles = StyleSheet.create({
         fontFamily: typography.quaternary,
         textAlign: 'center'
     },
-    // userName: {
-    //     fontSize: 16,
-    //     fontFamily: typography.tertiary,
-    //     fontWeight: 'bold',
-    //     color: 'white',
-    //     textAlign: 'center'
-    // },
     familyHeader: {
         paddingTop: '5%',
         fontSize: 30,
