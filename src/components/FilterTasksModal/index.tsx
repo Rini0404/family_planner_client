@@ -42,7 +42,29 @@ export const FilterModal: React.FC<FilterModalProps> = ({ openFilter, setOpenFil
                         </TouchableOpacity>
                     </View>
 
-                    <View style={styles.filterOptions}></View>
+                    <View style={styles.filterOptions}>
+                        <View style={styles.selfContainer}>
+                            <Text style={styles.byDateText}>By date:</Text>
+
+                            <View style={styles.dateOptions}>
+                                <TouchableOpacity style={styles.dateButtons}>
+                                    <Text style={styles.filterTextDate}>Today</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.dateButtons}>
+                                    <Text style={styles.filterTextDate}>Tomorrow</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View
+                            style={{ width: '100%', height: '20%', backgroundColor: 'red' }}
+                        ></View>
+                        <View
+                            style={{ width: '100%', height: '20%', backgroundColor: 'red' }}
+                        ></View>
+                        <View
+                            style={{ width: '100%', height: '20%', backgroundColor: 'red' }}
+                        ></View>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -55,6 +77,33 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center'
     },
+    selfContainer: {
+        width: '100%',
+        height: '20%'
+    },
+    byDateText: {
+        fontFamily: typography.primary,
+        fontSize: 16,
+        marginBottom: '2%',
+        paddingLeft: '4%',
+        textAlign: 'left'
+    },
+    dateButtons: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: palette.boxesPastelGreen,
+        width: '45%',
+        height: '90%'
+    },
+    dateOptions: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        width: '100%',
+        height: '50%'
+    },
     filterHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between', // This will space out the items
@@ -65,9 +114,7 @@ const styles = StyleSheet.create({
     filterOptions: {
         width: '100%',
         height: '80%',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        backgroundColor: 'pink'
+        justifyContent: 'space-evenly'
     },
     modalView: {
         backgroundColor: 'white',
@@ -85,6 +132,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
+    },
+    filterTextDate: {
+        fontSize: 16,
+        fontFamily: typography.tertiary,
+        textAlign: 'center'
     },
     filterText: {
         fontSize: 20,
