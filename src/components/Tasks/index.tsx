@@ -102,8 +102,6 @@ export const TaskCard: React.FC<
     const text = getText(updatedStatus, task.dueDate ? task.dueDate.toString() : '')
 
     const navigateToTaskScreen = (task: InterfaceTask) => {
-        console.log('TEST', task)
-
         const taskData = {
             ...task,
             updatedTextForDueBefore: text,
