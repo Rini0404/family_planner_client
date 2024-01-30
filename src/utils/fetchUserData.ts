@@ -1,6 +1,6 @@
 import { get } from '../api/get'
 import { updateFamilyDetails, updateUserDetails } from '../redux'
-import { updateTasks } from '../redux/tasks/tasksActions'
+import { setFilteredToAll, updateTasks } from '../redux/tasks/tasksActions'
 import { UserResponseType } from '../types/user'
 
 interface Action {
@@ -23,6 +23,8 @@ export const fetchUserData = async ({ dispatch }: { dispatch: DispatchFunction }
         dispatch(updateFamilyDetails(response.data.family))
 
         dispatch(updateTasks(response.data.family.tasks))
+
+        dispatch(setFilteredToAll(response.data.family.tasks))
     } catch (error) {
         console.log('Error in fetchUserData: ', error)
     }

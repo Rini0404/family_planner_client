@@ -17,7 +17,8 @@ const statusOrder: { [key in Status]: number } = {
     [Status.Overdue]: 1,
     [Status.Pending]: 2,
     [Status.Completed]: 3,
-    [Status.InProgress]: 0
+    [Status.InProgress]: 0,
+    [Status.All]: -1
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = () => {
@@ -25,7 +26,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     const { family } = useSelector((state: any) => state.family)
 
-    const { tasks } = useSelector((state: any) => state.tasks)
+    const { filteredTasks } = useSelector((state: any) => state.tasks)
 
     const navigation = useNavigation<NavigationProp<AppStackParamList>>()
 
@@ -39,7 +40,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
         const today = new Date()
         today.setHours(0, 0, 0, 0) // Reset time to the start of the day
 
-        const tasksForToday = tasks.filter((task: { dueDate: string | number | Date }) => {
+        const tasksForToday = filteredTasks.filter((task: { dueDate: string | number | Date }) => {
             const taskDueDate = new Date(task.dueDate)
             taskDueDate.setHours(0, 0, 0, 0) // Reset time for accurate date comparison
             return taskDueDate.getTime() === today.getTime()
@@ -50,13 +51,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
             const orderB = statusOrder[b.status as Status]
             return orderA - orderB
         })
-    }, [tasks])
+    }, [filteredTasks])
 
     const dispatch = useDispatch()
 
     const handleStatusUpdate = (taskId: string, newStatus: Status) => {
         // Find the task and update its status
-        const updatedTasks = tasks.map((task: { _id: string }) =>
+        const updatedTasks = filteredTasks.map((task: { _id: string }) =>
             task._id === taskId ? { ...task, status: newStatus } : task
         )
 

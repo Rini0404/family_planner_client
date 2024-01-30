@@ -1,12 +1,20 @@
-import { FilterOptions } from '../../types/filter'
+import { FilterOptions, SelectedMember } from '../../types/filter'
 import { DeleteTaskAction } from '../../types/taskRedux'
-import { InterfaceTask } from '../../types/tasks'
-import { TASKS, ADD_TASK, UPDATE_TASK, DELETE_TASK, SET_FILTERED_TASKS } from './tasksTypes'
+import { InterfaceTask, Status } from '../../types/tasks'
+import {
+    TASKS,
+    ADD_TASK,
+    UPDATE_TASK,
+    DELETE_TASK,
+    SET_FILTERED_TASKS,
+    SET_FILTERED_TO_ALL
+} from './tasksTypes'
 
 const initialState = {
     tasks: [],
     filteredTasks: []
 }
+
 type SetFilteredTasksAction = {
     type: typeof SET_FILTERED_TASKS
     data: FilterOptions
@@ -14,7 +22,7 @@ type SetFilteredTasksAction = {
 
 type TaskAction =
     | {
-          type: typeof TASKS | typeof ADD_TASK | typeof UPDATE_TASK
+          type: typeof TASKS | typeof ADD_TASK | typeof UPDATE_TASK | typeof SET_FILTERED_TO_ALL
           data: InterfaceTask | InterfaceTask[]
       }
     | DeleteTaskAction
@@ -28,6 +36,13 @@ const familyReducer = (state = initialState, action: TaskAction) => {
             return {
                 ...state,
                 tasks: Array.isArray(action.data) ? action.data : [...state.tasks, action.data]
+            }
+        case SET_FILTERED_TO_ALL:
+            return {
+                ...state,
+                filteredTasks: Array.isArray(action.data)
+                    ? action.data
+                    : [...state.tasks, action.data]
             }
         case ADD_TASK:
             return {
@@ -61,22 +76,33 @@ const familyReducer = (state = initialState, action: TaskAction) => {
             const filterOptions: FilterOptions = action.data
 
             const filteredTasks = tasks.filter((task) => {
-                let taskDueDate
-                if (task.dueDate) {
-                    taskDueDate = new Date(task.dueDate)
-                }
+                // Date filtering logic
+                let taskDueDate: Date | undefined = task.dueDate
+                    ? new Date(task.dueDate)
+                    : undefined
+                let filterDate: Date | undefined = filterOptions.date
+                    ? new Date(filterOptions.date)
+                    : undefined
+                let dateMatch =
+                    filterOptions.date && taskDueDate
+                        ? taskDueDate <= (filterDate ?? new Date())
+                        : true
 
-                let filterDate
-                if (filterOptions.date) {
-                    filterDate = new Date(filterOptions.date)
-                }
-
-                // not finnished
-                let dateMatch = filterOptions.date ? taskDueDate <= filterDate : true
+                // Status filtering logic
                 let statusMatch =
-                    filterOptions.status !== 'all' ? task.status === filterOptions.status : true
+                    filterOptions.status !== Status.All
+                        ? task.status === filterOptions.status
+                        : true
 
-                return dateMatch && statusMatch
+                // Member/User filtering logic
+                let memberMatch = true // Default to true to include all tasks when filter is not applied
+                if (filterOptions.member !== SelectedMember.EVERYONE) {
+                    // When a specific user is selected, only include tasks assigned to that user
+                    memberMatch = task.assignedTo?._id === action.data.member
+                }
+
+                // A task must satisfy all conditions to be included
+                return dateMatch && statusMatch && memberMatch
             })
 
             return {
@@ -84,6 +110,7 @@ const familyReducer = (state = initialState, action: TaskAction) => {
                 filteredTasks: filteredTasks
             }
         }
+
         default:
             return state
     }

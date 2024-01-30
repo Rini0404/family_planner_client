@@ -9,7 +9,7 @@ export enum DateChosen {
 }
 
 export type FilterOptions = {
-    member: SelectedMember
+    member: string | SelectedMember.EVERYONE
     date: Date | null
     status: string
 }

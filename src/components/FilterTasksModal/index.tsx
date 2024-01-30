@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native'
 import { typography } from '../../theme/fonts'
 import { palette } from '../../theme'
@@ -7,7 +7,7 @@ import { Status } from '../../types/tasks'
 import { Picker } from '@react-native-picker/picker'
 import { DateChosen, SelectedMember } from '../../types/filter'
 import { DatePickerAndTime } from '../DatePicker'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setFilteredTasks } from '../../redux/tasks/tasksActions'
 
 type FilterModalProps = {
@@ -39,6 +39,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     const [isPickerVisible, setIsPickerVisible] = React.useState<boolean>(false)
     const [isDatePickerVisible, setIsDatePickerVisible] = React.useState<boolean>(false)
 
+    const { user } = useSelector((state: any) => state.user)
+
     const handleDateSelect = (date: DateChosen) => {
         if (date === DateChosen.CUSTOM) {
             setIsDatePickerVisible(true)
@@ -60,13 +62,20 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     }
 
     const handleFilter = () => {
+        let userChosenId: string | null = null
+        console.log('USER', user)
+
+        if (selectedByMember === SelectedMember.ME) {
+            userChosenId = user._id
+        } else if (selectedByMember === SelectedMember.EVERYONE) {
+            userChosenId = SelectedMember.EVERYONE
+        }
+
         const filterOptions = {
-            member: selectedByMember,
+            member: userChosenId || '',
             status: selectedStatus,
             date: realDateChosen ? realDateChosen.toISOString() : null
         }
-
-        console.log('OPTIONS CHOSEN: ', filterOptions)
 
         dispatch(setFilteredTasks(filterOptions))
 
