@@ -6,9 +6,8 @@ import RadioButton from '../RadioButton'
 import { Status } from '../../types/tasks'
 import { Picker } from '@react-native-picker/picker'
 import { DateChosen, SelectedMember } from '../../types/filter'
-import { DatePickerAndTime } from '../DatePicker'
 import { useDispatch, useSelector } from 'react-redux'
-import { setFilteredTasks } from '../../redux/tasks/tasksActions'
+import { revertFilteredTasks, setFilteredTasks } from '../../redux/tasks/tasksActions'
 
 type FilterModalProps = {
     openFilter: boolean
@@ -36,21 +35,12 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     setRealDateChosen
 }) => {
     const dispatch = useDispatch()
+
+    const { tasks } = useSelector((state: any) => state.tasks)
+
     const [isPickerVisible, setIsPickerVisible] = React.useState<boolean>(false)
-    const [isDatePickerVisible, setIsDatePickerVisible] = React.useState<boolean>(false)
 
     const { user } = useSelector((state: any) => state.user)
-
-    const handleDateSelect = (date: DateChosen) => {
-        if (date === DateChosen.CUSTOM) {
-            setIsDatePickerVisible(true)
-        }
-
-        if (date === DateChosen.TODAY) {
-            setRealDateChosen(new Date())
-        }
-        setSelectedDate(date)
-    }
 
     // Function to handle selection change
     const handleSelectionChange = (member: SelectedMember) => {
@@ -63,7 +53,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
     const handleFilter = () => {
         let userChosenId: string | null = null
-        console.log('USER', user)
 
         if (selectedByMember === SelectedMember.ME) {
             userChosenId = user._id
@@ -77,16 +66,18 @@ export const FilterModal: React.FC<FilterModalProps> = ({
             date: realDateChosen ? realDateChosen.toISOString() : null
         }
 
+        console.log('filterOptions', filterOptions)
+
         dispatch(setFilteredTasks(filterOptions))
 
         setOpenFilter(!openFilter)
     }
 
     const handleClearFilter = () => {
-        setSelectedByMember(SelectedMember.ME)
+        setSelectedByMember(SelectedMember.EVERYONE)
         setSelectedStatus(Status.All)
-        setSelectedDate(DateChosen.TODAY)
-        setRealDateChosen(new Date())
+        dispatch(revertFilteredTasks(tasks))
+        setOpenFilter(!openFilter)
     }
 
     return (
@@ -123,34 +114,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                     </View>
 
                     <View style={styles.filterOptions}>
-                        <View style={styles.selfContainer}>
-                            <Text style={styles.byDateText}>By date:</Text>
-                            <View style={styles.dateOptions}>
-                                {Object.values(DateChosen).map((date) => (
-                                    <TouchableOpacity
-                                        key={date}
-                                        style={[
-                                            styles.dateButton,
-                                            selectedDate === date && styles.selectedDateButton
-                                        ]}
-                                        onPress={() => handleDateSelect(date)}
-                                    >
-                                        <Text style={styles.filterTextDate}>{date}</Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                            {selectedDate === DateChosen.CUSTOM && isDatePickerVisible && (
-                                <DatePickerAndTime
-                                    selectedValue={realDateChosen || new Date()}
-                                    onDateChange={(date) => {
-                                        setRealDateChosen(date)
-                                    }}
-                                    openedDate={isDatePickerVisible}
-                                    setOpenedDate={setIsDatePickerVisible}
-                                />
-                            )}
-                        </View>
-
                         <View style={styles.selfContainer}>
                             <Text style={styles.byDateText}>By family member:</Text>
                             <View style={styles.dateOptions}>
@@ -239,7 +202,7 @@ const styles = StyleSheet.create({
     modalView: {
         backgroundColor: 'white',
         width: '100%',
-        height: '55%',
+        height: '45%',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: '5%',
@@ -332,7 +295,8 @@ const styles = StyleSheet.create({
     },
     selfContainer: {
         width: '100%',
-        height: '20%'
+        height: '22%',
+        justifyContent: 'center'
     },
     byDateText: {
         fontFamily: typography.primary,

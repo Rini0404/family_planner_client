@@ -17,7 +17,7 @@ export const Settings: React.FC<SettingsProps> = () => {
 
     const { family } = useSelector((state: any) => state.family)
     const { user } = useSelector((state: any) => state.user)
-
+    console.log('user', user)
     const handleBackPress = () => {
         navigation.goBack()
     }

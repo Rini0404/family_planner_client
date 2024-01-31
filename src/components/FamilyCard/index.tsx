@@ -28,7 +28,7 @@ export const FamilyCard: React.FC<FamilyCardProps> = ({ family }) => {
     const [openFilter, setOpenFilter] = React.useState<boolean>(false)
 
     const [selectedByMember, setSelectedByMember] = React.useState<SelectedMember>(
-        SelectedMember.ME
+        SelectedMember.EVERYONE
     )
 
     const [selectedStatus, setSelectedStatus] = React.useState<Status>(Status.All)
