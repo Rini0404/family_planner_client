@@ -27,6 +27,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     const { filteredTasks } = useSelector((state: any) => state.tasks)
 
+    // console.log('filteredTasks', filteredTasks)
+
     const navigation = useNavigation<NavigationProp<AppStackParamList>>()
 
     // Sort tasks based on the defined status order
@@ -67,6 +69,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
     return (
         <View style={{ flex: 1, alignItems: 'center', paddingTop: '15%' }}>
             <UserBar family={family} user={user} />
+
             <FamilyCard family={family} />
 
             <View style={{ width: '100%', height: '57%' }}>

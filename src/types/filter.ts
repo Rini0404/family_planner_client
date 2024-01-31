@@ -1,6 +1,6 @@
 export enum SelectedMember {
-    ME = 'Me',
-    EVERYONE = 'Everyone'
+    EVERYONE = 'Everyone',
+    ME = 'Me'
 }
 
 export enum DateChosen {

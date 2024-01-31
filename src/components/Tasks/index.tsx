@@ -65,24 +65,28 @@ export const TaskCard: React.FC<
 
     let updatedStatus = task.status
 
-    // console.log('task: ', task)
+    React.useEffect(() => {
+        if (
+            isTaskOverdue(task) &&
+            task.status !== Status.Overdue &&
+            task.status !== Status.Completed
+        ) {
+            onStatusUpdate(task._id, Status.Overdue)
+            updatedStatus = Status.Overdue
+            console.log('Task is overdue! was due on: ', task.dueDate)
 
-    if (isTaskOverdue(task) && task.status !== Status.Overdue && task.status !== Status.Completed) {
-        onStatusUpdate(task._id, Status.Overdue)
-        updatedStatus = Status.Overdue
-        console.log('Task is overdue! was due on: ', task.dueDate)
+            const dataToUpdate = {
+                status: Status.Overdue
+            }
 
-        const dataToUpdate = {
-            status: Status.Overdue
+            const taskUpdate = {
+                _id: task._id,
+                isUpdating: true
+            }
+
+            put('api/tasks/edit', dataToUpdate, taskUpdate)
         }
-
-        const taskUpdate = {
-            _id: task._id,
-            isUpdating: true
-        }
-
-        put('api/tasks/edit', dataToUpdate, taskUpdate)
-    }
+    }, [task])
 
     useEffect(() => {
         if (updatedStatus === Status.Overdue) {

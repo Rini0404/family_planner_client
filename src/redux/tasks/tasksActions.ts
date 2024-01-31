@@ -4,11 +4,19 @@ import { InterfaceTask } from '../../types/tasks'
 import {
     ADD_TASK,
     DELETE_TASK,
+    REVERT_FILTERED_TASKS,
     SET_FILTERED_TASKS,
     SET_FILTERED_TO_ALL,
     TASKS,
     UPDATE_TASK
 } from './tasksTypes'
+
+export const revertFilteredTasks = (data: InterfaceTask) => {
+    return {
+        type: REVERT_FILTERED_TASKS,
+        data
+    }
+}
 
 export const updateTasks = (data: InterfaceTask) => {
     return {

@@ -153,8 +153,16 @@ export const DatePickerAndTime: React.FC<DatePickerProps> = ({
                         })}
                     </View>
 
-                    <TouchableOpacity onPress={() => setOpenedDate(false)}>
-                        <Text style={{ paddingTop: '3%', fontFamily: typography.primary }}>
+                    <TouchableOpacity
+                        onPress={() => setOpenedDate(false)}
+                        style={styles.confirmButton}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: typography.primary,
+                                fontSize: 16
+                            }}
+                        >
                             Confirm
                         </Text>
                     </TouchableOpacity>
@@ -169,6 +177,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center'
+    },
+    confirmButton: {
+        backgroundColor: palette.pastelLightGreen,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        paddingVertical: '2%',
+        marginTop: '2%'
     },
     datePickerButton: {
         borderWidth: 1,
@@ -194,7 +211,7 @@ const styles = StyleSheet.create({
     modalView: {
         backgroundColor: 'white',
         width: '100%',
-        height: '60%',
+        height: '70%',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: '5%',
