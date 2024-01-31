@@ -1,4 +1,4 @@
-import { View, Text, Platform, StyleSheet, StatusBar, Modal, TextInput } from 'react-native'
+import { View, Text, Platform, StyleSheet, StatusBar, Modal, TextInput, Alert } from 'react-native'
 import React from 'react'
 import { AppStackParamList, AppStackScreenProps } from '../navigators'
 import { palette } from '../theme'
@@ -8,6 +8,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { remove } from '../utils/storage'
 
 interface SettingsProps extends AppStackScreenProps<'Settings'> {}
 
@@ -15,7 +16,6 @@ export const Settings: React.FC<SettingsProps> = () => {
     const navigation = useNavigation<NavigationProp<AppStackParamList>>()
 
     const { family } = useSelector((state: any) => state.family)
-    const { tasks } = useSelector((state: any) => state.tasks)
     const { user } = useSelector((state: any) => state.user)
 
     const handleBackPress = () => {
@@ -40,6 +40,24 @@ export const Settings: React.FC<SettingsProps> = () => {
 
     const toggleLeaveFamilyModal = () => {
         setIsLeaveFamilyModalVisible(!isLeaveFamilyModalVisible)
+    }
+
+    const clearStorage = async () => {
+        Alert.alert('Logout', 'Are you sure you want to logout?', [
+            {
+                text: 'Cancel',
+                onPress: () => {},
+                style: 'cancel'
+            },
+            {
+                text: 'Logout',
+                onPress: async () => {
+                    await remove('token')
+                    navigation.navigate('Initial')
+                },
+                style: 'destructive'
+            }
+        ])
     }
 
     return (
@@ -92,6 +110,12 @@ export const Settings: React.FC<SettingsProps> = () => {
                     </View>
                     <TouchableOpacity style={styles.button} onPress={toggleLeaveFamilyModal}>
                         <Text style={styles.buttonText}>Leave this Family</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.logout}>
+                    <TouchableOpacity style={styles.logoutButton} onPress={clearStorage}>
+                        <Text style={styles.buttonText}>Logout</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -316,6 +340,25 @@ const styles = StyleSheet.create({
         marginTop: 18,
         width: '95%',
         alignSelf: 'center'
+    },
+    logout: {
+        width: '100%',
+        height: '13%',
+        position: 'absolute',
+        bottom: 0,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        alignSelf: 'center'
+    },
+    logoutButton: {
+        backgroundColor: palette.angry500,
+        borderRadius: 20,
+        alignItems: 'center',
+        width: '100%',
+        alignSelf: 'center',
+        height: '100%',
+        justifyContent: 'center',
+        paddingBottom: '5%'
     },
     buttonText: {
         color: palette.neutral100,

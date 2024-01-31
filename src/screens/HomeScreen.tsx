@@ -1,8 +1,7 @@
-import { FlatList, StatusBar, Text, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import React from 'react'
 import { AppStackParamList, AppStackScreenProps } from '../navigators'
 import { useDispatch, useSelector } from 'react-redux'
-import { remove } from '../utils/storage'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { FamilyCard } from '../components/FamilyCard'
 import { TaskCard } from '../components/Tasks'
@@ -29,11 +28,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
     const { filteredTasks } = useSelector((state: any) => state.tasks)
 
     const navigation = useNavigation<NavigationProp<AppStackParamList>>()
-
-    const clearStorage = async () => {
-        await remove('token')
-        navigation.navigate('Initial')
-    }
 
     // Sort tasks based on the defined status order
     const sortedTasks = React.useMemo(() => {
@@ -85,16 +79,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
                     ListEmptyComponent={<NoTasks navigation={navigation} />}
                 />
             </View>
-            <Text
-                style={{
-                    color: 'tomato',
-                    fontSize: 24,
-                    fontWeight: 'bold'
-                }}
-                onPress={clearStorage}
-            >
-                CLEAR TOKEN
-            </Text>
         </View>
     )
 }
