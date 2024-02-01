@@ -68,7 +68,9 @@ export const Settings: React.FC<SettingsProps> = () => {
                     <Text style={styles.headerText}>Settings</Text>
                 </View>
                 <View style={styles.userInfoCard}>
-                    <Text style={styles.cardTitleText}>User Information</Text>
+                    <View style={styles.cardTitleContainer}>
+                        <Text style={styles.cardTitleText}>User Information</Text>
+                    </View>
                     <TouchableOpacity style={styles.row} onPress={toggleNameModal}>
                         <Text style={styles.cardSubChangableText}>
                             Name: {user.firstName} {user.lastName}
@@ -95,7 +97,9 @@ export const Settings: React.FC<SettingsProps> = () => {
                 </View>
 
                 <View style={styles.familyCard}>
-                    <Text style={styles.cardTitleText}>Family Information</Text>
+                    <View style={styles.cardTitleContainer}>
+                        <Text style={styles.cardTitleText}>Family Information</Text>
+                    </View>
                     <View style={styles.nonChangeable}>
                         <Text style={styles.cardSubText}>Family Name:</Text>
                         <Text style={styles.cardSubText}> {family.familyName}'s</Text>
@@ -141,12 +145,14 @@ export const Settings: React.FC<SettingsProps> = () => {
                                 <TextInput
                                     style={styles.input}
                                     placeholder={user.firstName}
+                                    placeholderTextColor={palette.neutral300}
                                     value={firstName}
                                     onChangeText={(text) => setFirstName(text)}
                                 />
                                 <TextInput
                                     style={styles.input}
                                     placeholder={user.lastName}
+                                    placeholderTextColor={palette.neutral300}
                                     value={lastName}
                                     onChangeText={(text) => setLastName(text)}
                                 />
@@ -177,12 +183,14 @@ export const Settings: React.FC<SettingsProps> = () => {
                                 <TextInput
                                     style={styles.input}
                                     placeholder='Password'
+                                    placeholderTextColor={palette.neutral300}
                                     value={password}
                                     onChangeText={(text) => setPassword(text)}
                                 />
                                 <TextInput
                                     style={styles.input}
                                     placeholder='Confirm Password'
+                                    placeholderTextColor={palette.neutral300}
                                     value={confirmPassword}
                                     onChangeText={(text) => setConfirmPassword(text)}
                                 />
@@ -235,7 +243,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         width: '95%',
-        height: '90%',
+        height: Platform.OS === 'android' ? '90%' : '86%',
         backgroundColor: palette.neutral100,
         borderRadius: 10,
         padding: 20,
@@ -290,11 +298,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     userInfoCard: {
-        height: '25%',
+        height: Platform.OS === 'android' ? '26%' : '23%',
         width: '95%',
         alignSelf: 'center',
         backgroundColor: palette.neutral100,
-        borderRadius: 20
+        borderRadius: 20,
     },
     row: {
         flexDirection: 'row',
@@ -303,15 +311,19 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: 5
     },
+    cardTitleContainer: {
+        borderBottomColor: palette.neutral700,
+        borderBottomWidth: 1,
+        padding: Platform.OS === 'android' ? 5 : 10,
+        textAlign: 'center',
+        marginBottom: 5
+    },
     cardTitleText: {
         fontSize: 18,
         fontFamily: typography.quaternary,
         color: palette.neutral800,
         marginBottom: 2,
-        borderBottomColor: palette.neutral700,
-        borderBottomWidth: 1,
-        padding: 5,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     cardSubText: {
         fontSize: 16,
@@ -325,16 +337,16 @@ const styles = StyleSheet.create({
         color: palette.neutral800
     },
     familyCard: {
-        height: '28%',
+        height: Platform.OS === 'android' ? '29%' : '25%',
         width: '95%',
         alignSelf: 'center',
         backgroundColor: palette.neutral100,
         borderRadius: 20,
-        marginTop: 10
+        marginTop: 10,
     },
     button: {
         backgroundColor: palette.angry500,
-        padding: 10,
+        padding: 12,
         borderRadius: 20,
         alignItems: 'center',
         marginTop: 18,
