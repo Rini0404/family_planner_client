@@ -5,19 +5,21 @@ import { palette } from '../theme'
 import { typography } from '../theme/fonts'
 import BackArrow from '../components/BackArrow'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { remove } from '../utils/storage'
+import { put } from '../api/put'
+import { editUserDetails } from '../redux'
 
 interface SettingsProps extends AppStackScreenProps<'Settings'> {}
 
 export const Settings: React.FC<SettingsProps> = () => {
+    const dispatch = useDispatch()
     const navigation = useNavigation<NavigationProp<AppStackParamList>>()
 
     const { family } = useSelector((state: any) => state.family)
     const { user } = useSelector((state: any) => state.user)
-    console.log('user', user)
     const handleBackPress = () => {
         navigation.goBack()
     }
@@ -58,6 +60,42 @@ export const Settings: React.FC<SettingsProps> = () => {
                 style: 'destructive'
             }
         ])
+    }
+
+    const handleUpdateUserInfo = async () => {
+        let submissionData = {}
+        if (firstName === '' && lastName === '') {
+            Alert.alert('No Changes', 'No changes were made to your name')
+            return
+        }
+        if (firstName !== user.firstName || lastName !== user.lastName) {
+            submissionData = {
+                ...submissionData,
+                firstName,
+                lastName
+            }
+        }
+        try {
+            const response = (await put('api/users/updateMe', submissionData)) as any
+            console.log(response)
+            if (response.status !== 200) {
+                Alert.alert(
+                    'Error',
+                    'There was an error updating your information, Please try again.'
+                )
+                return
+            }
+            const updatedUser = {
+                ...user,
+                firstName,
+                lastName
+            }
+            dispatch(editUserDetails(updatedUser))
+            Alert.alert('Success', 'Your information was updated successfully')
+            toggleNameModal()
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -137,7 +175,7 @@ export const Settings: React.FC<SettingsProps> = () => {
                                     <Text style={styles.modalHeaderText}>Cancel</Text>
                                 </TouchableOpacity>
                                 <Text style={styles.modalHeaderTitle}>Edit Info</Text>
-                                <TouchableOpacity onPress={() => {}}>
+                                <TouchableOpacity onPress={handleUpdateUserInfo}>
                                     <Text style={styles.modalHeaderText}>Save</Text>
                                 </TouchableOpacity>
                             </View>
@@ -302,7 +340,7 @@ const styles = StyleSheet.create({
         width: '95%',
         alignSelf: 'center',
         backgroundColor: palette.neutral100,
-        borderRadius: 20,
+        borderRadius: 20
     },
     row: {
         flexDirection: 'row',
@@ -323,7 +361,7 @@ const styles = StyleSheet.create({
         fontFamily: typography.quaternary,
         color: palette.neutral800,
         marginBottom: 2,
-        textAlign: 'center',
+        textAlign: 'center'
     },
     cardSubText: {
         fontSize: 16,
@@ -342,7 +380,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         backgroundColor: palette.neutral100,
         borderRadius: 20,
-        marginTop: 10,
+        marginTop: 10
     },
     button: {
         backgroundColor: palette.angry500,
