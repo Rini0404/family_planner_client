@@ -29,14 +29,9 @@ export const UserBar: React.FC<UserBarProps> = ({ user, family }) => {
     return (
         <View style={styles.container}>
             <View style={styles.user}>
-                <TouchableOpacity
-                    onPress={() => {
-                        Alert.alert('Profile')
-                    }}
-                    style={styles.initialCircle}
-                >
+                <View style={styles.initialCircle}>
                     <Text style={styles.initials}>{userInitials}</Text>
-                </TouchableOpacity>
+                </View>
                 <Text style={styles.userName}>
                     {user.firstName} {user.lastName}
                 </Text>
