@@ -1,5 +1,14 @@
 import React from 'react'
-import { Text, View, StyleSheet, StatusBar, Platform, FlatList, Image } from 'react-native'
+import {
+    Text,
+    View,
+    StyleSheet,
+    StatusBar,
+    Platform,
+    FlatList,
+    Image,
+    TouchableOpacity
+} from 'react-native'
 import { AppStackParamList, AppStackScreenProps } from '../navigators'
 import { typography } from '../theme/fonts'
 import BackArrow from '../components/BackArrow'
@@ -68,7 +77,9 @@ export const FamilyScreen: React.FC<FamilyScreenProps> = () => {
                 <Text style={styles.inviteText}>{family.familyName}'s Invite Code:</Text>
                 <Text style={styles.inviteCodeText}>
                     {family.invitationCode}
-                    <CopyIcon onPress={copyToClipboard} />
+                    <TouchableOpacity onPress={copyToClipboard}>
+                        <CopyIcon />
+                    </TouchableOpacity>
                 </Text>
             </View>
             <View style={styles.familyMembersCard}>
@@ -90,14 +101,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     initialCircle: {
-        width: 33,
-        height: 33,
-        borderRadius: 20,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
         borderColor: palette.neutral800,
         borderWidth: 2,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 2
+        position: 'relative',
+        marginBottom: 4
     },
     headerText: {
         fontFamily: typography.tertiary,
@@ -183,9 +193,9 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     initials: {
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: typography.quaternary,
         textAlign: 'center',
-        lineHeight: 30
+        top: Platform.OS === 'ios' ? 7 : 2,
     }
 })

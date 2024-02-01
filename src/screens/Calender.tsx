@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { AppStackScreenProps } from '../navigators'
 import { SwipableMonthYear } from '../components/SwipyMonthYear'
@@ -34,7 +34,7 @@ export const CalenderScreen: React.FC<CalenderScreenProps> = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: '15%'
+        paddingTop: Platform.OS === 'ios' ? '15%' : '7%',
     },
     weekDaysView: {
         flexDirection: 'row',

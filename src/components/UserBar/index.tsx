@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import BellIcon from '../../../assets/navbar-icons/bell'
 import SettingsIcon from '../../../assets/navbar-icons/settings'
 import { UserType } from '../../types/user'
@@ -80,19 +80,19 @@ const styles = StyleSheet.create({
         fontFamily: typography.quaternary
     },
     initialCircle: {
-        width: 35,
-        height: 35,
-        borderRadius: 50,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
         borderColor: palette.neutral800,
         borderWidth: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: palette.pastelNavbars,
+        position: 'relative',
         marginRight: 10
     },
     initials: {
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 14,
+        top: Platform.OS === 'ios' ? 8 : 2,
         fontFamily: typography.quaternary
     },
     notifications: {
