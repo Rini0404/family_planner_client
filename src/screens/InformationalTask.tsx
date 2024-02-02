@@ -188,24 +188,20 @@ export const InformationalTask: React.FC<InformationalTaskProps> = ({ route }) =
                         </View>
                     )}
 
-                    {taskStatus === Status.Completed && (
-                        <View style={styles.updateTaskContainer}>
-                            <Text style={styles.updateTaskText}>
-                                Do you want to delete this task?
-                            </Text>
-                            <TouchableOpacity
-                                style={{
-                                    ...styles.doneButton,
-                                    backgroundColor: palette.angry500
-                                }}
-                                onPress={() => {
-                                    handleDeleteTask(params._id)
-                                }}
-                            >
-                                <Text style={styles.markAsDone}>Delete</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
+                    <View style={styles.updateTaskContainer}>
+                        <Text style={styles.updateTaskText}>Do you want to delete this task?</Text>
+                        <TouchableOpacity
+                            style={{
+                                ...styles.doneButton,
+                                backgroundColor: palette.angry500
+                            }}
+                            onPress={() => {
+                                handleDeleteTask(params._id)
+                            }}
+                        >
+                            <Text style={styles.markAsDone}>Delete</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
             {isLoading && <LoadingOverlay isVisible={isLoading} />}

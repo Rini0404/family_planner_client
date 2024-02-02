@@ -94,7 +94,10 @@ const familyReducer = (state = initialState, action: TaskAction) => {
         case DELETE_TASK:
             return {
                 ...state,
-                tasks: state.tasks.filter((task: InterfaceTask) => task._id !== action.data._id)
+                tasks: state.tasks.filter((task: InterfaceTask) => task._id !== action.data._id),
+                filteredTasks: state.filteredTasks.filter(
+                    (task: InterfaceTask) => task._id !== action.data._id
+                )
             }
         case SET_FILTERED_TASKS: {
             const tasks: InterfaceTask[] = state.tasks as InterfaceTask[]
