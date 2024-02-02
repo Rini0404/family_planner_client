@@ -61,6 +61,10 @@ const familyReducer = (state = initialState, action: TaskAction) => {
                 tasks: [
                     ...state.tasks,
                     ...(Array.isArray(action.data) ? action.data : [action.data])
+                ],
+                filteredTasks: [
+                    ...state.filteredTasks,
+                    ...(Array.isArray(action.data) ? action.data : [action.data])
                 ]
             }
         case UPDATE_TASK:

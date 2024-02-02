@@ -27,8 +27,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = () => {
 
     const { filteredTasks } = useSelector((state: any) => state.tasks)
 
-    // console.log('filteredTasks', filteredTasks)
-
     const navigation = useNavigation<NavigationProp<AppStackParamList>>()
 
     // Sort tasks based on the defined status order
