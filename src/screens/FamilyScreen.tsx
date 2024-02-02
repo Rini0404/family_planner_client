@@ -13,7 +13,6 @@ import { AppStackParamList, AppStackScreenProps } from '../navigators'
 import { typography } from '../theme/fonts'
 import BackArrow from '../components/BackArrow'
 import { palette } from '../theme'
-import { UserType } from '../types/user'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import CopyIcon from '../../assets/navbar-icons/copy'
@@ -26,7 +25,10 @@ export const FamilyScreen: React.FC<FamilyScreenProps> = () => {
     const navigation = useNavigation<NavigationProp<AppStackParamList>>()
 
     const { family } = useSelector((state: any) => state.family)
+
     const { tasks } = useSelector((state: any) => state.tasks)
+
+    const { user } = useSelector((state: any) => state.user)
 
     const handleBackPress = () => {
         navigation.goBack()
@@ -45,16 +47,28 @@ export const FamilyScreen: React.FC<FamilyScreenProps> = () => {
     }
 
     const renderItem = ({ item: member }: { item: any }) => {
-        const initials = getUserInitials(member.firstName, member.lastName)
-        const taskCount = getTaskCountForUser(member._id)
+        let userObject = member
+
+        // Special use case for in Redux state
+        if (member._id === user._id) {
+            userObject = {
+                ...member,
+                firstName: user.firstName,
+                lastName: user.lastName
+            }
+        }
+
+        const initials = getUserInitials(userObject.firstName, userObject.lastName)
+        const taskCount = getTaskCountForUser(userObject._id)
         const taskText = taskCount === 1 ? 'Task' : 'Tasks'
+
         return (
             <View style={styles.familyMemberList}>
                 <View style={styles.initialCircle}>
                     <Text style={styles.initials}>{initials}</Text>
                 </View>
                 <Text style={styles.familyMemberText}>
-                    {member.firstName} {member.lastName}
+                    {userObject.firstName} {userObject.lastName}
                 </Text>
                 <Text style={styles.familyMemberText}>
                     {taskCount} {taskText}
@@ -196,6 +210,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: typography.quaternary,
         textAlign: 'center',
-        top: Platform.OS === 'ios' ? 7 : 2,
+        top: Platform.OS === 'ios' ? 7 : 2
     }
 })

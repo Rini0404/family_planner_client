@@ -63,38 +63,46 @@ export const Settings: React.FC<SettingsProps> = () => {
     }
 
     const handleUpdateUserInfo = async () => {
-        let submissionData = {}
-        if (firstName === '' && lastName === '') {
+        // Use existing user info as default values
+        const updatedFirstName = firstName !== '' ? firstName : user.firstName
+        const updatedLastName = lastName !== '' ? lastName : user.lastName
+
+        // Check if there are any changes to update
+        if (updatedFirstName === user.firstName && updatedLastName === user.lastName) {
             Alert.alert('No Changes', 'No changes were made to your name')
             return
         }
-        if (firstName !== user.firstName || lastName !== user.lastName) {
-            submissionData = {
-                ...submissionData,
-                firstName,
-                lastName
-            }
+
+        const submissionData = {
+            firstName: updatedFirstName,
+            lastName: updatedLastName
         }
+
         try {
-            const response = (await put('api/users/updateMe', submissionData)) as any
-            console.log(response)
-            if (response.status !== 200) {
+            const response = await put('api/users/updateMe', submissionData)
+
+            if ((response as Response).status !== 200) {
                 Alert.alert(
                     'Error',
                     'There was an error updating your information, Please try again.'
                 )
                 return
             }
+
             const updatedUser = {
                 ...user,
-                firstName,
-                lastName
+                firstName: updatedFirstName,
+                lastName: updatedLastName
             }
+
             dispatch(editUserDetails(updatedUser))
+
             Alert.alert('Success', 'Your information was updated successfully')
+
             toggleNameModal()
         } catch (error) {
-            console.log(error)
+            console.error(error)
+            Alert.alert('Update Failed', 'An error occurred while updating your information.')
         }
     }
 

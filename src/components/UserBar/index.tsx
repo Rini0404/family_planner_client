@@ -38,11 +38,11 @@ export const UserBar: React.FC<UserBarProps> = ({ user, family }) => {
             </View>
             <View style={styles.notifications}>
                 <TouchableOpacity
-                    onPress={() => {
-                        Alert.alert('Notifications')
-                    }}
+                // onPress={() => {
+                //     Alert.alert('Notifications')
+                // }}
                 >
-                    <BellIcon />
+                    {/* <BellIcon /> */}
                 </TouchableOpacity>
 
                 <TouchableOpacity

@@ -42,7 +42,7 @@ export const getTaskIndicatorStyle = (
 
     const dateString = date.toISOString().split('T')[0]
     const status = taskStatusByDate.get(dateString)
-
+    console.log('status:', status)
     switch (status) {
         case Status.Completed:
             return styles.taskIndicatorCompleted

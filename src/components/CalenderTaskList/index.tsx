@@ -45,21 +45,26 @@ export const CalenderTaskList: React.FC<CalenderTaskListProps> = ({ tasks, curre
             const taskData = {
                 ...item,
                 updatedTextForDueBefore: 'text'
-                // backgroundColorUI: backgroundColor
             }
 
             navigation.navigate('InformationalTask', taskData)
         }
 
+        const handleBackgroundColor = () => {
+            switch (item.status) {
+                case Status.Completed:
+                    return styles.taskIndicatorCompleted
+                case Status.Pending:
+                    return styles.taskIndicatorPending
+                case Status.Overdue:
+                    return styles.taskIndicatorOverdue
+                default:
+                    return styles.taskIndicatorPending
+            }
+        }
         return (
-            <TouchableOpacity onPress={handlePress} key={index} style={styles.taskRow}>
-                <View
-                    style={getTaskIndicatorStyle(
-                        item.dueDate ? new Date(item.dueDate) : undefined,
-                        taskStatusByDate,
-                        styles
-                    )}
-                >
+            <TouchableOpacity onPress={handlePress} key={item._id} style={styles.taskRow}>
+                <View style={handleBackgroundColor()}>
                     <Text style={styles.taskText}>{item.title}</Text>
                     <View style={styles.line}></View>
                 </View>
